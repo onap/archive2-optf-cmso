@@ -1,0 +1,1161 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "0.1.0-SNAPSHOT",
+    "title" : "cmso"
+  },
+  "basePath" : "/cmso",
+  "paths" : {
+    "/{apiVersion}/admin/{id}" : {
+      "get" : {
+        "summary" : "",
+        "description" : "Returns encrypted value of id.",
+        "operationId" : "exec",
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1|v2",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Identifier",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "csv"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Request failed"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/health" : {
+      "get" : {
+        "summary" : "",
+        "description" : "Returns health status of server.",
+        "operationId" : "healthCheck",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "checkInterfaces",
+          "in" : "query",
+          "description" : "Check Interfaces",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "boolean",
+            "default" : true
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          },
+          "400" : {
+            "description" : "Not healthy",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          }
+        }
+      }
+    },
+    "/{apiVersion}/optimizerCallback" : {
+      "post" : {
+        "summary" : "",
+        "description" : "Processes optimizer results callback to a Pending Optimization schedule.",
+        "operationId" : "sniroCallback",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Return schedules > lastScheduleId",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Response from schedule optimizer"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/schedules" : {
+      "get" : {
+        "summary" : "",
+        "description" : "Returns a list of Scheduler Requests based upon the filter criteria.",
+        "operationId" : "searchScheduleRequests",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "includeDetails",
+          "in" : "query",
+          "description" : "Include details",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "scheduleId",
+          "in" : "query",
+          "description" : "Schedule identifier",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "scheduleName",
+          "in" : "query",
+          "description" : "Schedule name",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "description" : "SCheduler creator User id of ",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Schedule status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "createDateTime",
+          "in" : "query",
+          "description" : "Creation date and time (<low date>[,<hi date>])",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "optimizerStatus",
+          "in" : "query",
+          "description" : "Optimizer status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "WorkflowName",
+          "in" : "query",
+          "description" : "Workflow",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Schedule"
+              }
+            }
+          },
+          "404" : {
+            "description" : "No records found",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/schedules/scheduleDetails" : {
+      "get" : {
+        "summary" : "",
+        "description" : "Returns a list of Schedule request details based upon the filter criteria.",
+        "operationId" : "searchScheduleRequestDetails",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "request.scheduleId",
+          "in" : "query",
+          "description" : "Schedule identifier",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.scheduleName",
+          "in" : "query",
+          "description" : "Schedule name",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.userId",
+          "in" : "query",
+          "description" : "Scheduler creator User id of ",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.status",
+          "in" : "query",
+          "description" : "Schedule status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.createDateTime",
+          "in" : "query",
+          "description" : "Creation date and time (<low date>[,<hi date>])",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.optimizerStatus",
+          "in" : "query",
+          "description" : "Optimizer status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.approvalUserId",
+          "in" : "query",
+          "description" : "Request Approval user id",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.approvalStatus",
+          "in" : "query",
+          "description" : "Request Approval status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "request.approvalType",
+          "in" : "query",
+          "description" : "Request Approval type",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "WorkflowName",
+          "in" : "query",
+          "description" : "Workflow",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "vnfName",
+          "in" : "query",
+          "description" : "VNF Name",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "vnfId",
+          "in" : "query",
+          "description" : "VNF Id",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "vnfStatus",
+          "in" : "query",
+          "description" : "VNF Status",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "startTime",
+          "in" : "query",
+          "description" : "Start time <low>,<high>",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "finishTime",
+          "in" : "query",
+          "description" : "Finish time <low>,<high>",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "lastInstanceTime",
+          "in" : "query",
+          "description" : "Last instance start time <low>,<high>",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "tmChangeId",
+          "in" : "query",
+          "description" : "TM Change Ticket Change Id",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "maxSchedules",
+          "in" : "query",
+          "description" : "Maximum number of schedules to return",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "lastScheduleId",
+          "in" : "query",
+          "description" : "Return schedules > lastScheduleId",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "request.concurrencyLimit",
+          "in" : "query",
+          "description" : "Return concurrencyLimit",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CmDetailsMessage"
+              }
+            }
+          },
+          "404" : {
+            "description" : "No records found",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/schedules/{scheduleId}" : {
+      "get" : {
+        "summary" : "",
+        "description" : "Retrieve the schedule request for scheduleId",
+        "operationId" : "getScheduleRequestInfo",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "scheduleId",
+          "in" : "path",
+          "description" : "Schedule id to uniquely identify the schedule info being retrieved.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Schedule"
+            }
+          },
+          "404" : {
+            "description" : "No record found"
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "",
+        "description" : "Creates a schedule request for scheduleId",
+        "operationId" : "createScheduleRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "scheduleId",
+          "in" : "path",
+          "description" : "Schedule id to uniquely identify the schedule request being created.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Data for creating a schedule request for the given schedule id",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/CMSMessage"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Schedule request accepted for optimization."
+          },
+          "409" : {
+            "description" : "Schedule request already exists for this schedule id.",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "",
+        "description" : "Cancels the schedule request for scheduleId",
+        "operationId" : "deleteScheduleRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "scheduleId",
+          "in" : "path",
+          "description" : "Schedule id to uniquely identify the schedule request being deleted.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Delete successful"
+          },
+          "404" : {
+            "description" : "No record found",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/schedules/{scheduleId}/approvals" : {
+      "post" : {
+        "summary" : "",
+        "description" : "Adds an accept/reject approval status to the schedule request identified by scheduleId",
+        "operationId" : "approveScheduleRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "scheduleId",
+          "in" : "path",
+          "description" : "Schedule id to uniquely identify the schedule request being accepted or rejected.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Accept or reject approval message",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Schedule Approval Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "No record found"
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CMSMessage" : {
+      "type" : "object",
+      "properties" : {
+        "domain" : {
+          "type" : "string",
+          "description" : "Schedule domain : ChangeManagement"
+        },
+        "scheduleId" : {
+          "type" : "string",
+          "description" : "Schedule id that must be unique within the domain. Use of UUID is highly recommended."
+        },
+        "scheduleName" : {
+          "type" : "string",
+          "description" : "User provided name of the schedule (deaults to scheduleId"
+        },
+        "userId" : {
+          "type" : "string",
+          "description" : "ATTUID of the user requesting the schedule."
+        },
+        "domainData" : {
+          "type" : "array",
+          "description" : "Domain data as name value/pairs. (i.e. CallbackUrl, CallbackData, WorkflowName)",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        },
+        "schedulingInfo" : {
+          "$ref" : "#/definitions/Change Management Scheduling Info"
+        }
+      }
+    },
+    "CMSRequestError" : {
+      "type" : "object",
+      "properties" : {
+        "requestError" : {
+          "$ref" : "#/definitions/RequestError"
+        }
+      }
+    },
+    "CMSchedule" : {
+      "type" : "object",
+      "properties" : {
+        "groupId" : {
+          "type" : "string"
+        },
+        "startTime" : {
+          "type" : "string"
+        },
+        "finishTime" : {
+          "type" : "string"
+        },
+        "latestInstanceStartTime" : {
+          "type" : "string"
+        },
+        "node" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Change Management Group" : {
+      "type" : "object",
+      "properties" : {
+        "finishTime" : {
+          "type" : "string",
+          "description" : "Date/time by which all of the workflows should be completed."
+        },
+        "groupId" : {
+          "type" : "string",
+          "description" : "Name of the group of VNFs to be scheduled"
+        },
+        "lastInstanceStartTime" : {
+          "type" : "string",
+          "description" : "The latest date/time by which a workflow is to be started."
+        },
+        "startTime" : {
+          "type" : "string",
+          "description" : "The date/time when workflows are to be started."
+        },
+        "additionalDurationInSecs" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Time added to the workflow interval to allow for rollback in case of failure."
+        },
+        "concurrencyLimit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "The maximum number of workflows that should be started simultaneiously."
+        },
+        "normalDurationInSecs" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Expected duration of a successful workflow execution."
+        },
+        "policyId" : {
+          "type" : "string",
+          "description" : "The name of the schedule optimization policy used by the change management schedule optimizer."
+        },
+        "changeManagementSchedules" : {
+          "type" : "array",
+          "description" : "The list of VNF workflows scheduled.",
+          "items" : {
+            "$ref" : "#/definitions/Change Management Schedule"
+          }
+        }
+      },
+      "description" : "Scheduling critirea for a group of VNFs"
+    },
+    "Change Management Schedule" : {
+      "type" : "object",
+      "properties" : {
+        "tmChangeId" : {
+          "type" : "string",
+          "description" : "TM Change Id"
+        },
+        "tmStatus" : {
+          "type" : "string",
+          "description" : "TM ticket status",
+          "enum" : [ "<null>", "Closed" ]
+        },
+        "tmApprovalStatus" : {
+          "type" : "string",
+          "description" : "TM ticket approval status",
+          "enum" : [ "<null>", "Approved" ]
+        },
+        "finishTime" : {
+          "type" : "string",
+          "description" : "Anticipated time of completion based upon start time and duration"
+        },
+        "startTime" : {
+          "type" : "string",
+          "description" : "Start time of this VNF workflow assigned by Scheduler based upon the group start time returned by the optimizer and concurrency."
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Status of the VNF.",
+          "enum" : [ "See CMSStatusEnum" ]
+        },
+        "vnfName" : {
+          "type" : "string",
+          "description" : "Name of the VNF."
+        },
+        "dispatchTime" : {
+          "type" : "string",
+          "description" : "Actual time the VNF workflow was dispatched."
+        },
+        "executionCompletedTime" : {
+          "type" : "string",
+          "description" : "Actual time the VNF workflow execution was completed as reported by MSO."
+        },
+        "msoRequestId" : {
+          "type" : "string",
+          "description" : "MSO Request ID of the workflow returned at dispatch time."
+        },
+        "msoStatus" : {
+          "type" : "string",
+          "description" : "Final MSO status.",
+          "enum" : [ "COMPLETED", "FAILED" ]
+        },
+        "msoMessage" : {
+          "type" : "string",
+          "description" : "MSO final status message."
+        },
+        "statusMessage" : {
+          "type" : "string",
+          "description" : "Scheduler status message."
+        },
+        "msoTime" : {
+          "type" : "string",
+          "description" : "Time of last poll for MSO status."
+        }
+      },
+      "description" : "VNF details for Change Management Schedule"
+    },
+    "Change Management Scheduling Info" : {
+      "type" : "object",
+      "properties" : {
+        "normalDurationInSeconds" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Expected duration (in seconds) of a successful execution of a single VNF change."
+        },
+        "additionalDurationInSeconds" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Additional duration (in seconds) to be added to support backout of an unsuccessful VNF change."
+        },
+        "concurrencyLimit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Maximum number of VNF changes to schedule concurrently"
+        },
+        "policyId" : {
+          "type" : "string",
+          "description" : "Name of schedule optimization policy used by the change management cmso optimizer to determine available time slot"
+        },
+        "vnfDetails" : {
+          "type" : "array",
+          "description" : "Lists of the VNFs to be changed and the desired change windows",
+          "items" : {
+            "$ref" : "#/definitions/VNF Details"
+          }
+        }
+      },
+      "description" : "Details of schedule being requested"
+    },
+    "Change Window" : {
+      "type" : "object",
+      "properties" : {
+        "startTime" : {
+          "type" : "string",
+          "description" : "Earliest time that a set of changes may begin."
+        },
+        "endTime" : {
+          "type" : "string",
+          "description" : "Latest time by which all changes must be completed"
+        }
+      },
+      "description" : "Time window within which the scheduler optimizer can schedule the changes for the  group of NVFs"
+    },
+    "CmDetailsMessage" : {
+      "type" : "object",
+      "properties" : {
+        "vnfName" : {
+          "type" : "string",
+          "description" : "Name of the VNF."
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Status of the VNF.",
+          "enum" : [ "See CMSStatusEnum" ]
+        },
+        "tmChangeId" : {
+          "type" : "string",
+          "description" : "TM Change Id"
+        },
+        "tmStatus" : {
+          "type" : "string",
+          "description" : "TM ticket status",
+          "enum" : [ "<null>", "Closed" ]
+        },
+        "tmApprovalStatus" : {
+          "type" : "string",
+          "description" : "TM ticket approval status",
+          "enum" : [ "<null>", "Approved" ]
+        },
+        "startTime" : {
+          "type" : "string",
+          "description" : "Start time of this VNF workflow assigned by Scheduler based upon the group start time returned by the optimizer and concurrency."
+        },
+        "finishTime" : {
+          "type" : "string",
+          "description" : "Anticipated time of completion based upon start time and duration"
+        },
+        "groupId" : {
+          "type" : "string",
+          "description" : "Name of the group of VNFs to be scheduled"
+        },
+        "lastInstanceStartTime" : {
+          "type" : "string",
+          "description" : "The latest date/time by which a workflow is to be started."
+        },
+        "policyId" : {
+          "type" : "string",
+          "description" : "Time of last poll for MSO status."
+        },
+        "dispatchTime" : {
+          "type" : "string",
+          "description" : "Actual time the VNF workflow was dispatched."
+        },
+        "executionCompletedTime" : {
+          "type" : "string",
+          "description" : "Actual time the VNF workflow execution was completed as reported by MSO."
+        },
+        "msoRequestId" : {
+          "type" : "string",
+          "description" : "MSO Request ID of the workflow returned at dispatch time."
+        },
+        "msoStatus" : {
+          "type" : "string",
+          "description" : "Final MSO status.",
+          "enum" : [ "COMPLETED", "FAILED" ]
+        },
+        "msoMessage" : {
+          "type" : "string",
+          "description" : "MSO final status message."
+        },
+        "statusMessage" : {
+          "type" : "string",
+          "description" : "Scheduler status message."
+        },
+        "msoTime" : {
+          "type" : "string",
+          "description" : "Time of last poll for MSO status."
+        },
+        "scheduleRequest" : {
+          "$ref" : "#/definitions/Schedule"
+        },
+        "approvals" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Schedule Approval Request"
+          }
+        },
+        "schedulesId" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Domain data" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Domain specific data represented as name/value pairs"
+    },
+    "HealthCheckComponent" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "healthy" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "HealthCheckMessage" : {
+      "type" : "object",
+      "properties" : {
+        "healthy" : {
+          "type" : "boolean"
+        },
+        "buildInfo" : {
+          "type" : "string"
+        },
+        "currentTime" : {
+          "type" : "string"
+        },
+        "hostname" : {
+          "type" : "string"
+        },
+        "components" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/HealthCheckComponent"
+          }
+        }
+      }
+    },
+    "RequestError" : {
+      "type" : "object",
+      "properties" : {
+        "messageId" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "variables" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Response from schedule optimizer" : {
+      "type" : "object",
+      "properties" : {
+        "transactionId" : {
+          "type" : "string",
+          "description" : "Unique id of optimization request."
+        },
+        "scheduleId" : {
+          "type" : "string",
+          "description" : "Schedule id for which the optimization request was executed."
+        },
+        "requestState" : {
+          "type" : "string",
+          "description" : "State of the request as reported by the optimizer."
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Status of the request."
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the request status."
+        },
+        "schedule" : {
+          "type" : "array",
+          "description" : "List of schedules returned, one per group. Only 1 group supported at this time.",
+          "items" : {
+            "$ref" : "#/definitions/CMSchedule"
+          }
+        }
+      },
+      "description" : "Asynchronous response to schedule oprimizer request."
+    },
+    "Schedule" : {
+      "type" : "object",
+      "properties" : {
+        "createDateTime" : {
+          "type" : "string",
+          "description" : "Date/time schedule was created."
+        },
+        "optimizerDateTime" : {
+          "type" : "string"
+        },
+        "optimizerMessage" : {
+          "type" : "string"
+        },
+        "optimizerStatus" : {
+          "type" : "string"
+        },
+        "optimizerReturnDateTime" : {
+          "type" : "string"
+        },
+        "optimizerTransactionId" : {
+          "type" : "string"
+        },
+        "schedule" : {
+          "type" : "string"
+        },
+        "scheduleName" : {
+          "type" : "string"
+        },
+        "scheduleInfo" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "domain" : {
+          "type" : "string"
+        },
+        "deleteDateTime" : {
+          "type" : "string"
+        },
+        "domainData" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Domain data"
+          }
+        },
+        "scheduleApprovals" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Schedule Approval"
+          }
+        },
+        "groups" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Change Management Group"
+          }
+        }
+      }
+    },
+    "Schedule Approval" : {
+      "type" : "object",
+      "properties" : {
+        "approvalDateTime" : {
+          "type" : "string",
+          "description" : "Date/time schedule time slot was accepted/rejected."
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Approval status.",
+          "enum" : [ "Accepted", "Rejected" ]
+        },
+        "userId" : {
+          "type" : "string",
+          "description" : "ATTUID of the user accepting/rejecting the time slot."
+        }
+      },
+      "description" : "Details of a schedule approval/rejection."
+    },
+    "Schedule Approval Request" : {
+      "type" : "object",
+      "properties" : {
+        "approvalUserId" : {
+          "type" : "string",
+          "description" : "ATTUID of the user accepting/rejecting the time slot."
+        },
+        "approvalStatus" : {
+          "type" : "string",
+          "description" : "Approval status.",
+          "enum" : [ "Accepted", "Rejected" ]
+        },
+        "approvalType" : {
+          "type" : "string",
+          "description" : "Type of approval.",
+          "enum" : [ "Tier 2" ]
+        },
+        "approvalDateTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "description" : "Request to accept or reject an optimized time slot."
+    },
+    "VNF Details" : {
+      "type" : "object",
+      "properties" : {
+        "groupId" : {
+          "type" : "string",
+          "description" : "Name of the list of VNFs to be changed as a group"
+        },
+        "node" : {
+          "type" : "array",
+          "description" : "Lists of the VNF names to be changed",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "changeWindow" : {
+          "type" : "array",
+          "description" : "Lists of desired change windows that the optimizer can select from. (Only 1 change window supported at this time)",
+          "items" : {
+            "$ref" : "#/definitions/Change Window"
+          }
+        }
+      },
+      "description" : "Details and scheduling criteria for the VNFs to be changed."
+    }
+  }
+}
