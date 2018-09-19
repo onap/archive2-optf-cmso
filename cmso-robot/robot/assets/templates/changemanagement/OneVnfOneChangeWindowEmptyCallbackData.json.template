@@ -1,0 +1,25 @@
+{
+	"domain" : "ChangeManagement",
+	"scheduleId" : "${uuid}",
+	"scheduleName" : "",
+	"userId" : "${userId}",
+	"domainData" : [{
+			"CallbackUrl" : "${callbackUrl}",
+			"CallbackData" : "",
+			"WorkflowName" : "Build Software Upgrade for vNFs"
+		}
+	],
+	"schedulingInfo" : {
+		"normalDurationInSeconds" : 100,
+		"additionalDurationInSeconds" : 10,
+		"concurrencyLimit" : 10,
+		"policyId" : "dummy-policy-id",
+		"vnfDetails" : [{
+				"groupId" : "group",
+				"node" : [
+					"${node1}"
+				]
+			}
+		]
+	}
+}
