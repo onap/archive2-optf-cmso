@@ -1,0 +1,24 @@
+{
+	"domain" : "${domain}",
+	"scheduleId" : "${uuid}",
+	"userId" : "${userId}",
+	"domainData" : [{
+			"CallbackUrl" : "${callbackUrl}",
+			"CallbackData" : "${callbackData}",
+			"WorkflowName" : "${workflow}"
+		}
+	],
+	"schedulingInfo" : {
+		"normalDurationInSeconds" : ${normalDurationInSeconds},
+		"additionalDurationInSeconds" : ${additionalDurationInSeconds},
+		"vnfDetails" : [{
+				"groupId" : "",
+				"node" : [
+					"VNFName1${testid}",
+					"VNFName2${testid}",
+					"VNFName3${testid}"
+				]
+			}
+		]
+	}
+}

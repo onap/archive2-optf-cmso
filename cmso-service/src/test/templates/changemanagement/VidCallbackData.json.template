@@ -1,0 +1,40 @@
+{
+	"requestType" : "Update",
+	"requestDetails" : [{
+			"vnfName" : "dummynode",
+			"vnfInstanceId" : "dummy-vnf-id",
+			"modelInfo" : {
+				"modelType" : "vnf",
+				"modelInvariantId" : "dummy-model-id",
+				"modelVersionId" : "dummy-model-version-id",
+				"modelName" : "dummy-model-name",
+				"modelCustomizationId" : "dummy-model-cust-id"
+			},
+			"cloudConfiguration" : {
+				"lcpCloudRegionId" : "dummy-region-id",
+				"tenantId" : "dummy-tenent-id"
+			},
+			"requestInfo" : {
+				"source" : "VID",
+				"suppressRollback" : false,
+				"requestorId" : "onap"
+			},
+			"relatedInstanceList" : [{
+					"relatedInstance" : {
+						"instanceId" : "dummy-instance-id",
+						"modelInfo" : {
+							"modelType" : "service",
+							"modelInvariantId" : "dummy-model-id",
+							"modelVersionId" : "dummy-model-version-id",
+							"modelName" : "dummy-model-name",
+							"modelVersion" : "4.0"
+						}
+					}
+				}
+			],
+			"requestParameters" : {
+				"usePreload" : true
+			}
+		}
+	]
+}
