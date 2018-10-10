@@ -9,8 +9,8 @@ Library           String
 Resource   misc.robot
 *** Variables ***
 *** Variables ***
-${SCHEDULER_PATH}    /scheduler/v1
-${CHANGE_MANAGEMENT_PATH}    ${SCHEDULER_PATH}/ChangeManagement
+${SCHEDULER_PATH}    /cmso/v1
+${CHANGE_MANAGEMENT_PATH}    ${SCHEDULER_PATH}
 ${valid_status_codes}    200    202    400    404    204    409
 #**************** Test Case Variables ******************
 
@@ -41,7 +41,7 @@ Get Change Management
 Post Scheduler
     [Documentation]    Runs a scheduler POST request
     [Arguments]    ${alias}   ${data_path}   ${data}={}
-    ${url}=   Catenate   ${GLOBAL_SCHEDULER_PROTOCOL}://${GLOBAL_SCHEDULER_HOST}:${GLOBAL_SCHEDULER_PORT}
+    ${url}=   Catenate   ${GLOBAL_SCHEDULER_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}        
@@ -57,7 +57,7 @@ Post Scheduler
 Delete Scheduler
     [Documentation]    Runs a scheduler POST request
     [Arguments]    ${alias}   ${data_path} 
-    ${url}=   Catenate   ${GLOBAL_SCHEDULER_PROTOCOL}://${GLOBAL_SCHEDULER_HOST}:${GLOBAL_SCHEDULER_PORT}
+    ${url}=   Catenate   ${GLOBAL_SCHEDULER_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}     
@@ -72,7 +72,7 @@ Delete Scheduler
 Get Scheduler
     [Documentation]    Runs a scheduler GET request
     [Arguments]    ${alias}   ${data_path} 
-    ${url}=   Catenate   ${GLOBAL_SCHEDULER_PROTOCOL}://${GLOBAL_SCHEDULER_HOST}:${GLOBAL_SCHEDULER_PORT}
+    ${url}=   Catenate   ${GLOBAL_SCHEDULER_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}     

@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -50,11 +51,11 @@ public class ApprovalType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(name = "approval_count")
-    private int approvalCount;
+    private Integer approvalCount;
 
     @Column(name = "approval_type")
     private String approvalType;
@@ -65,19 +66,19 @@ public class ApprovalType implements Serializable {
 
     public ApprovalType() {}
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getApprovalCount() {
+    public Integer getApprovalCount() {
         return this.approvalCount;
     }
 
-    public void setApprovalCount(int approvalCount) {
+    public void setApprovalCount(Integer approvalCount) {
         this.approvalCount = approvalCount;
     }
 

@@ -2,7 +2,7 @@
   "swagger" : "2.0",
   "info" : {
     "version" : "0.1.0-SNAPSHOT",
-    "title" : "cmso"
+    "title" : "cmso-service"
   },
   "basePath" : "/cmso",
   "paths" : {
