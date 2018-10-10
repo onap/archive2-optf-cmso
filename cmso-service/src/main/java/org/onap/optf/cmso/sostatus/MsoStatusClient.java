@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -247,8 +247,8 @@ public class MsoStatusClient {
     public HealthCheckComponent healthCheck() {
         Map<String, String> mdcSave = Mdc.save();
         String requestId = "healthCheck";
-        String url = env.getProperty("so.url");
-        String user = env.getProperty("so.user");
+        String url = env.getProperty("so.url", "");
+        String user = env.getProperty("so.user", "");
         String pass = pm.getProperty("so.pass", "");
         if (!url.endsWith("/"))
             url = url + "/";
