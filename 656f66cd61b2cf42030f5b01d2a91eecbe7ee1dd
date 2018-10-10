@@ -22,6 +22,30 @@
       "revId": "656f66cd61b2cf42030f5b01d2a91eecbe7ee1dd",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bada0100_d305ffc2",
+        "filename": "cmso-database/pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-10-10T23:43:24Z",
+      "side": 1,
+      "message": "Fixed it..",
+      "parentUuid": "bada0100_736f7393",
+      "range": {
+        "startLine": 42,
+        "startChar": 10,
+        "endLine": 42,
+        "endChar": 13
+      },
+      "revId": "656f66cd61b2cf42030f5b01d2a91eecbe7ee1dd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
