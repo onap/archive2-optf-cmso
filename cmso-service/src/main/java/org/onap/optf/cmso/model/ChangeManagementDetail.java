@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ package org.onap.optf.cmso.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
@@ -58,8 +59,8 @@ import io.swagger.annotations.ApiModelProperty;
 public class ChangeManagementDetail {
     @Id
     @JsonIgnore
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
 
     @ApiModelProperty(value = "Name of the VNF.")
     @Column(name = "vnf_name")
@@ -167,7 +168,7 @@ public class ChangeManagementDetail {
     private String msoTime;
 
     @JsonIgnore
-    private int schedules_id;
+    private Integer schedules_id;
 
     public String getVnfName() {
         return vnfName;
@@ -241,11 +242,11 @@ public class ChangeManagementDetail {
         this.policyId = policyId;
     }
 
-    public int getSchedulesId() {
+    public Integer getSchedulesId() {
         return schedules_id;
     }
 
-    public void setSchedulesId(int schedules_id) {
+    public void setSchedulesId(Integer schedules_id) {
         this.schedules_id = schedules_id;
     }
 

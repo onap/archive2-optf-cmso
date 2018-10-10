@@ -34,24 +34,23 @@
     <configVersion>1.0</configVersion>
     <robotExecEnvironment path="C:\Python27"/>
     <relativeTo>PROJECT</relativeTo>
-    <referencedLibrary type="PYTHON" name="PycURLLibrary" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="RequestsLibrary" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="Selenium2Library" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="selenium" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="SSHLibrary" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="HttpLibrary" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="HttpLibrary.HTTP" path="SchedulerRobot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="StringTemplater" path="SchedulerRobot/robot/locallibrary/cmsoUtils"/>
-    <referencedLibrary type="PYTHON" name="UUID" path="SchedulerRobot/robot/locallibrary/cmsoUtils"/>
-    <referencedLibrary type="PYTHON" name="OSUtils" path="SchedulerRobot/robot/locallibrary/cmsoUtils"/>
-    <referencedLibrary type="PYTHON" name="HTTPUtils" path="SchedulerRobot/robot/locallibrary/cmsoUtils"/>
-    <referencedLibrary type="PYTHON" name="JSONUtils" path="SchedulerRobot/robot/locallibrary/cmsoUtils"/>
-    <referencedLibrary type="PYTHON" name="FtpLibrary" path="C:/test/jerryVNFNames/SchedulerRobot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="PycURLLibrary" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="RequestsLibrary" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="Selenium2Library" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="selenium" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="SSHLibrary" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="HttpLibrary" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="HttpLibrary.HTTP" path="cmso-robot/robot/library"/>
+    <referencedLibrary type="PYTHON" name="StringTemplater" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
+    <referencedLibrary type="PYTHON" name="UUID" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
+    <referencedLibrary type="PYTHON" name="OSUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
+    <referencedLibrary type="PYTHON" name="HTTPUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
+    <referencedLibrary type="PYTHON" name="JSONUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
     <pythonpath>
         <path location="robot/library"/>
     </pythonpath>
     <classpath/>
-    <variableFiles path="SchedulerRobot/robot/assets/test_properties.py"/>
+    <variableFiles path="cmso-robot/robot/assets/test_properties.py"/>
     <excludedForValidation/>
     <isValidatedFileSizeCheckingEnabled>true</isValidatedFileSizeCheckingEnabled>
     <validatedFileMaxSize>1024</validatedFileMaxSize>
