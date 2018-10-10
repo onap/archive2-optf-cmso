@@ -24,7 +24,7 @@ Create Schedule
     ${dict}=   Create Dictionary   serviceInstanceId=${uuid}   parent_service_model_name=${uuid}
     ${callbackData}=   Fill JSON Template File    ${VID_TEMPLATES}/VidCallbackData.json.template   ${dict} 
     ${callbackDataString}=   Json Escape    ${callbackData}   
-	${map}=   Create Dictionary   uuid=${uuid}   callbackUrl=${GLOBAL_CALLBACK_URL}   callbackData=${callbackDataString}    testid=${testid}   workflow=${workflow}      userId=${GLOBAL_CALLBACK_USERID}
+	${map}=   Create Dictionary   uuid=${uuid}   callbackUrl=${GLOBAL_VID_CALLBACK_URL}   callbackData=${callbackDataString}    testid=${testid}   workflow=${workflow}      userId=${GLOBAL_VID_USERID}
 	${nodelist}=   Split String    ${NODES}   ,
 	${nn}=    Catenate    1
     # Support up to 4 ChangeWindows

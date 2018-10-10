@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
@@ -63,8 +64,8 @@ public class Schedule implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
 
     @JsonIgnore
     @Column(name = "create_date_time")
@@ -93,7 +94,7 @@ public class Schedule implements Serializable {
 
     @JsonIgnore
     @Column(name = "optimizer_attempts_to_schedule")
-    private int optimizerAttemptsToSchedule;
+    private Integer optimizerAttemptsToSchedule;
 
     @JsonIgnore
     @Column(name = "optimizer_return_date_time")
@@ -159,11 +160,11 @@ public class Schedule implements Serializable {
 
     public Schedule() {}
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -307,11 +308,11 @@ public class Schedule implements Serializable {
         return sa;
     }
 
-    public int getOptimizerAttemptsToSchedule() {
+    public Integer getOptimizerAttemptsToSchedule() {
         return optimizerAttemptsToSchedule;
     }
 
-    public void setOptimizerAttemptsToSchedule(int optimizerAttemptsToSchedule) {
+    public void setOptimizerAttemptsToSchedule(Integer optimizerAttemptsToSchedule) {
         this.optimizerAttemptsToSchedule = optimizerAttemptsToSchedule;
     }
 
