@@ -97,6 +97,7 @@ public class Application extends SpringBootServletInitializer {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
         int port = Integer.parseInt(dispatchPort);
         tomcat.addAdditionalTomcatConnectors(createStandardConnector(port));
+        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter ss = null;
         return tomcat;
     }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -59,8 +60,8 @@ public class ChangeManagementGroup implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue
-    private int id;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
 
     @JsonIgnore
     @Column(name = "finish_time")
@@ -95,19 +96,19 @@ public class ChangeManagementGroup implements Serializable {
 
     @JsonIgnore
     @Column(name = "schedules_id")
-    private int schedulesId;
+    private Integer schedulesId;
 
     @Column(name = "additional_duration_in_secs")
     @ApiModelProperty(value = "Time added to the workflow interval to allow for rollback in case of failure.")
-    private int additionalDurationInSecs;
+    private Integer additionalDurationInSecs;
 
     @ApiModelProperty(value = "The maximum number of workflows that should be started simultaneiously.")
     @Column(name = "concurrency_limit")
-    private int concurrencyLimit;
+    private Integer concurrencyLimit;
 
     @ApiModelProperty(value = "Expected duration of a successful workflow execution.")
     @Column(name = "normal_duration_in_secs")
-    private int normalDurationInSecs;
+    private Integer normalDurationInSecs;
 
     @ApiModelProperty(
             value = "The name of the schedule optimization policy used by the change management schedule optimizer.")
@@ -121,11 +122,11 @@ public class ChangeManagementGroup implements Serializable {
 
     public ChangeManagementGroup() {}
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -161,35 +162,35 @@ public class ChangeManagementGroup implements Serializable {
 
     public void setStartTime(String startTime) {}
 
-    public int getSchedulesId() {
+    public Integer getSchedulesId() {
         return schedulesId;
     }
 
-    public void setSchedulesId(int schedulesId) {
+    public void setSchedulesId(Integer schedulesId) {
         this.schedulesId = schedulesId;
     }
 
-    public int getAdditionalDurationInSecs() {
+    public Integer getAdditionalDurationInSecs() {
         return additionalDurationInSecs;
     }
 
-    public void setAdditionalDurationInSecs(int additionalDurationInSecs) {
+    public void setAdditionalDurationInSecs(Integer additionalDurationInSecs) {
         this.additionalDurationInSecs = additionalDurationInSecs;
     }
 
-    public int getConcurrencyLimit() {
+    public Integer getConcurrencyLimit() {
         return concurrencyLimit;
     }
 
-    public void setConcurrencyLimit(int concurrencyLimit) {
+    public void setConcurrencyLimit(Integer concurrencyLimit) {
         this.concurrencyLimit = concurrencyLimit;
     }
 
-    public int getNormalDurationInSecs() {
+    public Integer getNormalDurationInSecs() {
         return normalDurationInSecs;
     }
 
-    public void setNormalDurationInSecs(int normalDurationInSecs) {
+    public void setNormalDurationInSecs(Integer normalDurationInSecs) {
         this.normalDurationInSecs = normalDurationInSecs;
     }
 

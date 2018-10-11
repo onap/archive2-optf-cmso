@@ -40,7 +40,6 @@
 		<artifactId>oparent</artifactId>
 		<version>1.2.0</version>
 	</parent>
-
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>cmso-service</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
@@ -67,8 +66,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
-
-		<h2database.version>1.4.197</h2database.version>
+		<mariadb.version>2.2.1</mariadb.version>
 		<swagger.directory>${basedir}/src/main/resources/swagger-ui/dist</swagger.directory>
 
 		<!-- Sonar -->
@@ -251,9 +249,10 @@
 
 		<!-- Database -->
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
 		</dependency>
+
 
 		<!-- Pact -->
 		<dependency>

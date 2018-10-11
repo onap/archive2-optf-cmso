@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -59,9 +60,9 @@ public class ScheduleApproval implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @JsonIgnore
-    private int id;
+    private Integer id;
 
     @JsonIgnore
     @Column(name = "approval_date_time")
@@ -91,11 +92,11 @@ public class ScheduleApproval implements Serializable {
 
     public ScheduleApproval() {}
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
