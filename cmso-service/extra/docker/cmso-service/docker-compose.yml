@@ -1,0 +1,32 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb:10.1.11
+    volumes:
+      - "/var/lib/mysql"
+      - "../mariadb/conf1:/etc/mysql/conf.d:ro"
+    environment:
+      - MYSQL_ROOT_PASSWORD=beer
+    ports:
+      - "3306:3306"
+
+  db-init:
+    image: onap/cmso-dbinit
+    volumes:
+      - "../config/:/volume/config:rw"
+      - "../logs/:/volume/logs:rw"
+    depends_on:
+      - db
+
+  cmso-service:
+    image: onap/cmso-service
+    volumes:
+      - "../etc/:/volume/etc:rw"
+      - "../logs/:/volume/logs:rw"
+      - "../debug-logs/:/volume/debug-logs:rw"
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+
