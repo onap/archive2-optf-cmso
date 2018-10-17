@@ -38,7 +38,7 @@
 		<artifactId>oparent</artifactId>
 		<version>1.2.0</version>
 	</parent>
-
+ 
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>liquibase</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
@@ -92,10 +92,6 @@
 			<artifactId>liquibase-core</artifactId>
 			</dependency>
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
 		</dependency>
@@ -106,7 +102,17 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.0.4.RELEASE</version>
+				<version>${spring.boot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+						<configuration>
+							<mainClass>${start-class}</mainClass>
+						</configuration>						
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.liquibase</groupId>
@@ -116,6 +122,53 @@
 					<propertyFile>etc/config/liquibase.properties</propertyFile>
 				</configuration>
 			</plugin>
+			<plugin>
+			        <groupId>io.fabric8</groupId>
+			        <artifactId>docker-maven-plugin</artifactId>
+			        <version>0.26.0</version>
+			        <configuration>
+			                <verbose>true</verbose>
+			                <apiVersion>1.23</apiVersion>
+			                <images>
+								<image>
+										<name>onap/cmso-dbinit</name>
+										<alias>onap-cmso-dbinit</alias>
+										<build>
+												<cleanup>true</cleanup>
+												<tags>
+														<tag>latest</tag>
+												</tags>
+												<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+												<assembly>
+														<descriptor>${project.basedir}/src/main/docker/assembly/cmso-files.xml</descriptor>
+														<name>onap-cmso</name>
+												</assembly>
+										</build>
+								</image>
+			                </images>
+			        </configuration>
+			        <executions>
+			                <execution>
+			                        <id>generate-images</id>
+			                        <phase>install</phase>
+			                        <goals>
+			                                <goal>build</goal>
+			                        </goals>
+			                </execution>
+			                <execution>
+			                        <id>push-images</id>
+			                        <phase>deploy</phase>
+			                        <goals>
+			                                <goal>build</goal>
+			                                <goal>push</goal>
+			                        </goals>
+			                        <configuration>
+			                                <image>onap/cmso-init:%l</image>
+			                        </configuration>
+			                </execution>
+			        </executions>
+			</plugin>
+			
 		</plugins>
 		<finalName>docker-liquibase</finalName>
 	</build>
