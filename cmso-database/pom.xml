@@ -41,12 +41,17 @@
  
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<name>liquibase</name>
 	<description>Liquibase project for Spring Boot</description>
 
 	<properties>
+		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+	
+		<cmso.project.version>${project.version}</cmso.project.version>
+		<cmso.build.timestamp>${maven.build.timestamp}</cmso.build.timestamp>
+
 		<service.name>liquibase</service.name>
 		<release-tag>Casablanca</release-tag>
 		<name.space>org.onap.optf</name.space>
@@ -130,6 +135,22 @@
 					<propertyFile>etc/config/liquibase.properties</propertyFile>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.groovy.maven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<source>${project.basedir}/src/main/script/TagVersion.groovy</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>			
 			<plugin>
 			        <groupId>io.fabric8</groupId>
 			        <artifactId>docker-maven-plugin</artifactId>
