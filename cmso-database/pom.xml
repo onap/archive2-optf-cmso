@@ -41,7 +41,7 @@
  
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>3.0.0-SNAPSHOT</version>
 
 	<name>liquibase</name>
 	<description>Liquibase project for Spring Boot</description>
@@ -62,6 +62,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
+		
+		<docker.push.registry>localhost:5000</docker.push.registry>
+		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
+		<docker.skip.build>true</docker.skip.build>
+		<docker.skip.push>true</docker.skip.push>
+		<docker.skip.tag>true</docker.skip.tag>
+		<skip.staging.artifacts>false</skip.staging.artifacts>
+		
 	</properties>
 
 	<dependencyManagement>
