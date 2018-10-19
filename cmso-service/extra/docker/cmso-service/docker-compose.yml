@@ -12,7 +12,7 @@ services:
       - "3306:3306"
 
   db-init:
-    image: onap/cmso-dbinit
+    image: onap/optf-cmso-dbinit
     volumes:
       - "../etc:/share/etc:rw"
       - "../logs:/share/logs:rw"
@@ -20,7 +20,7 @@ services:
       - db
 
   cmso-service:
-    image: onap/cmso-service
+    image: onap/optf-cmso-service
     volumes:
       - "../etc:/share/etc:rw"
       - "../logs:/share/logs:rw"

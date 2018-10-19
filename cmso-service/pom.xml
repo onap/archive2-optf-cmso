@@ -371,12 +371,14 @@
 			                <apiVersion>1.23</apiVersion>
 			                <images>
 								<image>
-										<name>onap/cmso-service</name>
-										<alias>onap-cmso-service</alias>
+										<name>onap/optf-cmso-service</name>
+										<alias>onap-optf-cmso-service</alias>
 										<build>
 												<cleanup>true</cleanup>
 												<tags>
 														<tag>latest</tag>
+														<tag>${project.docker.latesttagtimestamp.version}</tag>
+														<tag>${project.docker.latesttag.version}</tag>												
 												</tags>
 												<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
 												<assembly>
@@ -403,7 +405,7 @@
 			                                <goal>push</goal>
 			                        </goals>
 			                        <configuration>
-			                                <image>onap/cmso-service:%l</image>
+			                                <image>onap/optf-cmso-service:%l</image>
 			                        </configuration>
 			                </execution>
 			        </executions>

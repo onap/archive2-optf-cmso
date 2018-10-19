@@ -131,12 +131,14 @@
 			                <apiVersion>1.23</apiVersion>
 			                <images>
 								<image>
-										<name>onap/cmso-dbinit</name>
-										<alias>onap-cmso-dbinit</alias>
+										<name>onap/optf-cmso-dbinit</name>
+										<alias>onap-optf-cmso-dbinit</alias>
 										<build>
 												<cleanup>true</cleanup>
 												<tags>
 														<tag>latest</tag>
+														<tag>${project.docker.latesttagtimestamp.version}</tag>
+														<tag>${project.docker.latesttag.version}</tag>
 												</tags>
 												<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
 												<assembly>
@@ -163,7 +165,7 @@
 			                                <goal>push</goal>
 			                        </goals>
 			                        <configuration>
-			                                <image>onap/cmso-init:%l</image>
+			                                <image>onap/optf-cmso-dbinit:%l</image>
 			                        </configuration>
 			                </execution>
 			        </executions>
