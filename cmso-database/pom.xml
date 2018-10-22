@@ -71,7 +71,7 @@
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>false</docker.skip.build>
-		<docker.skip.push>true</docker.skip.push>
+		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 		

@@ -90,7 +90,7 @@
 		<docker.push.registry>localhost:5000</docker.push.registry>
 		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>false</docker.skip.build>
-		<docker.skip.push>true</docker.skip.push>
+		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 
@@ -260,23 +260,6 @@
 		</dependency>
 
 
-		<!-- Pact -->
-		<dependency>
-			<groupId>au.com.dius</groupId>
-			<artifactId>pact-jvm-consumer-junit_2.11</artifactId>
-			<version>${pact.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.codehaus.groovy</groupId>
-					<artifactId>groovy-all</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>au.com.dius</groupId>
-			<artifactId>pact-jvm-provider-junit_2.11</artifactId>
-			<version>${pact.version}</version>
-		</dependency>
 
 		<!-- Testing Dependencies -->
 		<!-- <dependency> <groupId>org.powermock</groupId> <artifactId>powermock-api-mockito2</artifactId> 
