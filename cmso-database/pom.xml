@@ -41,7 +41,7 @@
 
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>liquibase</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>liquibase</name>
 	<description>Liquibase project for Spring Boot</description>
