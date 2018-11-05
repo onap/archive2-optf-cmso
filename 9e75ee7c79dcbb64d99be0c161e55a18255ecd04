@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_02682fb9",
+        "filename": "cmso-database/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2018-11-05T22:25:54Z",
+      "side": 1,
+      "message": "Can you check if the version of the jar or zip it build by doing the mvn clean install with this patch? inside target folder? If the version is inherited it is fine otherwise we need to add the version tag for this also.",
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_c261c7d4",
+        "filename": "cmso-service/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2018-11-05T22:25:54Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_e25e4b12",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1361
+      },
+      "writtenOn": "2018-11-05T22:25:54Z",
+      "side": 1,
+      "message": "check the oparent version latest? I think it is 1.2.1\nhttps://nexus.onap.org/content/repositories/releases/org/onap/oparent/oparent/",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 16
+      },
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
