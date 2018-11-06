@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9adffdf1_a1a120ab",
+        "filename": "cmso-database/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-11-06T14:54:27Z",
+      "side": 1,
+      "message": "The jar file will use the parent pom version.",
+      "parentUuid": "9adffdf1_02682fb9",
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9adffdf1_c261c7d4",
         "filename": "cmso-service/pom.xml",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "9adffdf1_61ab388a",
+        "filename": "cmso-service/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-11-06T14:54:27Z",
+      "side": 1,
+      "message": "It picks up the parent pom version#.",
+      "parentUuid": "9adffdf1_c261c7d4",
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9adffdf1_e25e4b12",
         "filename": "pom.xml",
         "patchSetId": 2
@@ -47,6 +83,30 @@
       "writtenOn": "2018-11-05T22:25:54Z",
       "side": 1,
       "message": "check the oparent version latest? I think it is 1.2.1\nhttps://nexus.onap.org/content/repositories/releases/org/onap/oparent/oparent/",
+      "range": {
+        "startLine": 41,
+        "startChar": 15,
+        "endLine": 41,
+        "endChar": 16
+      },
+      "revId": "9e75ee7c79dcbb64d99be0c161e55a18255ecd04",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9adffdf1_41cb9472",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-11-06T14:54:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9adffdf1_e25e4b12",
       "range": {
         "startLine": 41,
         "startChar": 15,
