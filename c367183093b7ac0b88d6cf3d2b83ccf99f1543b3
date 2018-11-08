@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_b9ee288a",
+        "filename": "docs/sections/offeredapis.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-11-08T18:40:07Z",
+      "side": 1,
+      "message": "verify checks are failing on this.  oof-cmso-api.json right?",
+      "revId": "c367183093b7ac0b88d6cf3d2b83ccf99f1543b3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
