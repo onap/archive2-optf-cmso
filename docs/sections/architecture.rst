@@ -49,5 +49,7 @@ The design of CMSO is to ensure that the scheduling of the work flows will not c
  #. Ensure that asset(s) required to execute the work flow are available so that the work flow will be able to complete successfully
  #. Ensure that the execution of teh work flow does not cause a network outage.
 
-TBD
-----
+Architectural Flow Diagram
+---------------------------
+
+.. image:: ./diagrams/ONAP_CMSO_FLOW.png
