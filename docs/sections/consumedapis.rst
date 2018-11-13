@@ -26,15 +26,15 @@ Conflict avoidance requires:
 
  * Horizontal topology assets ???
 
- * Availability of the VNFs and the availability of the assets identified in the previous items.
-   This generally requires a change management
-   tracking/ticketing system system that identifies scheduled changes to all assets that contribute to the
+ * Availability of the VNFs and of the assets identified in the previous items.
+   Knowing the availability of related assests generally requires a change management
+   tracking/ticketing system system that identifies scheduled changes (unavailaibility) to all assets that contribute to the
    functioning of the network.
 
    * There is no change management ticketing system within ONAP. CMSO itself may serve as such in a very limited capacity as it
      tracks scheduled changes to VNFs. It does not track changes the all network assets which is necessarilty required for full
      conflict avoidance. For ONAP Dublin, the conflict avoidance will necessarily be limited to VNF level conflict
-     checking using CMSO as the source of asset avaialability/unavailability.
+     checking using CMSO as the source of asset (VNF) avaialability/unavailability.
 
 
 Change Management Ticketing System (TBD)

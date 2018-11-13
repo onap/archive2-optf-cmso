@@ -24,6 +24,7 @@ CMSO also models interfacing an external ticket/change management system to crea
    ./sections/architecture.rst
    ./sections/offeredapis.rst
    ./sections/consumedapis.rst
+   ./sections/delivery.rst
    ./sections/logging.rst
    ./sections/installation.rst
    ./sections/configuration.rst
