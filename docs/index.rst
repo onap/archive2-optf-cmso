@@ -1,8 +1,7 @@
 .. This work is licensed under a Creative Commons Attribution 4.0 International License.
 
 Optimization Framework: Change Management Schedule Optimization
-
-=============================================
+================================================================
 
 OOF-CMSO is an optimizing service that allows for the scheduling of VNF change management
 work flows to be executed at a time in the future. It enables a 3rd party client to provide 
