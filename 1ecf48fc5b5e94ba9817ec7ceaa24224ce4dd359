@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9adffdf1_20baeade",
+        "filename": "docs/index.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2018-11-14T19:48:38Z",
+      "side": 1,
+      "message": "Remove this extra line.   Generated html wont be correct",
+      "revId": "1ecf48fc5b5e94ba9817ec7ceaa24224ce4dd359",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
