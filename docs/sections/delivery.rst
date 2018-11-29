@@ -1,7 +1,7 @@
 OOF CMSO Delivery
 ======================
 
-OOF CMSO is made up of 3 docker containers
+OOF CMSO is made up of 3 docker containers depoloyed via OOM
 
  #. CMSO Service - Java server (Jersey)
  #. CMSO Database Initialization - Java wrapper invoking Liquibase schema management scripts
