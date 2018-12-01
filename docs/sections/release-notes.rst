@@ -10,7 +10,7 @@ Release Notes
 Version: 1.0.1
 --------------
 
-:Release Date: 2018-XX-XX (Casablanca)
+:Release Date: 2018-11-30 (Casablanca)
 
 **New Project**
 
