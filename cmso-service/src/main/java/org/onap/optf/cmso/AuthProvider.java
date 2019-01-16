@@ -1,6 +1,6 @@
 /*
  * Copyright © 2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Modifications Copyright © 2019 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,15 +30,14 @@
 */
 package org.onap.optf.cmso;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class AuthProvider
@@ -48,9 +47,7 @@ public class AuthProvider
 	Environment env;
 	
     @Override
-    public Authentication authenticate(Authentication authentication) 
-      throws AuthenticationException {
-    	org.springframework.security.web.authentication.www.BasicAuthenticationFilter f = null;
+    public Authentication authenticate(Authentication authentication) {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
         //TODO check credentials until we enable AAF 
