@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ import com.att.eelf.configuration.EELFManager;
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
     private static EELFLogger log = EELFManager.getInstance().getLogger(AutowiringSpringBeanJobFactory.class);
 
-    private transient AutowireCapableBeanFactory beanFactory;
+    private AutowireCapableBeanFactory beanFactory;
 
     @Override
     public void setApplicationContext(final ApplicationContext context) {

@@ -48,7 +48,7 @@ public class CMSEnvironmentPostProcessor implements EnvironmentPostProcessor {
         String pwd = environment.getProperty("cmso.database.password");
         if (pwd != null) {
             pwd = PropertiesManagement.getDecryptedValue(pwd);
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("spring.datasource.password", pwd);
             MapPropertySource propertySource = new MapPropertySource("abc", map);
             MutablePropertySources proeprtySources = environment.getPropertySources();
