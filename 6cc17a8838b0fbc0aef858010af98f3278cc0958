@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a66f9f1_38ad3efb",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/JerseyConfiguration.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2019-02-11T17:22:18Z",
+      "side": 1,
+      "message": "Looks like the copyright symbol got replaced.",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "6cc17a8838b0fbc0aef858010af98f3278cc0958",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
