@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.onap.optf.cmso.common.Mdc;
+
+import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,14 +53,11 @@ public class AdminToolImpl implements AdminTool {
 
     @Override
     public Response exec(String apiVersion, String id, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
         log.info("AdminTool.exec entered");
         if (id.length() < 4)
             return Response.ok("").build();
         String encrypted = pm.getEncryptedValue(id);
         Response response = Response.ok(encrypted).build();
-        Mdc.end(response);
-        audit.info("AdminTool");
         return response;
     }
 

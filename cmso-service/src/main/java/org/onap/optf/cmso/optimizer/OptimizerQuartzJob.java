@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,12 +39,14 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.filters.CMSOClientFilters;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.model.dao.ScheduleDAO;
 import org.quartz.DisallowConcurrentExecution;
@@ -115,13 +117,11 @@ public class OptimizerQuartzJob extends QuartzJobBean {
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
+            client.register(new CMSOClientFilters());
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
-            Mdc.metricStart(id.toString(), url);
             response = invocationBuilder.get();
-            Mdc.metricEnd(response);
-            metrics.info(LogMessages.OPTIMIZER_QUARTZ_JOB, id.toString());
             switch (response.getStatus()) {
                 case 200:
                     log.info("Returned from dispatch call");

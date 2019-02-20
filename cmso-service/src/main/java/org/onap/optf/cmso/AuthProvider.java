@@ -31,6 +31,7 @@
 package org.onap.optf.cmso;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,6 +41,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
+@Profile(SpringProfiles.PROPRIETARY__AUTHENTICATION)
+
 public class AuthProvider
   implements AuthenticationProvider {
  

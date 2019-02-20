@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,17 +32,20 @@
 package org.onap.optf.cmso.dispatcher;
 
 import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.eventq.DispatchedEventList;
+import org.onap.optf.cmso.filters.CMSOClientFilters;
 import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
 import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
 import org.onap.optf.cmso.model.dao.ScheduleDAO;
@@ -55,6 +58,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -121,13 +125,12 @@ public class CmJob implements Job {
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
+			client.register(new CMSOClientFilters());
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
             try {
-                Mdc.metricStart(id.toString(), url);
                 response = invocationBuilder.get();
-                Mdc.metricEnd(response);
                 metrics.info(LogMessages.CM_JOB, id.toString());
                 switch (response.getStatus()) {
                     case 200:

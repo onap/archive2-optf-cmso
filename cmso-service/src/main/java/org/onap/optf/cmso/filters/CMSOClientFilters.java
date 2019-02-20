@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,16 +32,23 @@
 package org.onap.optf.cmso.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
+
 import java.io.IOException;
+
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
+
+import org.onap.observations.Mdc;
+import org.onap.observations.Observation;
+import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.filters.MessageHeaders.HeadersEnum;
 import org.onap.optf.cmso.service.rs.CMSOServiceImpl;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -54,14 +61,23 @@ public class CMSOClientFilters implements ClientRequestFilter, ClientResponseFil
 
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
-        // On the way back
-        log.info("SchedulerClientFilters.filter(r,r)");
+		// On the way back
+		Mdc.metricEnd(responseContext);
+		Mdc.setCaller(17);
+		Observation.report(LogMessages.OUTGOING_MESSAGE_RETURNED, 
+				requestContext.getMethod(),
+				requestContext.getUri().getPath().toString(),
+				responseContext.getStatusInfo().toString());
     }
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        // On the way out
-        log.info("SchedulerClientFilters.filter(r)" + requestContext.getUri().getPath());
+		// On the way out 
+		Mdc.metricStart(requestContext);
+		Mdc.setCaller(17);
+		Observation.report(LogMessages.OUTGOING_MESSAGE, 
+				requestContext.getMethod(),
+				requestContext.getUri().getPath().toString());
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
 
         String transactionId = (String) headers.getFirst(MessageHeaders.HeadersEnum.TransactionID.toString());
