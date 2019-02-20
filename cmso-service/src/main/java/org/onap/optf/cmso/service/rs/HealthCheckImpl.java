@@ -32,11 +32,11 @@
 package org.onap.optf.cmso.service.rs;
 
 import java.util.List;
-import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.onap.optf.cmso.common.Mdc;
+
 import org.onap.optf.cmso.model.ApprovalType;
 import org.onap.optf.cmso.model.dao.ApprovalTypeDAO;
 import org.onap.optf.cmso.optimizer.CMSOptimizerClient;
@@ -47,13 +47,13 @@ import org.onap.optf.cmso.ticketmgt.TmClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 @Controller
 public class HealthCheckImpl implements HealthCheck {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(HealthCheckImpl.class);
-    private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
+    private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
     TmClient tmClient;
@@ -72,8 +72,7 @@ public class HealthCheckImpl implements HealthCheck {
 
     @Override
     public Response healthCheck(String apiVersion, Boolean checkInterfaces, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info("Entered healthcheck");
+        debug.debug("Entered healthcheck");
         Response response = null;
         HealthCheckMessage hc = new HealthCheckMessage();
         hc.setHealthy(true);
@@ -89,8 +88,6 @@ public class HealthCheckImpl implements HealthCheck {
             response = Response.ok().entity(hc).build();
         else
             response = Response.status(Response.Status.BAD_REQUEST).entity(hc).build();
-        Mdc.end(response);
-        audit.info("Healthcheck healthy={0}", hc.getHealthy().toString());
         return response;
     }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -47,12 +48,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import org.apache.commons.lang3.text.StrSubstitutor;
+
+import org.apache.commons.text.StringSubstitutor;
 import org.joda.time.format.ISODateTimeFormat;
+import org.onap.observations.Mdc;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CmHelpers;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.common.exceptions.CMSException;
 import org.onap.optf.cmso.filters.CMSOClientFilters;
@@ -72,6 +75,7 @@ import org.onap.optf.cmso.ticketmgt.bean.TmChangeInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -81,9 +85,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
 public class TmClient {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(TmClient.class);
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
-    private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
@@ -153,12 +154,12 @@ public class TmClient {
                 }
                     break;
                 default: {
-                    errors.error(LogMessages.UNEXPECTED_RESPONSE, "TM", String.valueOf(response.getStatus()),
+                    Observation.report(LogMessages.UNEXPECTED_RESPONSE, "TM", String.valueOf(response.getStatus()),
                             response.toString());
                 }
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.toString());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.toString());
         } finally {
             Mdc.restore(mdcSave);
         }
@@ -225,10 +226,10 @@ public class TmClient {
         try {
             Response response = null;
             debug.debug("postCloseChangeTicket {}", closeChangeRecord.asText());
-            log.info(LogMessages.TM_CLOSE_CHANGE_RECORD, "Begin", scheduleId, changeId);
+            Observation.report(LogMessages.TM_CLOSE_CHANGE_RECORD, "Begin", scheduleId, changeId);
             // response = vtmPost(url, closeChangeRecord, scheduleId);
             response = tmPost(Endpoint.CLOSE, closeChangeRecord, scheduleId);
-            log.info(LogMessages.TM_CLOSE_CHANGE_RECORD, "End", scheduleId, changeId);
+            Observation.report(LogMessages.TM_CLOSE_CHANGE_RECORD, "End", scheduleId, changeId);
             switch (response.getStatus()) {
                 case 200: {
                     String resp = response.readEntity(String.class);
@@ -239,7 +240,7 @@ public class TmClient {
                     String respString = response.readEntity(String.class);
                     debug.debug("response=" + respString);
                     if (!isAlreadyClosed(respString)) {
-                        errors.error(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
+                        Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                 response.toString() + " : " + respString);
                         throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
                                 scheduleId, changeId, respString);
@@ -248,14 +249,14 @@ public class TmClient {
                     break;
                 default: {
                     String message = response.readEntity(String.class);
-                    errors.error(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
+                    Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                             response.toString() + " : " + message);
                     throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
                             scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET, scheduleId,
                     changeId, e.toString());
         } finally {
@@ -283,7 +284,7 @@ public class TmClient {
                 }
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
         return false;
     }
@@ -351,7 +352,7 @@ public class TmClient {
         for (String name : variables.keySet()) {
             Object value = variables.get(name);
             if (value instanceof String) {
-                StrSubstitutor sub = new StrSubstitutor(variables);
+                StringSubstitutor sub = new StringSubstitutor(variables);
                 value = sub.replace(value.toString());
                 variables.put(name, value);
             }
@@ -366,10 +367,10 @@ public class TmClient {
         try {
             Response response = null;
             debug.debug("postCreateChangeTicket {}", createChangeRecord.toString());
-            log.info(LogMessages.TM_CREATE_CHANGE_RECORD, "Begin", scheduleId);
+            Observation.report(LogMessages.TM_CREATE_CHANGE_RECORD, "Begin", scheduleId);
             // response = vtmPost(url, createChangeRecord, scheduleId);
             response = tmPost(Endpoint.CREATE, createChangeRecord, scheduleId);
-            log.info(LogMessages.TM_CREATE_CHANGE_RECORD, "End", scheduleId);
+            Observation.report(LogMessages.TM_CREATE_CHANGE_RECORD, "End", scheduleId);
             switch (response.getStatus()) {
                 case 200: {
                     ObjectNode json = response.readEntity(ObjectNode.class);
@@ -382,7 +383,7 @@ public class TmClient {
                             debug.debug("ChangeId=" + changeId);
                         }
                     } else {
-                        errors.error(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
+                        Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                 response.toString() + " : " + "Response is empty");
                         throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                                 scheduleId, "Response is empty");
@@ -391,14 +392,14 @@ public class TmClient {
                     break;
                 default: {
                     String message = response.readEntity(String.class);
-                    errors.error(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
+                    Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                             response.toString() + " : " + message);
                     throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                             scheduleId, message);
                 }
             }
         } catch (ProcessingException e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
                     e.toString());
         } finally {
@@ -415,10 +416,10 @@ public class TmClient {
 
             Response response = null;
             debug.debug("postUpdateChangeTicket {}", updateChangeRecord.toString());
-            log.info(LogMessages.TM_UPDATE_CHANGE_RECORD, "Begin", scheduleId, changeId, url);
+            Observation.report(LogMessages.TM_UPDATE_CHANGE_RECORD, "Begin", scheduleId, changeId, url);
             // response = vtmPost(url, updateChangeRecord, scheduleId);
             response = tmPost(Endpoint.UPDATE, updateChangeRecord, scheduleId);
-            log.info(LogMessages.TM_UPDATE_CHANGE_RECORD, "End", scheduleId, changeId, url);
+            Observation.report(LogMessages.TM_UPDATE_CHANGE_RECORD, "End", scheduleId, changeId, url);
             switch (response.getStatus()) {
                 case 200: {
                     String resp = response.readEntity(String.class);
@@ -427,14 +428,14 @@ public class TmClient {
                     break;
                 default: {
                     String message = response.readEntity(String.class);
-                    errors.error(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
+                    Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                             response.toString() + " : " + message);
                     throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET,
                             scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET, scheduleId,
                     changeId, e.toString());
         } finally {
@@ -460,16 +461,13 @@ public class TmClient {
             ObjectMapper mapper = new ObjectMapper();
             String jsonRequest = mapper.writeValueAsString(request);
             debug.debug("vTM URL = " + url + " user=" + user + " : " + jsonRequest);
-            Mdc.metricStart(scheduleId, url);
             response = invocationBuilder.post(Entity.json(request));
-            Mdc.metricEnd(response);
-            metrics.info(LogMessages.TM_API, url);
             // String message = response.readEntity(String.class);
             // debug.debug("Return from " + url + " : " + response.toString() + "\n" +
             // message);
             debug.debug("Return from " + url + " : " + response.toString());
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
             throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
                     e.getMessage());
         }
@@ -496,24 +494,21 @@ public class TmClient {
                 ObjectMapper mapper = new ObjectMapper();
                 String jsonRequest = mapper.writeValueAsString(request);
                 debug.debug("TM URL = " + url + " user=" + user + " : " + jsonRequest);
-                Mdc.metricStart(scheduleId, url);
                 response = invocationBuilder.post(Entity.json(request));
-                Mdc.metricEnd(response);
-                metrics.info(LogMessages.TM_API, url);
                 // String message = response.readEntity(String.class);
                 // debug.debug("Return from " + url + " : " + response.toString() + "\n" +
                 // message);
                 debug.debug("Return from " + url + " : " + response.toString());
                 return response;
             } catch (ProcessingException e) {
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
                 url = tmEndpoints.getNextEndpoint(ep, endpoints);
                 if (url == null || !tryNextURL(e)) {
                     throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                             scheduleId, e.getMessage());
                 }
             } catch (Exception e) {
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
                 throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                         scheduleId, e.getMessage());
             }
