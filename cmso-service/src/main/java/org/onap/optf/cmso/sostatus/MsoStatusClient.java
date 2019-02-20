@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
+ * Copyright © 2017-2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +34,7 @@ package org.onap.optf.cmso.sostatus;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -41,10 +42,12 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.onap.observations.Mdc;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.filters.CMSOClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
@@ -59,6 +62,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,10 +70,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
 public class MsoStatusClient {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(MsoStatusClient.class);
-    private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
     ChangeManagementScheduleDAO cmScheduleDAO;
@@ -91,12 +92,12 @@ public class MsoStatusClient {
         try {
             ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(id);
             if (cmSchedule == null) {
-                log.warn(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id.toString());
+                Observation.report(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id.toString());
                 return;
             }
             poll(cmSchedule);
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
         debug.debug(LogMessages.MSO_STATUS_JOB, "Exited", id.toString());
     }
@@ -120,10 +121,7 @@ public class MsoStatusClient {
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
             cmSchedule.setMsoTimeMillis(System.currentTimeMillis());
-            Mdc.metricStart(requestId, url);
             response = invocationBuilder.get();
-            Mdc.metricEnd(response);
-            metrics.info(LogMessages.SO_API, requestId);
             switch (response.getStatus()) {
                 case 200: {
                     String respString = response.readEntity(String.class);
@@ -136,7 +134,7 @@ public class MsoStatusClient {
                         try {
                             msoStatus = MSO_STATUS.valueOf(resp.getRequestState());
                         } catch (Exception e) {
-                            errors.error("Unregcognized status from MSO: " + resp.getRequestState());
+                        	Observation.report(LogMessages.UNRECOGNIZED_MSO_STATUS, resp.getRequestState());
                         }
                         long finishTime = getFinishTime(resp);
                         switch (msoStatus) {
@@ -185,15 +183,13 @@ public class MsoStatusClient {
                 }
             }
         } catch (ProcessingException e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             // Probably a transient error... Keep polling
             cmSchedule.setMsoTimeMillis(System.currentTimeMillis());
             cmSchedule.setMsoStatus("ConnectionException");
             cmSchedule.setMsoMessage("Could not call MSO:" + e.getMessage());
         } catch (Exception e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             // Probably a transient error... Keep polling
             cmSchedule.setMsoTimeMillis(System.currentTimeMillis());
             cmSchedule.setMsoStatus("Exception");
@@ -216,8 +212,7 @@ public class MsoStatusClient {
                 Date dateTime = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z").parse(timestr);
                 finishTime = dateTime.getTime();
             } catch (Exception e) {
-                debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse MSO fisnish timestamp: " + timestr);
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse MSO fisnish timestamp: " + timestr);
+            	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse MSO finish timestamp: " + timestr);
             }
         }
         return finishTime;
@@ -238,8 +233,7 @@ public class MsoStatusClient {
                     om.treeToValue(requestStatus, MsoOrchestrationQueryResponse.class);
             return msoResponse;
         } catch (Exception e) {
-            log.warn("Exception parsing MSO response", e);
-            log.warn("MSO response:\n" + resp);
+        	Observation.report(LogMessages.UNABLE_TO_PARSE_MSO_RESPONSE, e, e.getMessage(), resp);
         }
         return null;
     }
@@ -260,14 +254,13 @@ public class MsoStatusClient {
 
         Client client = ClientBuilder.newClient();
         client.register(new BasicAuthenticatorFilter(user, pass));
+        client.register(new CMSOClientFilters());
+
         WebTarget target = client.target(url);
         Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
         Response response = null;
         try {
-            Mdc.metricStart(requestId, url);
             response = invocationBuilder.get();
-            Mdc.metricEnd(response);
-            metrics.info(LogMessages.SO_API, requestId);
             switch (response.getStatus()) {
                 case 200:
                 case 204:

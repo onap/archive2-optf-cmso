@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2019 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,19 +39,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
-import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
 import org.joda.time.DateTime;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.ApprovalStatusEnum;
 import org.onap.optf.cmso.common.ApprovalTypesEnum;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.exceptions.CMSException;
 import org.onap.optf.cmso.common.exceptions.CMSNotFoundException;
 import org.onap.optf.cmso.eventq.CMSQueueJob;
@@ -83,15 +84,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 @Controller
 public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOService {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(CMSOServiceImpl.class);
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
-    private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
-    private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
@@ -129,15 +127,14 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             String scheduleName, String userId, String status, String createDateTime, String optimizerStatus,
             String workflowName, UriInfo uri, HttpServletRequest request) {
 
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info(LogMessages.SEARCH_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), uri.toString(), "");
+        Observation.report(LogMessages.SEARCH_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), uri.toString(), "");
         Response response = null;
         List<Schedule> schedules = new ArrayList<Schedule>();
         try {
-            log.info("Timezone=" + TimeZone.getDefault());
-            MultivaluedMap<String, String> qp = uri.getQueryParameters();
+            debug.debug("Timezone={}", TimeZone.getDefault());
             StringBuilder where = new StringBuilder();
             int maxRows = 0;
+            //MultivaluedMap<String, String> qp = uri.getQueryParameters();
             // buildWhere(qp, where);
             List<ScheduleQuery> list = scheduleQueryDAO.searchSchedules(where.toString(), maxRows);
             if (list == null || !list.iterator().hasNext()) {
@@ -162,21 +159,14 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             }
             response = Response.ok(schedules.toArray(new Schedule[schedules.size()])).build();
         } catch (CMSException e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            log.info(e.getMessage());
+        	Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.serverError().build();
         }
 
-        Mdc.end(response);
-        log.info(LogMessages.SEARCH_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), schedules.toString(),
-                response.getStatusInfo().toString());
-        audit.info(LogMessages.SEARCH_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), schedules.toString(),
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.SEARCH_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), schedules.toString(),
+        Observation.report(LogMessages.SEARCH_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), schedules.toString(),
                 response.getStatusInfo().toString());
         return response;
     }
@@ -185,8 +175,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
     @Transactional
     public Response createScheduleRequest(String apiVersion, String scheduleId, CMSMessage scheduleMessage,
             HttpServletRequest request) {
-        Mdc.begin(request, scheduleId);
-        log.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId,
+        Observation.report(LogMessages.CREATE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId,
                 scheduleMessage.toString());
         Response response = null;
         try {
@@ -208,25 +197,6 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             if (immediate) {
                 createChangeManagementImmediate(schedule, scheduleMessage);
 
-                // *******************************************************************************************
-                // This flush does nothing because JPA is expecting
-                // JtaTransactionCoordinatorImpl
-                // rather than
-                // JdbcResourceLocalTransactionCoordinatorImpl
-                // (it does an instance of and JdbcResourceLocalTransactionCoordinatorImpl
-                // fails)
-                // SO the automatic approval and creation of tickets cannot
-                // rely retrieving the entities from the Schedule entity as the SQL has not yet
-                // executed.
-                // Under future flow, they can because the data is committed in a separate
-                // transaction
-                // Three choices
-                // 1. Pass domainData through all of the methods. ***
-                // 2. Re-structre the code to have @Transactionals which would break the top
-                // level rollback strategy
-                // 3. Debug JPA (Still worth doing, maybe some kind of goofy parameter.)
-                TransactionAspectSupport.currentTransactionStatus().flush();
-
                 // Create automatic approval
                 ApprovalMessage am = new ApprovalMessage();
                 am.setApprovalStatus(ApprovalStatusEnum.Accepted);
@@ -239,25 +209,15 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             }
             response = Response.accepted().build();
         } catch (CMSException e) {
-            debug.debug(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.info(e.getMessage());
+        	Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
-            Mdc.end(response);
-            audit.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId, "");
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response = Response.serverError().build();
-            Mdc.end(response);
-            audit.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId, "");
         }
-        Mdc.end(response);
-        log.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        audit.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
+        Observation.report(LogMessages.CREATE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
                 response.getStatusInfo().toString());
         return response;
     }
@@ -326,7 +286,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
         } catch (CMSException e) {
             throw e;
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
         }
         // If we got here, there are no change windows....
@@ -440,7 +400,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
                 try {
                     CmDomainDataEnum.valueOf(name);
                 } catch (Exception e) {
-                    log.warn(LogMessages.UNDEFINED_DOMAIN_DATA_ATTRIBUTE, DomainsEnum.ChangeManagement.name(), name,
+                    Observation.report(LogMessages.UNDEFINED_DOMAIN_DATA_ATTRIBUTE, DomainsEnum.ChangeManagement.name(), name,
                             value);
                 }
             }
@@ -456,9 +416,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
     @Override
     @Transactional
     public Response deleteScheduleRequest(String apiVersion, String scheduleId, HttpServletRequest request) {
-        Mdc.begin(request, scheduleId);
         Response response = null;
-        log.info(LogMessages.DELETE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId, "");
+        Observation.report(LogMessages.DELETE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId, "");
         try {
             Schedule schedule = scheduleDAO.findByDomainScheduleID(DomainsEnum.ChangeManagement.toString(), scheduleId);
             if (schedule == null) {
@@ -469,20 +428,14 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             response = Response.noContent().build();
         } catch (CMSException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.info(e.getMessage());
+            Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response = Response.serverError().build();
         }
-        Mdc.end(response);
-        log.info(LogMessages.DELETE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        audit.info(LogMessages.DELETE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.DELETE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
+        Observation.report(LogMessages.DELETE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
                 response.getStatusInfo().toString());
         return response;
     }
@@ -490,8 +443,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
     @Override
     public Response getScheduleRequestInfo(String apiVersion, String scheduleId, HttpServletRequest request) {
         Response response = null;
-        Mdc.begin(request, scheduleId);
-        log.info(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Received", request.getRemoteAddr(), scheduleId, "");
+        Observation.report(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Received", request.getRemoteAddr(), scheduleId, "");
         Schedule schedule = null;
         try {
             schedule = scheduleDAO.findByDomainScheduleID(DomainsEnum.ChangeManagement.toString(), scheduleId);
@@ -501,20 +453,13 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             }
             response = Response.ok().entity(schedule).build();
         } catch (CMSException e) {
-            log.info(e.getMessage());
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.serverError().build();
         }
-        Mdc.end(response);
-        audit.info(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        log.info(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Returned", request.getRemoteAddr(), scheduleId,
+        Observation.report(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Returned", request.getRemoteAddr(), scheduleId,
                 response.getStatusInfo().toString());
         return response;
     }
@@ -524,8 +469,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
     public Response approveScheduleRequest(String apiVersion, String scheduleId, ApprovalMessage approval,
             HttpServletRequest request) {
         Response response = null;
-        Mdc.begin(request, scheduleId);
-        log.info(LogMessages.APPROVE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId,
+        Observation.report(LogMessages.APPROVE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId,
                 approval.toString());
         try {
             String domain = DomainsEnum.ChangeManagement.toString();
@@ -537,19 +481,14 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             response = Response.noContent().build();
         } catch (CMSException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            log.info(e.getMessage());
+            Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             response = Response.serverError().build();
         }
-        Mdc.end(response);
-        log.info(LogMessages.APPROVE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId, "");
-        audit.info(LogMessages.APPROVE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.APPROVE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId,
-                response.getStatusInfo().toString());
+        Observation.report(LogMessages.APPROVE_SCHEDULE_REQUEST, "Returned", request.getRemoteAddr(), scheduleId, "");
         return response;
     }
 
@@ -645,14 +584,13 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             Integer maxSchedules, String lastScheduleId, Integer concurrencyLimit, UriInfo uri,
             HttpServletRequest request) {
 
-        Mdc.begin(request, UUID.randomUUID().toString());
         Response response = null;
-        log.info(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Received", request.getRemoteAddr(),
+        Observation.report(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Received", request.getRemoteAddr(),
                 uri.getRequestUri().getQuery());
         List<CmDetailsMessage> schedules = new ArrayList<CmDetailsMessage>();
 
         try {
-            log.info("Timezone=" + TimeZone.getDefault());
+            debug.debug("Timezone={}" , TimeZone.getDefault());
             MultivaluedMap<String, String> qp = uri.getQueryParameters();
             StringBuilder where = new StringBuilder();
             int maxRows = 0;
@@ -673,20 +611,13 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             }
             response = Response.ok(schedules.toArray(new CmDetailsMessage[schedules.size()])).build();
         } catch (CMSException e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            log.info(e.getMessage());
+            Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.serverError().build();
         }
-        Mdc.end(response);
-        log.info(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Returned", request.getRemoteAddr(),
-                response.getStatusInfo().toString());
-        audit.info(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Returned", request.getRemoteAddr(),
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Returned", request.getRemoteAddr(),
+        Observation.report(LogMessages.SEARCH_SCHEDULE_REQUEST_DETAILS, "Returned", request.getRemoteAddr(),
                 response.getStatusInfo().toString());
         return response;
 

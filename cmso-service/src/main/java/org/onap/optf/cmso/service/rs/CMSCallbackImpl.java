@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2019 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,10 @@ import javax.ws.rs.core.UriInfo;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
+import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.exceptions.CMSException;
 import org.onap.optf.cmso.common.exceptions.CMSNotFoundException;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
@@ -88,7 +88,6 @@ public class CMSCallbackImpl extends BaseSchedulerServiceImpl implements CMSOpti
     public Response sniroCallback(String apiVersion, CMOptimizerResponse sniroResponse, UriInfo uri,
             HttpServletRequest request) {
         Response response = null;
-        Mdc.begin(request, sniroResponse.getTransactionId());
         log.info(LogMessages.PROCESS_OPTIMIZER_CALLBACK, "Received", request.getRemoteAddr(), "");
         log.info(LogMessages.OPTIMIZER_REQUEST, "Callback received", sniroResponse.getTransactionId(),
                 uri.getAbsolutePath().toString());
@@ -138,13 +137,6 @@ public class CMSCallbackImpl extends BaseSchedulerServiceImpl implements CMSOpti
             response = Response.serverError().entity(e.getMessage()).build();
         } finally {
         }
-        Mdc.end(response);
-        log.info(LogMessages.OPTIMIZER_REQUEST, "Callback completed", sniroResponse.getTransactionId(),
-                uri.getAbsolutePath().toString());
-        audit.info(LogMessages.PROCESS_OPTIMIZER_CALLBACK, "Returned", request.getRemoteAddr(),
-                response.getStatusInfo().toString());
-        metrics.info(LogMessages.PROCESS_OPTIMIZER_CALLBACK, "Returned", request.getRemoteAddr(),
-                response.getStatusInfo().toString());
         return response;
     }
 
