@@ -1,45 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
- Copyright © 2017-2018 AT&T Intellectual Property.
- Modifications Copyright © 2018 IBM.
- 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- 
-         http://www.apache.org/licenses/LICENSE-2.0
- 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- 
- 
- Unless otherwise specified, all documentation contained herein is licensed
- under the Creative Commons License, Attribution 4.0 Intl. (the "License");
- you may not use this documentation except in compliance with the License.
- You may obtain a copy of the License at
- 
-         https://creativecommons.org/licenses/by/4.0/
- 
- Unless required by applicable law or agreed to in writing, documentation
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+<!--
+
+    ============LICENSE_START=======================================================
+    org.onap.optf.cmso
+    ================================================================================
+    Copyright © 2017-2019 AT&T Intellectual Property. All rights reserved.
+    ================================================================================
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    ============LICENSE_END=========================================================
+
 -->
+
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.onap.optf.cmso</groupId>
-        <artifactId>cmso</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.onap.optf.cmso</groupId>
+		<artifactId>cmso</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</parent>
 
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>cmso-service</artifactId>
@@ -50,10 +42,10 @@
 
 	<properties>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
-	
+
 		<cmso.project.version>${project.version}</cmso.project.version>
 		<cmso.build.timestamp>${maven.build.timestamp}</cmso.build.timestamp>
-		
+
 		<service.name>cmso</service.name>
 		<release-tag>Casablanca</release-tag>
 		<name.space>org.onap.optf.cmso</name.space>
@@ -74,6 +66,7 @@
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 		<mariadb.version>2.2.1</mariadb.version>
 		<swagger.directory>${basedir}/src/main/resources/swagger-ui/dist</swagger.directory>
+        <aaf.version>2.1.4</aaf.version>
 
 		<!-- Sonar -->
 		<ilib.version>2.0.7</ilib.version>
@@ -246,8 +239,6 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${springfox.swagger2.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.commons</groupId> <artifactId>commons-lang3</artifactId> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -260,14 +251,13 @@
 		</dependency>
 
 		<dependency>
-    		<groupId>joda-time</groupId>
-    		<artifactId>joda-time</artifactId>
-    		<version>2.8.1</version>
-		</dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			</dependency>
 		<dependency>
-    		<groupId>org.apache.commons</groupId>
-    		<artifactId>commons-lang3</artifactId>
-    		<version>3.8.1</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.6</version>
 		</dependency>
 		<!-- Testing Dependencies -->
 		<!-- <dependency> <groupId>org.powermock</groupId> <artifactId>powermock-api-mockito2</artifactId> 
@@ -282,7 +272,12 @@
 			<groupId>org.jacoco</groupId>
 			<artifactId>jacoco-maven-plugin</artifactId>
 			<version>0.8.1</version>
-            <scope>test</scope>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.onap.aaf.authz</groupId>
+			<artifactId>aaf-cadi-aaf</artifactId>
+			<version>${aaf.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -365,7 +360,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
@@ -383,52 +378,52 @@
 				</executions>
 			</plugin>
 			<plugin>
-			        <groupId>io.fabric8</groupId>
-			        <artifactId>docker-maven-plugin</artifactId>
-			        <version>0.26.0</version>
-			        <configuration>
-			                <verbose>true</verbose>
-			                <apiVersion>1.23</apiVersion>
-			                <images>
-								<image>
-										<name>onap/optf-cmso-service</name>
-										<alias>onap-optf-cmso-service</alias>
-										<build>
-												<cleanup>true</cleanup>
-												<tags>
-														<tag>latest</tag>
-														<tag>${project.docker.latesttagtimestamp.version}</tag>
-														<tag>${project.docker.latesttag.version}</tag>												
-												</tags>
-												<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
-												<assembly>
-														<descriptor>${project.basedir}/src/main/docker/assembly/cmso-files.xml</descriptor>
-														<name>onap-cmso</name>
-												</assembly>
-										</build>
-								</image>
-			                </images>
-			        </configuration>
-			        <executions>
-			                <execution>
-			                        <id>generate-images</id>
-			                        <phase>install</phase>
-			                        <goals>
-			                                <goal>build</goal>
-			                        </goals>
-			                </execution>
-			                <execution>
-			                        <id>push-images</id>
-			                        <phase>deploy</phase>
-			                        <goals>
-			                                <goal>build</goal>
-			                                <goal>push</goal>
-			                        </goals>
-			                        <configuration>
-			                                <image>onap/optf-cmso-service:%l</image>
-			                        </configuration>
-			                </execution>
-			        </executions>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.26.0</version>
+				<configuration>
+					<verbose>true</verbose>
+					<apiVersion>1.23</apiVersion>
+					<images>
+						<image>
+							<name>onap/optf-cmso-service</name>
+							<alias>onap-optf-cmso-service</alias>
+							<build>
+								<cleanup>true</cleanup>
+								<tags>
+									<tag>latest</tag>
+									<tag>${project.docker.latesttagtimestamp.version}</tag>
+									<tag>${project.docker.latesttag.version}</tag>
+								</tags>
+								<dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+								<assembly>
+									<descriptor>${project.basedir}/src/main/docker/assembly/cmso-files.xml</descriptor>
+									<name>onap-cmso</name>
+								</assembly>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-images</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>push-images</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>push</goal>
+						</goals>
+						<configuration>
+							<image>onap/optf-cmso-service:%l</image>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<!-- mention the logback.xml location through system property or environment 
@@ -436,6 +431,13 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>etc/config</directory>
 				<filtering>true</filtering>
 				<includes>
 					<include>**/*</include>

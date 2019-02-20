@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2019 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,17 +33,21 @@ package org.onap.optf.cmso.sostatus;
 
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.onap.observations.Mdc;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.filters.CMSOClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
@@ -56,6 +60,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -67,10 +72,7 @@ import com.att.eelf.configuration.EELFManager;
 @Component
 @DisallowConcurrentExecution
 public class ScheduleStatusJob implements Job {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(ScheduleStatusJob.class);
-    private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
     ScheduleDAO scheduleDAO;
@@ -95,7 +97,7 @@ public class ScheduleStatusJob implements Job {
                 dispatchMso(s.getId());
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
         try {
 
@@ -107,7 +109,7 @@ public class ScheduleStatusJob implements Job {
                 dispatchScheduleStatusChecker(s.getId());
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
         debug.debug(LogMessages.SCHEDULE_STATUS_JOB, "Exited");
     }
@@ -122,17 +124,15 @@ public class ScheduleStatusJob implements Job {
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
+            client.register(CMSOClientFilters.class);
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
             try {
-                Mdc.metricStart(id.toString(), url);
                 response = invocationBuilder.get();
-                Mdc.metricEnd(response);
-                metrics.info(LogMessages.SCHEDULE_STATUS_JOB, id.toString());
                 switch (response.getStatus()) {
                     case 200:
-                        log.info("Returned from dispatch call");
+                        debug.debug("Returned from dispatch call");
                         break;
                     case 400: // Bad request
                     default: {
@@ -142,12 +142,10 @@ public class ScheduleStatusJob implements Job {
                     }
                 }
             } catch (Exception e) {
-                debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             }
         } catch (Exception e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         } finally {
             Mdc.restore(mdcSave);
         }
@@ -164,17 +162,15 @@ public class ScheduleStatusJob implements Job {
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
+            client.register(CMSOClientFilters.class);
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
             try {
-                Mdc.metricStart(id.toString(), url);
                 response = invocationBuilder.get();
-                Mdc.metricEnd(response);
-                metrics.info(LogMessages.SCHEDULE_STATUS_JOB, id.toString());
                 switch (response.getStatus()) {
                     case 200:
-                        log.info("Returned from dispatch call");
+                        debug.debug("Returned from dispatch call");
                         break;
                     case 400: // Bad request
                     default: {
@@ -184,12 +180,10 @@ public class ScheduleStatusJob implements Job {
                     }
                 }
             } catch (Exception e) {
-                debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             }
         } catch (Exception e) {
-            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         } finally {
             Mdc.restore(mdcSave);
         }

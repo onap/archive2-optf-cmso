@@ -1,6 +1,5 @@
 /*
- * Copyright © 2018 AT&T Intellectual Property.
- * Modifications Copyright © 2019 IBM.
+ * Copyright © 2019 AT&T Intellectual Property.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,39 +27,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 */
-package org.onap.optf.cmso;
+package org.onap.optf.cmso.aaf;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.onap.optf.cmso.SpringProfiles;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import java.util.ArrayList;
-
-@Component
-@Profile(SpringProfiles.PROPRIETARY__AUTHENTICATION)
-
-public class AuthProvider
-  implements AuthenticationProvider {
+@Configuration
+@EnableWebSecurity
+@ComponentScan("org.onap.optf")
+@Profile(SpringProfiles.AAF_AUTHENTICATION)
+public class AafSecurityConfig extends WebSecurityConfigurerAdapter {
+  
  
-	@Autowired
-	Environment env;
-	
     @Override
-    public Authentication authenticate(Authentication authentication) {
-        String name = authentication.getName();
-        String password = authentication.getCredentials().toString();
-        //TODO check credentials until we enable AAF 
-        return new UsernamePasswordAuthenticationToken(
-          name, password, new ArrayList<>());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+  
     }
  
     @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(
-          UsernamePasswordAuthenticationToken.class);
+    protected void configure(HttpSecurity http) throws Exception {
+    	
+        http.csrf().disable();
+        
     }
 }

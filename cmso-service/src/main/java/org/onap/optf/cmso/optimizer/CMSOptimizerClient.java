@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2019 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -44,10 +45,12 @@ import javax.ws.rs.client.ResponseProcessingException;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.onap.observations.Mdc;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.filters.CMSOClientFilters;
 import org.onap.optf.cmso.model.Schedule;
@@ -64,15 +67,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
 public class CMSOptimizerClient {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(CMSOptimizerClient.class);
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
-    private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
@@ -117,7 +118,7 @@ public class CMSOptimizerClient {
                 }
                 buildRequest(cmReq, info, schedule, snirocallbackurl);
             } catch (Exception e) {
-                errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
                 schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
                 schedule.setOptimizerMessage("Unexpected exception: " + e.getMessage());
                 updateScheduleStatus(schedule);
@@ -146,13 +147,9 @@ public class CMSOptimizerClient {
                 updateScheduleStatus(schedule);
                 debug.debug("SNIRO url / user: " + snirourl + " / " + username);
                 debug.debug("SNIRO Request: " + new ObjectMapper().writeValueAsString(cmReq));
-                log.info(LogMessages.OPTIMIZER_REQUEST, "Begin", schedule.getScheduleId(), snirourl);
-                Mdc.metricStart(schedule.getScheduleId(), snirourl);
+                Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", schedule.getScheduleId(), snirourl);
                 Response response = invocationBuilder.post(Entity.json(cmReq));
-
-                Mdc.metricEnd(response);
-                metrics.info(LogMessages.OPTIMIZER_REQUEST, "End", schedule.getScheduleId(), snirourl);
-                log.info(LogMessages.OPTIMIZER_REQUEST, "End", schedule.getScheduleId(), snirourl);
+                Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", schedule.getScheduleId(), snirourl);
                 switch (response.getStatus()) {
                     case 202:
                         debug.debug("Successfully scheduled optimization: " + schedule.getScheduleId());
@@ -171,7 +168,7 @@ public class CMSOptimizerClient {
                         tries++;
                         schedule.setOptimizerAttemptsToSchedule(tries);
                         updateScheduleStatus(schedule);
-                        errors.error(LogMessages.OPTIMIZER_EXCEPTION, message);
+                        Observation.report(LogMessages.OPTIMIZER_EXCEPTION, message);
                         return true;
                     }
 
@@ -188,7 +185,7 @@ public class CMSOptimizerClient {
                         updateScheduleStatus(schedule);
                         /// Got processing error response
                         // may be transient, wait for next cycle.
-                        errors.error(LogMessages.OPTIMIZER_EXCEPTION, message);
+                        Observation.report(LogMessages.OPTIMIZER_EXCEPTION, message);
                         // Wait until next cycle and try again.
                         return false;
                     }
@@ -207,7 +204,7 @@ public class CMSOptimizerClient {
                 updateScheduleStatus(schedule);
                 // Getting invalid response from SNIRO.
                 // May be data related.
-                errors.error(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
+                Observation.report(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
                 return false;
 
             } catch (ProcessingException e) {
@@ -216,12 +213,12 @@ public class CMSOptimizerClient {
                 schedule.setStatus(CMSStatusEnum.PendingSchedule.toString());
                 updateScheduleStatus(schedule);
                 /// Cannot connect to SNIRO
-                errors.error(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
+                Observation.report(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
                 // Wait until next cycle
                 return false;
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
 
         } finally {
             Mdc.restore(mdcSave);
@@ -285,7 +282,7 @@ public class CMSOptimizerClient {
             // We may have an issue when upgrading....
             // Perhaps We create ChangeManagementSchedulingInfoV1, ...V2, etc.
             // ANd try them one after another....
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse message. Format changed?");
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse message. Format changed?");
             schedule.setOptimizerStatus("Failed to parse SNIRO request");
             schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
             schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
@@ -336,15 +333,14 @@ public class CMSOptimizerClient {
 
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(username, password));
+            client.register(new CMSOClientFilters());
+
             WebTarget sniroTarget = client.target(snirourl);
             Invocation.Builder invocationBuilder = sniroTarget.request(MediaType.APPLICATION_JSON);
             debug.debug("SNIRO url / user: " + snirourl + " / " + username);
-            log.info(LogMessages.OPTIMIZER_REQUEST, "Begin", "healthcheck", snirourl);
-            Mdc.metricStart("healthcjeck", snirourl);
+            Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", "healthcheck", snirourl);
             Response response = invocationBuilder.post(Entity.json(cmReq));
-            Mdc.metricEnd(response);
-            metrics.info(LogMessages.OPTIMIZER_REQUEST, "End", "healthcheck", snirourl);
-            log.info(LogMessages.OPTIMIZER_REQUEST, "End", "healthcheck", snirourl);
+            Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", "healthcheck", snirourl);
             String message = response.getStatus() + ":" + response.readEntity(String.class);
             switch (response.getStatus()) {
                 case 202:
@@ -366,7 +362,7 @@ public class CMSOptimizerClient {
                     break;
             }
         } catch (Exception e) {
-            errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.toString());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.toString());
             hcc.setStatus(e.toString());
         } finally {
             Mdc.restore(mdcSave);
