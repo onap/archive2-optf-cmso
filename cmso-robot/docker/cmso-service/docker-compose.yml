@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb:10.1.11
+    volumes:
+      - "/var/lib/mysql"
+      - "../mariadb/conf1:/etc/mysql/conf.d:ro"
+    environment:
+      - MYSQL_ROOT_PASSWORD=beer
+    ports:
+      - "8806:3306"
+
+  db-init:
+    image: onap/optf-cmso-dbinit
+    volumes:
+      - "../etc:/share/etc:rw"
+      - "../logs:/share/logs:rw"
+    depends_on:
+      - mariadb
+    environment: 
+      - DB_HOST=mariadb
+    entrypoint: "bash -x /share/etc/startDbinitService.sh"
+
+  cmso-service:
+    image: onap/optf-cmso-service
+    volumes:
+      - "../etc:/share/etc:rw"
+      - "../logs:/share/logs:rw"
+      - "../debug-logs:/share/debug-logs:rw"
+    depends_on:
+      - db-init
+    entrypoint: "bash -x /share/etc/startJacocoService.sh"
+    ports:
+      - "8080:8080"
+    environment: 
+      - DB_HOST=mariadb
+
+  cmso-robot:
+    image: onap/optf-cmso-robot
+    volumes:
+      - "../logs:/share:rw"
+    depends_on:
+      - cmso-service
+    environment:
+      - GLOBAL_SCHEDULER_URL=http://cmso-service:8080
+      - TAGS=-i ete
+      - OUTPUT=-d /share
+    working_dir: /opt/cmso-robot  
+    entrypoint: "bash -x /opt/cmso-robot/ete.sh"
+

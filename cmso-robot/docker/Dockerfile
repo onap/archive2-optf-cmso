@@ -1,52 +1,39 @@
-FROM dockercentral.it.att.com:5300/library/ubuntu:16.04
-## Be careful of Windows newlines
+FROM ppodgorsek/robot-framework:latest
 
-MAINTAINER "Scheduler"
+MAINTAINER "CMSO"
 
-LABEL name="Docker image for the Scheduler Robot Testing Framework"
-LABEL usage="docker run -e <testname> scheduler_robot
+LABEL name="Docker image for the CMSO Robot Testing Framework"
+LABEL usage="docker run -e <testname> optf-cmso-robot"
 
-# Install Python Pip, Robot framework, firefox, lighttpd web server, wget
-RUN apt-get update
-RUN apt-get --assume-yes upgrade
-RUN apt-get --assume-yes install python2.7 
-RUN apt-get --assume-yes install build-essential
-RUN apt-get --assume-yes install dbus
-RUN apt-get --assume-yes install dnsutils
-RUN apt-get --assume-yes install git
-RUN apt-get --assume-yes install libappindicator1
-RUN apt-get --assume-yes install libffi-dev
-RUN apt-get --assume-yes install libindicator7
-RUN apt-get --assume-yes install libssl-dev
-RUN apt-get --assume-yes install libxss1
-RUN apt-get --assume-yes install lighttpd
-RUN apt-get --assume-yes install net-tools
-RUN apt-get --assume-yes install python-dev
-RUN apt-get --assume-yes install python-pip
-RUN apt-get --assume-yes install unzip
-RUN apt-get --assume-yes install wget 
-RUN apt-get --assume-yes install xvfb
-RUN pip install --upgrade pip
-RUN pip install robotframework
-RUN python --version
+COPY /onap-cmso/robot /opt/cmso-robot/robot
 
-# Install chrome
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list  && \
-    apt-get update && \
-    apt-get --assume-yes install google-chrome-stable
+COPY /onap-cmso/ete.sh /opt/cmso-robot
+RUN chmod 777 /opt/cmso-robot/ete.sh
 
-# Copy the robot code
+COPY /onap-cmso/server.py /opt/cmso-robot
+RUN pip install Flask
+RUN pip install 'PyYAML==3.12'
+RUN pip install  'selenium' 
+RUN pip install  'requests'
+RUN pip install  'robotframework-selenium2library'
+RUN pip install  'robotframework-databaselibrary'
+RUN pip install  'robotframework-extendedselenium2library'
+RUN pip install  'robotframework-requests'
+RUN pip install  'robotframework-sshlibrary'
+RUN pip install  'robotframework-sudslibrary'
+RUN pip install  'robotframework-ftplibrary'
+RUN pip install  'robotframework-rammbock'
+RUN pip install  'deepdiff'
+RUN pip install  'dnspython'
+RUN pip install  'robotframework-httplibrary'
+RUN pip install  'robotframework-archivelibrary'
 
-COPY / /opt/app/scheduler_robot/
-COPY docker/lighttpd.conf /etc/lighttpd/lighttpd.conf
-RUN ls -ltr /opt/app/scheduler_robot
-RUN chmod 777 /opt/app/scheduler_robot/setup.sh
 
-# Update the ssh library so that it will run properly in the docker env
-RUN cd  /opt/app/scheduler_robot/ && ./setup.sh && apt-get clean
 
-###CMD ["lighttpd", "-D", "-f",  "/etc/lighttpd/lighttpd.conf"]
+###Just to keep it running
+CMD ["/usr/bin/python", "/opt/cmso-robot/server.py"]
 
+### Use --entrypoint to override to run the tests test and exit
+### --entrypoint /opt/cmso-robot/ete.sh
 
 
