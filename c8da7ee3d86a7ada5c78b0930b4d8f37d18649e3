@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2217b1e0_4039f382",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/common/ApprovalTypesEnum.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-02-27T20:32:25Z",
+      "side": 1,
+      "message": "Please fix the copyright symbols here.",
+      "revId": "c8da7ee3d86a7ada5c78b0930b4d8f37d18649e3",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
