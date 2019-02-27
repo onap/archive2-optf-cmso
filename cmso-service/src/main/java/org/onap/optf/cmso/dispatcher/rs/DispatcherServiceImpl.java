@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2019 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,12 +31,11 @@
 
 package org.onap.optf.cmso.dispatcher.rs;
 
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.Mdc;
 import org.onap.optf.cmso.dispatcher.DispatchJob;
 import org.onap.optf.cmso.optimizer.CMSOptimizerClient;
 import org.onap.optf.cmso.sostatus.MsoStatusClient;
@@ -44,6 +43,7 @@ import org.onap.optf.cmso.ticketmgt.TmStatusClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -69,8 +69,7 @@ public class DispatcherServiceImpl implements DispacherService {
     @Override
     @Transactional
     public Response dispatchSchedule(Integer id, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info("dispatchVID entered {}", id);
+        debug.debug("dispatchSchedule entered  {}" , id);
         try {
             dispatchJob.execute(id);
         } catch (Exception e) {
@@ -78,16 +77,13 @@ public class DispatcherServiceImpl implements DispacherService {
             debug.error(e.getMessage(), e);
         }
         Response response = Response.ok().build();
-        Mdc.end(response);
-        audit.info("dispatchVID");
         return response;
     }
 
     @Override
     @Transactional
     public Response dispatchOptimizer(Integer id, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info("Dispatch.exec entered {}", id);
+        debug.debug("dispatchOptimizer entered {}", id);
         try {
             sniroClient.scheduleSniroOptimization(id);
         } catch (Exception e) {
@@ -95,7 +91,6 @@ public class DispatcherServiceImpl implements DispacherService {
             debug.error(e.getMessage(), e);
         }
         Response response = Response.ok().build();
-        Mdc.end(response);
         audit.info("dispatchSNIRO");
         return response;
     }
@@ -103,8 +98,7 @@ public class DispatcherServiceImpl implements DispacherService {
     @Override
     @Transactional
     public Response dispatchScheduleStatus(Integer id, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info("Dispatch.exec entered {}", id);
+        debug.debug("dispatchScheduleStatus entered {}", id);
         try {
             tmStatusClient.checkStatus(id);
         } catch (Exception e) {
@@ -112,16 +106,13 @@ public class DispatcherServiceImpl implements DispacherService {
             debug.error(e.getMessage(), e);
         }
         Response response = Response.ok().build();
-        Mdc.end(response);
-        audit.info("dispatchScheduleStatus");
         return response;
     }
 
     @Override
     @Transactional
     public Response dispatchSoStatus(Integer id, UriInfo uri, HttpServletRequest request) {
-        Mdc.begin(request, UUID.randomUUID().toString());
-        log.info("Dispatch.exec entered {}", id);
+        debug.debug("dispatchSoStatus entered {}", id);
         try {
             msoStatusClient.execute(id);
         } catch (Exception e) {
@@ -129,8 +120,6 @@ public class DispatcherServiceImpl implements DispacherService {
             debug.error(e.getMessage(), e);
         }
         Response response = Response.ok().build();
-        Mdc.end(response);
-        audit.info("dispatchMsoStatus");
         return response;
     }
 
