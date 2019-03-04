@@ -1,0 +1,579 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0.1-SNAPSHOT",
+    "title" : "cmso-ticketmgt"
+  },
+  "basePath" : "/ticketmgt",
+  "tags" : [ {
+    "name" : "Administration"
+  }, {
+    "name" : "Availability Interface"
+  }, {
+    "name" : "Ticket Management"
+  } ],
+  "paths" : {
+    "/{apiVersion}/activetickets" : {
+      "post" : {
+        "tags" : [ "Availability Interface" ],
+        "summary" : "",
+        "description" : "API to support conflict avoidance. Retrieves the active ticket data for the passed criteria to detemine availability of passed elements within the passed time window",
+        "operationId" : "getActiveTickets",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Active ticket criteria (elements and change windows).",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Ticket Management Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Ticket Management Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/admin/{id}" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns encrypted value of id.",
+        "operationId" : "exec",
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1|v2",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Request failed"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/health" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns health status of server.",
+        "operationId" : "healthCheck",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "checkInterfaces",
+          "in" : "query",
+          "description" : "Check Interfaces",
+          "required" : false,
+          "type" : "boolean",
+          "default" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          },
+          "400" : {
+            "description" : "Not healthy",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          }
+        }
+      }
+    },
+    "/{apiVersion}/ticket" : {
+      "post" : {
+        "tags" : [ "Ticket Management" ],
+        "summary" : "Create Ticket",
+        "description" : "Creates a ticket for the passed data",
+        "operationId" : "createTicket",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Data for creating a ticket",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Ticket Data"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Ticket Created. Ticket Id returned.",
+            "schema" : {
+              "$ref" : "#/definitions/Ticket Data"
+            }
+          },
+          "400" : {
+            "description" : "Bad request.",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Ticket Management" ],
+        "summary" : "Update Ticket",
+        "description" : "Updates a ticket to the passed data",
+        "operationId" : "updateTicket",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Data for updating a ticket",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Ticket Data"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Ticket Updated."
+          },
+          "400" : {
+            "description" : "Bad request.",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/ticket/{id}" : {
+      "get" : {
+        "tags" : [ "Ticket Management" ],
+        "summary" : "Fetch Ticket",
+        "description" : "Returns ticket information for the provided ticket id.",
+        "operationId" : "fetchTicket",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Unique ticket identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Ticket Data"
+            }
+          },
+          "404" : {
+            "description" : "No record found",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Ticket Management" ],
+        "summary" : "Cancel the ticket",
+        "description" : "Cancels the ticket.",
+        "operationId" : "deleteScheduleRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Ticket id to uniquely identify the ticket being deleted.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Delete successful"
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "404" : {
+            "description" : "No record found",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/tickets" : {
+      "get" : {
+        "tags" : [ "Ticket Management" ],
+        "summary" : "Search Tickets",
+        "description" : "Returns a list of based upon the filter criteria.",
+        "operationId" : "searchTcikets",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Ticket identifier",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "elementId",
+          "in" : "query",
+          "description" : "Element Id",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "startTime",
+          "in" : "query",
+          "description" : "Start time <low>,<high>",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "finishTime",
+          "in" : "query",
+          "description" : "Finish time <low>,<high>",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "maxTickets",
+          "in" : "query",
+          "description" : "Maximum number of tickets to return",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "lastId",
+          "in" : "query",
+          "description" : "Return tickets > last id",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Ticket Data"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CMSRequestError" : {
+      "type" : "object",
+      "properties" : {
+        "requestError" : {
+          "$ref" : "#/definitions/RequestError"
+        }
+      }
+    },
+    "Change Window" : {
+      "type" : "object",
+      "properties" : {
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Earliest time for which changes may begin."
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Latest time by which all changes must be completed."
+        }
+      },
+      "description" : "Time window for which tickets are to returned"
+    },
+    "Element Critera" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element id unique to the request."
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Element criteria for retrieving active tickets."
+    },
+    "HealthCheckComponent" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "healthy" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "HealthCheckMessage" : {
+      "type" : "object",
+      "properties" : {
+        "healthy" : {
+          "type" : "boolean"
+        },
+        "buildInfo" : {
+          "type" : "string"
+        },
+        "currentTime" : {
+          "type" : "string"
+        },
+        "hostname" : {
+          "type" : "string"
+        },
+        "components" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/HealthCheckComponent"
+          }
+        }
+      }
+    },
+    "Name Value Data" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Name."
+        },
+        "value" : {
+          "type" : "object",
+          "description" : "Value."
+        }
+      },
+      "description" : "Instance of a name/value"
+    },
+    "RequestError" : {
+      "type" : "object",
+      "properties" : {
+        "messageId" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "variables" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Ticket Data" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "Unique ticket identifier"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Scheduled start time of change."
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Scheduled end time of change."
+        },
+        "availability" : {
+          "type" : "string",
+          "description" : "Availability of element(s) during change window",
+          "enum" : [ "full", "partial", "unavailable" ]
+        },
+        "elementIds" : {
+          "type" : "array",
+          "description" : "List elementIds  of elements being changed. At least one maps to elementId in the request",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "changeDetails" : {
+          "type" : "string",
+          "description" : "Details of the change."
+        }
+      },
+      "description" : "Change Management Ticket Information."
+    },
+    "Ticket Management Request" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "commonData" : {
+          "type" : "array",
+          "description" : "Implementation specific name value pairs provided to be passed to Ticket Management query .",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "changeWindows" : {
+          "type" : "array",
+          "description" : "Lists of desired change windows for which TicketData will be returned.",
+          "items" : {
+            "$ref" : "#/definitions/Change Window"
+          }
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "List of the elements for which TicketData will be returned.",
+          "items" : {
+            "$ref" : "#/definitions/Element Critera"
+          }
+        }
+      },
+      "description" : "Request to retrieve active tickets for the provided elements."
+    },
+    "Ticket Management Response" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "List of TicketData for the requested elements. A single ticket may apply to more than 1 passed elementId.",
+          "items" : {
+            "$ref" : "#/definitions/Ticket Data"
+          }
+        }
+      },
+      "description" : "Response to active ticket query for the requested elements."
+    }
+  }
+}
