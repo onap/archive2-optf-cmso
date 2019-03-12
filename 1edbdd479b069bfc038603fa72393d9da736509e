@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2036f4a3_f8534f37",
+        "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/MessageHeaders.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2019-03-12T19:00:59Z",
+      "side": 1,
+      "message": "copyright symbol got overwritten.",
+      "revId": "1edbdd479b069bfc038603fa72393d9da736509e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
