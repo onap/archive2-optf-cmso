@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ import org.onap.optf.cmso.optimizer.bean.CMRequestInfo;
 import org.onap.optf.cmso.optimizer.bean.CMSchedule;
 import org.onap.optf.cmso.optimizer.bean.CMSchedulingInfo;
 import org.onap.optf.cmso.optimizer.bean.CMVnfDetails;
-import org.onap.optf.cmso.service.rs.CMSCallbackImpl;
+import org.onap.optf.cmso.service.rs.CMSOOptimizerCallbackImpl;
 import org.onap.optf.cmso.wf.bean.WfCmResponse200;
 import org.onap.optf.cmso.wf.bean.WfMsoRequestReferences;
 import org.onap.optf.cmso.wf.bean.WfMsoResponse;
@@ -101,11 +101,11 @@ public class SchedulerTestLoopbackServiceImpl implements SchedulerTestLoopbackSe
                 nodes.add(sr.getNode());
             }
 
-            DateTime startTime = CMSCallbackImpl.convertISODate(si.getStartTime(), "startTime");
+            DateTime startTime = CMSOOptimizerCallbackImpl.convertISODate(si.getStartTime(), "startTime");
 
             // Ignore the finish time for now in the calc. Just accept what they
             // gave
-            DateTime finishTime = CMSCallbackImpl.convertISODate(si.getEndTime(), "endTime");
+            DateTime finishTime = CMSOOptimizerCallbackImpl.convertISODate(si.getEndTime(), "endTime");
             DateTimeFormatter sniroFmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
             int add = si.getAdditionalDurationInSecs();

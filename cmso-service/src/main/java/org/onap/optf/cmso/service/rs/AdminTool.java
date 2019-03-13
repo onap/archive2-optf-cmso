@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,23 +31,21 @@
 
 package org.onap.optf.cmso.service.rs;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api
+@Api("CMSO Administration")
 @Path("/{apiVersion}")
 @Produces({MediaType.APPLICATION_JSON})
 public interface AdminTool {
@@ -60,7 +58,6 @@ public interface AdminTool {
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Request failed")})
     public Response exec(@ApiParam(value = "v1|v2") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
-            @ApiParam(value = "Identifier", allowMultiple = true) @PathParam("id") String id, @Context UriInfo uri,
-            @Context HttpServletRequest request);
+            @ApiParam(value = "Identifier", allowMultiple = true) @PathParam("id") String id);
 
 }
