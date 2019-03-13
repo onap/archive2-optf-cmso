@@ -34,15 +34,17 @@ package org.onap.optf.cmso.service.rs;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
-import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
@@ -59,17 +61,25 @@ import org.onap.optf.cmso.optimizer.bean.CMOptimizerResponse;
 import org.onap.optf.cmso.optimizer.bean.CMSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-public class CMSCallbackImpl extends BaseSchedulerServiceImpl implements CMSOptimizerCallback {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(CMSCallbackImpl.class);
+public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implements CMSOptimizerCallback {
+    private static EELFLogger log = EELFManager.getInstance().getLogger(CMSOOptimizerCallbackImpl.class);
     private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
     private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
+
+    @Context 
+    UriInfo uri;
+    
+    @Context
+    HttpServletRequest request;
+    
 
     @Autowired
     ChangeManagementScheduleDAO cmScheduleDAO;
@@ -85,8 +95,7 @@ public class CMSCallbackImpl extends BaseSchedulerServiceImpl implements CMSOpti
 
     @Override
     @Transactional
-    public Response sniroCallback(String apiVersion, CMOptimizerResponse sniroResponse, UriInfo uri,
-            HttpServletRequest request) {
+    public Response sniroCallback(String apiVersion, CMOptimizerResponse sniroResponse) {
         Response response = null;
         log.info(LogMessages.PROCESS_OPTIMIZER_CALLBACK, "Received", request.getRemoteAddr(), "");
         log.info(LogMessages.OPTIMIZER_REQUEST, "Callback received", sniroResponse.getTransactionId(),
