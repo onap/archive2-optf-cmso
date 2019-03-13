@@ -85,15 +85,15 @@ public class CMSOptimizerClient {
     @Autowired
     PropertiesManagement pm;
 
-    public boolean scheduleSniroOptimization(Integer id) {
+    public boolean scheduleOptimization(Integer id) {
         Map<String, String> mdcSave = Mdc.save();
         try {
-            String snirourl = env.getProperty("cmso.optimizer.url");
-            String snirocallbackurl = env.getProperty("cmso.optimizer.callbackurl");
+            String optimizerurl = env.getProperty("cmso.optimizer.url");
+            String optimizercallbackurl = env.getProperty("cmso.optimizer.callbackurl");
             String username = env.getProperty("mechid.user");
-            Integer maxAttempts = env.getProperty("cmso.sniro.maxAttempts", Integer.class, 20);
+            Integer maxAttempts = env.getProperty("cmso.optimizer.maxAttempts", Integer.class, 20);
 
-            // Ensure that only one cmso is requsting this call to SNIRO
+            // Ensure that only one cmso is requsting this call to optimizer
             Schedule schedule = scheduleDAO.lockOne(id);
             if (!schedule.getStatus().equals(CMSStatusEnum.PendingSchedule.toString()))
                 return false;
@@ -116,7 +116,7 @@ public class CMSOptimizerClient {
                 if (info == null) {
                     return true;
                 }
-                buildRequest(cmReq, info, schedule, snirocallbackurl);
+                buildRequest(cmReq, info, schedule, optimizercallbackurl);
             } catch (Exception e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
                 schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
@@ -126,34 +126,34 @@ public class CMSOptimizerClient {
             }
 
             // This service will call SNIO for each PendingOptimiztion
-            // If the request is successfully scheduled in SNIRO, status will be
+            // If the request is successfully scheduled in optimizer, status will be
             // updated to OptimizationInProgress.
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(username, password));
             client.register(new CMSOClientFilters());
-            WebTarget sniroTarget = client.target(snirourl);
-            Invocation.Builder invocationBuilder = sniroTarget.request(MediaType.APPLICATION_JSON);
+            WebTarget optimizerTarget = client.target(optimizerurl);
+            Invocation.Builder invocationBuilder = optimizerTarget.request(MediaType.APPLICATION_JSON);
             try {
                 //
                 // First, push OptimizationInProgress to the DB (flush()) assuming a 202 status,
-                // in case the SNIRO callback is received prior to the
+                // in case the optimizer callback is received prior to the
                 // commit of this transaction.
-                // SNIRO Callback will throw an error if it receives a response in the incorrect
+                // optimizer Callback will throw an error if it receives a response in the incorrect
                 // state.
                 //
                 schedule.setOptimizerTransactionId(cmReq.getRequestInfo().getTransactionId());
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                 schedule.setStatus(CMSStatusEnum.OptimizationInProgress.toString());
                 updateScheduleStatus(schedule);
-                debug.debug("SNIRO url / user: " + snirourl + " / " + username);
-                debug.debug("SNIRO Request: " + new ObjectMapper().writeValueAsString(cmReq));
-                Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", schedule.getScheduleId(), snirourl);
+                debug.debug("optimizer url / user: " + optimizerurl + " / " + username);
+                debug.debug("optimizer Request: " + new ObjectMapper().writeValueAsString(cmReq));
+                Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", schedule.getScheduleId(), optimizerurl);
                 Response response = invocationBuilder.post(Entity.json(cmReq));
-                Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", schedule.getScheduleId(), snirourl);
+                Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", schedule.getScheduleId(), optimizerurl);
                 switch (response.getStatus()) {
                     case 202:
                         debug.debug("Successfully scheduled optimization: " + schedule.getScheduleId());
-                        // Scheduled with SNIRO
+                        // Scheduled with optimizer
                         break;
                     case 400: // Bad request
                     {
@@ -162,7 +162,7 @@ public class CMSOptimizerClient {
                         String message = response.readEntity(String.class);
                         schedule.setOptimizerMessage(message);
                         schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
-                        // Need to understand the cause of this error. May be teh same as SNIRO
+                        // Need to understand the cause of this error. May be teh same as optimizer
                         // down.
                         int tries = schedule.getOptimizerAttemptsToSchedule();
                         tries++;
@@ -195,24 +195,24 @@ public class CMSOptimizerClient {
                 return true;
             } catch (ResponseProcessingException e) {
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
-                schedule.setOptimizerStatus("Failed to parse SNIRO response");
+                schedule.setOptimizerStatus("Failed to parse optimizer response");
                 schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
-                // Need to understand the cause of this error. May be teh same as SNIRO down.
+                // Need to understand the cause of this error. May be teh same as optimizer down.
                 int tries = schedule.getOptimizerAttemptsToSchedule();
                 tries++;
                 schedule.setOptimizerAttemptsToSchedule(tries);
                 updateScheduleStatus(schedule);
-                // Getting invalid response from SNIRO.
+                // Getting invalid response from optimizer.
                 // May be data related.
                 Observation.report(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
                 return false;
 
             } catch (ProcessingException e) {
-                // Don't track number of retries on IO error (SNIRO is down)
+                // Don't track number of retries on IO error (optimizer is down)
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                 schedule.setStatus(CMSStatusEnum.PendingSchedule.toString());
                 updateScheduleStatus(schedule);
-                /// Cannot connect to SNIRO
+                /// Cannot connect to optimizer
                 Observation.report(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
                 // Wait until next cycle
                 return false;
@@ -226,15 +226,15 @@ public class CMSOptimizerClient {
         return false;
     }
 
-    private void buildRequest(CMOptimizerRequest cmReq, CMSInfo info, Schedule schedule, String snirocallbackurl) {
+    private void buildRequest(CMOptimizerRequest cmReq, CMSInfo info, Schedule schedule, String optimizercallbackurl) {
 
-        // TODO: Need to get SNIRO to accept ChangeManagementSchedulingInfo
-        // This is to support 1707 SNIRO interface
+        // TODO: Need to get optimizer to accept ChangeManagementSchedulingInfo
+        // This is to support 1707 optimizer interface
         CMRequestInfo reqInfo = cmReq.getRequestInfo();
         CMSchedulingInfo schInfo = cmReq.getSchedulingInfo();
 
         UUID uuid = UUID.randomUUID();
-        reqInfo.setCallbackUrl(snirocallbackurl);
+        reqInfo.setCallbackUrl(optimizercallbackurl);
         reqInfo.setOptimizer(new String[] {"scheduling"});
         reqInfo.setTransactionId(schedule.getOptimizerTransactionId());
         reqInfo.setRequestId("CM-" + uuid.toString());
@@ -283,7 +283,7 @@ public class CMSOptimizerClient {
             // Perhaps We create ChangeManagementSchedulingInfoV1, ...V2, etc.
             // ANd try them one after another....
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse message. Format changed?");
-            schedule.setOptimizerStatus("Failed to parse SNIRO request");
+            schedule.setOptimizerStatus("Failed to parse optimizer request");
             schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
             schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
             scheduleDAO.save(schedule);
@@ -300,12 +300,12 @@ public class CMSOptimizerClient {
     public HealthCheckComponent healthCheck() {
         Map<String, String> mdcSave = Mdc.save();
         HealthCheckComponent hcc = new HealthCheckComponent();
-        hcc.setName("SNIRO Interface");
-        String snirourl = env.getProperty("cmso.optimizer.url");
-        String snirocallbackurl = env.getProperty("cmso.optimizer.callbackurl");
+        hcc.setName("OPtimizer Interface");
+        String optimizerurl = env.getProperty("cmso.optimizer.url");
+        String optimizercallbackurl = env.getProperty("cmso.optimizer.callbackurl");
         String username = env.getProperty("mechid.user");
         String password = pm.getProperty("mechid.pass", "");
-        hcc.setUrl(snirourl);
+        hcc.setUrl(optimizerurl);
         try {
             UUID uuid = UUID.randomUUID();
             // Build a bogus request should fail policy validation
@@ -335,22 +335,22 @@ public class CMSOptimizerClient {
             client.register(new BasicAuthenticatorFilter(username, password));
             client.register(new CMSOClientFilters());
 
-            WebTarget sniroTarget = client.target(snirourl);
-            Invocation.Builder invocationBuilder = sniroTarget.request(MediaType.APPLICATION_JSON);
-            debug.debug("SNIRO url / user: " + snirourl + " / " + username);
-            Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", "healthcheck", snirourl);
+            WebTarget optimizerTarget = client.target(optimizerurl);
+            Invocation.Builder invocationBuilder = optimizerTarget.request(MediaType.APPLICATION_JSON);
+            debug.debug("Optimizer url / user: " + optimizerurl + " / " + username);
+            Observation.report(LogMessages.OPTIMIZER_REQUEST, "Begin", "healthcheck", optimizerurl);
             Response response = invocationBuilder.post(Entity.json(cmReq));
-            Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", "healthcheck", snirourl);
+            Observation.report(LogMessages.OPTIMIZER_REQUEST, "End", "healthcheck", optimizerurl);
             String message = response.getStatus() + ":" + response.readEntity(String.class);
             switch (response.getStatus()) {
                 case 202:
-                    debug.debug("Successful SNIRO healthcheck");
+                    debug.debug("Successful optimizer healthcheck");
                     hcc.setHealthy(true);
                     break;
                 case 400:
                     // Expecting policy not found.
                     if (message.contains("Cannot fetch policy")) {
-                        debug.debug("Successful SNIRO healthcheck");
+                        debug.debug("Successful optimizer healthcheck");
                         hcc.setHealthy(true);
                         hcc.setStatus("OK");
                     } else {
