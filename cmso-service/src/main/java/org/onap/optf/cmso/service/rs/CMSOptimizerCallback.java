@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,24 +31,23 @@
 
 package org.onap.optf.cmso.service.rs;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+
 import org.onap.optf.cmso.optimizer.bean.CMOptimizerResponse;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
-@Api
+@Api("CMSO Optimized Schedule API")
 @Path("/{apiVersion}")
 @Produces({MediaType.APPLICATION_JSON})
 public interface CMSOptimizerCallback {
@@ -62,7 +61,6 @@ public interface CMSOptimizerCallback {
             @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response sniroCallback(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
-            @ApiParam(value = "Return schedules > lastScheduleId") CMOptimizerResponse reponse, @Context UriInfo uri,
-            @Context HttpServletRequest request);
+            @ApiParam(value = "Return schedules > lastScheduleId") CMOptimizerResponse reponse);
 
 }
