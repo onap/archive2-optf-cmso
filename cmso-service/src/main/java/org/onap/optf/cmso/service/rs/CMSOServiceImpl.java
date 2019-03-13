@@ -261,8 +261,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
                         if (cw.getEndTime() == null || cw.getEndTime().equals(""))
                             throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE,
                                     "endTime");
-                        DateTime start = CMSCallbackImpl.convertISODate(cw.getStartTime(), "startTime");
-                        DateTime end = CMSCallbackImpl.convertISODate(cw.getEndTime(), "endTime");
+                        DateTime start = CMSOOptimizerCallbackImpl.convertISODate(cw.getStartTime(), "startTime");
+                        DateTime end = CMSOOptimizerCallbackImpl.convertISODate(cw.getEndTime(), "endTime");
                         if (!end.isAfter(start))
                             throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_CHANGE_WINDOW,
                                     cw.getStartTime(), cw.getEndTime());
@@ -312,8 +312,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             for (ChangeWindowMessage cw : vnfDetail.getChangeWindow()) {
                 ChangeManagementChangeWindow cmcw = new ChangeManagementChangeWindow();
                 cmcw.setChangeManagementGroupsId(cmg.getId());
-                DateTime start = CMSCallbackImpl.convertISODate(cw.getStartTime(), "startTime");
-                DateTime end = CMSCallbackImpl.convertISODate(cw.getEndTime(), "startTime");
+                DateTime start = CMSOOptimizerCallbackImpl.convertISODate(cw.getStartTime(), "startTime");
+                DateTime end = CMSOOptimizerCallbackImpl.convertISODate(cw.getEndTime(), "startTime");
                 cmcw.setStartTimeMillis(start.getMillis());
                 cmcw.setFinishTimeMillis(end.getMillis());
                 cmChangeWindowDAO.save(cmcw);

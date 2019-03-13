@@ -31,32 +31,38 @@
 
 package org.onap.optf.cmso.service.rs;
 
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
 @Controller
 public class AdminToolImpl implements AdminTool {
     private static EELFLogger log = EELFManager.getInstance().getLogger(AdminToolImpl.class);
-    private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
+
+    @Context 
+    UriInfo uri;
+    
+    @Context
+    HttpServletRequest request;
+    
 
     @Autowired
     PropertiesManagement pm;
 
     @Override
-    public Response exec(String apiVersion, String id, UriInfo uri, HttpServletRequest request) {
+    public Response exec(String apiVersion, String id) {
         log.info("AdminTool.exec entered");
         if (id.length() < 4)
             return Response.ok("").build();
-        String encrypted = pm.getEncryptedValue(id);
+        String encrypted = PropertiesManagement.getEncryptedValue(id);
         Response response = Response.ok(encrypted).build();
         return response;
     }
