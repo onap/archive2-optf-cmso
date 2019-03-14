@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08d4f528_6d8ebf13",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/service/rs/HealthCheckImpl.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2019-03-14T15:39:35Z",
+      "side": 1,
+      "message": "want to change it to osdfClient?",
+      "revId": "13662dcf74f79f71bbf8e15446ca71498bab0ea9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
