@@ -1,0 +1,515 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0.1-SNAPSHOT",
+    "title" : "cmso-optimizer"
+  },
+  "basePath" : "/optimizer",
+  "tags" : [ {
+    "name" : "Administration"
+  }, {
+    "name" : "Optimizer Interface"
+  } ],
+  "paths" : {
+    "/{apiVersion}/admin/{id}" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns encrypted value of id.",
+        "operationId" : "exec",
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1|v2",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Request failed"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/health" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns health status of server.",
+        "operationId" : "healthCheck",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "checkInterfaces",
+          "in" : "query",
+          "description" : "Check Interfaces",
+          "required" : false,
+          "type" : "boolean",
+          "default" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          },
+          "400" : {
+            "description" : "Not healthy",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          }
+        }
+      }
+    },
+    "/{apiVersion}/optimize/schedule/{id}" : {
+      "get" : {
+        "tags" : [ "Optimizer Interface" ],
+        "summary" : "",
+        "description" : "API to poll for   optimized schedule.",
+        "operationId" : "getSchedule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Optimizer Response"
+            }
+          },
+          "404" : {
+            "description" : "Not found.",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Optimizer Interface" ],
+        "summary" : "",
+        "description" : "API to acknowledge and delete optimized schedule request. Acknowledgesthat optimization has rsults have been retrieved an are safe to delete",
+        "operationId" : "deleteSchedule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Deleted"
+          },
+          "404" : {
+            "description" : "Not found.",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/optimize/shedule" : {
+      "post" : {
+        "tags" : [ "Optimizer Interface" ],
+        "summary" : "",
+        "description" : "API to request schedule optimization for the passed elements.",
+        "operationId" : "optimizeSchedule",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Optimization data.",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Optimizer Request"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Accepted"
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/policies" : {
+      "get" : {
+        "tags" : [ "Optimizer Interface" ],
+        "summary" : "",
+        "description" : "API to retrieve supported change management policies.",
+        "operationId" : "getPolicies",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Supported Policy Information"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CMSRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CMSRequestError" : {
+      "type" : "object",
+      "properties" : {
+        "requestError" : {
+          "$ref" : "#/definitions/RequestError"
+        }
+      }
+    },
+    "Change Window" : {
+      "type" : "object",
+      "properties" : {
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Earliest time for which changes may begin."
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Latest time by which all changes must be completed."
+        }
+      },
+      "description" : "Time window for which tickets are to returned"
+    },
+    "HealthCheckComponent" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "healthy" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "HealthCheckMessage" : {
+      "type" : "object",
+      "properties" : {
+        "healthy" : {
+          "type" : "boolean"
+        },
+        "buildInfo" : {
+          "type" : "string"
+        },
+        "currentTime" : {
+          "type" : "string"
+        },
+        "hostname" : {
+          "type" : "string"
+        },
+        "components" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/HealthCheckComponent"
+          }
+        }
+      }
+    },
+    "Name Value Data" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Name."
+        },
+        "value" : {
+          "type" : "object",
+          "description" : "Value."
+        }
+      },
+      "description" : "Instance of a name/value"
+    },
+    "Optimizer Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Element to be scheduled."
+    },
+    "Optimizer Request" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "commonData" : {
+          "type" : "array",
+          "description" : "Implementation specific name value pairs.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "changeWindows" : {
+          "type" : "array",
+          "description" : "Lists of desired change windows to schedule the elements.",
+          "items" : {
+            "$ref" : "#/definitions/Change Window"
+          }
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "List of the elements to schedule.",
+          "items" : {
+            "$ref" : "#/definitions/Optimizer Element"
+          }
+        },
+        "policies" : {
+          "type" : "array",
+          "description" : "List of the policies to control optimization.",
+          "items" : {
+            "$ref" : "#/definitions/Supported Policy Information"
+          }
+        }
+      },
+      "description" : "Request to provide an \"conflict free\" schedule for passed elements."
+    },
+    "Optimizer Response" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Status of the optimization",
+          "enum" : [ "CREATED", "PENDING_TOPOLOGY", "PENDING_TICKETS", "PENDING_OPTIMIZER", "COMPLETED", "FAILED", "DELETED" ]
+        },
+        "errorMessage" : {
+          "type" : "string",
+          "description" : "Message for failed optimization"
+        },
+        "schedules" : {
+          "type" : "array",
+          "description" : "List of schedules returned by the optimizer.",
+          "items" : {
+            "$ref" : "#/definitions/Optimizer Schedule Info"
+          }
+        }
+      },
+      "description" : "Response to optimizer request for the requested elements."
+    },
+    "Optimizer Schedule Info" : {
+      "type" : "object",
+      "properties" : {
+        "scheduledElements" : {
+          "type" : "array",
+          "description" : "Lists of elements with start times.",
+          "items" : {
+            "$ref" : "#/definitions/Scheduled Element"
+          }
+        },
+        "unScheduledElements" : {
+          "type" : "array",
+          "description" : "Lists of elements that were not able to be scheduled.",
+          "items" : {
+            "$ref" : "#/definitions/Unscheduled Element"
+          }
+        }
+      },
+      "description" : "Schedule Information returned from optimizer request."
+    },
+    "RequestError" : {
+      "type" : "object",
+      "properties" : {
+        "messageId" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "variables" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Scheduled Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "groupId" : {
+          "type" : "string",
+          "description" : "Group identifier"
+        },
+        "scheduleType" : {
+          "type" : "string",
+          "enum" : [ "UNKNOWN", "GROUP_DISPATCH", "INDIVIDUAL" ]
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Earliest time for which changes may begin."
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Latest time by which all changes must be completed."
+        },
+        "durationSeconds" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Expected duration of change in seconds."
+        }
+      },
+      "description" : "Scheduled element returned by the optimizer."
+    },
+    "Supported Policy Information" : {
+      "type" : "object",
+      "properties" : {
+        "policyName" : {
+          "type" : "string",
+          "description" : "Policy name"
+        },
+        "policyDescription" : {
+          "type" : "string",
+          "description" : "Policy description"
+        },
+        "policyModifiers" : {
+          "type" : "array",
+          "description" : "Named values to modify/override policy attributes.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Policy Information returned from get policies API."
+    },
+    "Unscheduled Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "notScheduledReaons" : {
+          "type" : "array",
+          "description" : "List of reasons not able to schedule this element.",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "ConcurrencyConstraint", "AvailabilityConstraint", "Other" ]
+          }
+        },
+        "notScheduledMessages" : {
+          "type" : "array",
+          "description" : "List of messages not able to schedule this element.",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "Scheduled element returned by the optimizer."
+    }
+  }
+}
