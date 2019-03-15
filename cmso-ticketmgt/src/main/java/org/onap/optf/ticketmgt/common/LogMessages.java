@@ -52,6 +52,8 @@ public enum LogMessages implements ObservationInterface {
 	UPDATE_TICKET("Update ticket {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
 	GET_ACTIVE_TICKETS("Get active tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
 	SEARCH_TICKETS("Search tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
+	DELETE_ACTIVE_TICKETS("Delete active tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
+	POLL_ACTIVE_TICKETS("Polling active tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
 	
 	TICKET_NOT_FOUND("Ticket not found id={0}", Status.NOT_FOUND, Level.INFO),
 	INVALID_ATTRIBUTE("Invalid attribute {0}={1}", Status.BAD_REQUEST, Level.INFO),
@@ -73,7 +75,7 @@ public enum LogMessages implements ObservationInterface {
 	EXPECTED_EXCEPTION("Expected exception encountered during processing. {0}", Status.OK, Level.INFO),
 	UNABLE_TO_UPDATE_TICKET("Unable to update change ticket in TM: Schedule ID: {0} : changeid: {1} :  Reason: {2}", Status.OK, Level.INFO),
 	UNAUTHORIZED("Authorization failed.", Status.FORBIDDEN, Level.INFO),
-	UNAUTHENTICATED("Authentication failed.", Status.UNAUTHORIZED, Level.INFO), 
+	UNAUTHENTICATED("Authentication failed.", Status.UNAUTHORIZED, Level.INFO),  
 	
 	;
 	private final String defaultId;
