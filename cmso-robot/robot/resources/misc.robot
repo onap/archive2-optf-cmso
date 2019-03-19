@@ -3,7 +3,6 @@ Library     Collections
 Library     String
 Library     UUID
 Library     Process
-Library     HttpLibrary.HTTP
 Documentation     Miscellaneous keywords
 
 Resource    json_templater.robot
@@ -33,7 +32,7 @@ Check ATTIDs Template
    ${request_file}=    Convert to String    OneVnfImmediateATTID.json.template
    ${attid_file}=    OperatingSystem.Get File    robot/assets/AOTS_CM_IDs.txt
    @{attids}=    Split to lines    ${attid_file}
-   :for    ${attid}    in    @{attids}
+   :for    ${attid}    IN    @{attids}
    \   ${uuid}=    Generate UUID
    \   ${resp}=   Run Keyword and Continue on Failure    Create Schedule   ${uuid}   ${request_file}   ${template_folder}    attid=${attid}
    \   Run Keyword and Continue on Failure   Should Be Equal as Strings    ${resp.status_code}    ${expected_status_code}

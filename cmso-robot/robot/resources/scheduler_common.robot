@@ -44,8 +44,8 @@ Post Scheduler
     ${url}=   Catenate   ${GLOBAL_SCHEDULER_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
-    ${session}=    Create Session 	${alias}   ${url}        
-    ${auth_string}=   B64 Encode    ${GLOBAL_SCHEDULER_USER}:${GLOBAL_SCHEDULER_PASSWORD}
+    ${session}=    Create Session 	${alias}   ${url}   
+    ${auth_string}=   B64 Encode     ${GLOBAL_SCHEDULER_USER}:${GLOBAL_SCHEDULER_PASSWORD}
     ${headers}=  Create Dictionary   Accept=application/json    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}   Authorization=Basic ${auth_string}
     ${resp}= 	Post Request 	${alias} 	${data_path}     headers=${headers}   data=${data}
     Log    Received response from scheduler ${resp.text}

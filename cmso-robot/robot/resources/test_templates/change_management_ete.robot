@@ -43,7 +43,7 @@ Change Management Immediate Template
 Wait For All VNFs Reach Status
     [Arguments]   ${status}   ${uuid}
     ${resp}=   Get Change Management   auth   schedules/scheduleDetails?request.scheduleId=${uuid}
-    : for   ${vnf}   in  @{resp.json()}
+    : for   ${vnf}   IN  @{resp.json()}
     \   Dictionary Should Contain Item   ${vnf}   status   Completed 
       
 Wait for Schedule to Complete

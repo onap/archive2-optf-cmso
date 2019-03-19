@@ -5,7 +5,6 @@ Library   String
 Library   OperatingSystem
 Library   UUID
 Library   Collections
-Library   HttpLibrary.HTTP
 Library   DateTime
 Resource    ../scheduler_common.robot
 Resource    ../json_templater.robot
@@ -103,14 +102,14 @@ Get Schedule Test Template
     ${uuid_file}=    OperatingSystem.Get File    ${existing_uuid_file}    #this file works with the dev server as of 11/9/2017
     @{file_lines}=    Split to Lines    ${uuid_file}
     &{uuid_dictionary}=    Create Dictionary
-    :For    ${line}    in    @{file_lines}
+    :For    ${line}    IN    @{file_lines}
     \    @{line_array}=    Split String    ${line}
     \    log    ${line_array[1]}
     \    Set To Dictionary    ${uuid_dictionary}	@{line_array}[0]    @{line_array}[1]    #You can pass singular list items as scalar variables
     \
     Log    ${uuid_dictionary}
     @{resp_list}=    Create List
-    :For    ${uuid}    in    @{uuid_dictionary.keys()}
+    :For    ${uuid}    IN    @{uuid_dictionary.keys()}
     \    ${resp}=   Get Change Management   auth   schedules/${uuid}
     \    ${actual_status}=    Get from dictionary    ${uuid_dictionary}    ${uuid}
     \    Should be equal as Strings    ${actual_status}    ${resp.status_code}
@@ -121,13 +120,13 @@ Wait For All VNFs Reach Status
     [Documentation]    Checks the status of the VNFs in a schedule.
     [Arguments]   ${status}   ${uuid}
     ${resp}=   Get Change Management   auth   schedules/scheduleDetails?request.scheduleId=${uuid}
-    : for   ${vnf}   in  @{resp.json()}
+    : for   ${vnf}   IN  @{resp.json()}
     \   Dictionary Should Contain Item   ${vnf}   status   Completed 
 Wait For All VNFs Reach Status and Add to Status
     [Documentation]    This records the status of the vnf in the global status list 
     [Arguments]   ${status}   ${uuid}
     ${resp}=   Get Change Management   auth   schedules/scheduleDetails?request.scheduleId=${uuid}
-    : for   ${vnf}   in  @{resp.json()}
+    : for   ${vnf}   IN  @{resp.json()}
     \   Dictionary Should Contain Item   ${vnf}   status   Completed
     Add to Status List    Completed    ${uuid}     #This only runs if there are no failures in Dictionary should Contain Item for loop previously
 Wait for Schedule to Complete
@@ -143,8 +142,8 @@ Add To Status List
     [Documentation]    Takes List and Schedule ID and changes global list of Statuses    #A global list was used because Wait for Keyword to Succeed only seems to return pass or fail
     [Arguments]    ${end_status}    ${uuid}
     ${resp}=   Get Change Management   auth   schedules/${uuid}
-    ${json}=    Stringify Json    ${resp.json()}
-    ${status}=    Get Json Value    ${json}    /status
+    ${json}=    Set Variable    ${resp.json()}
+    ${status}=    Get From Dictionary    ${json}    status
     ${temp_list}=    Catenate    ${status_list}    ${status},
     ${temp_list}=    Replace String    ${temp_list}    ${SPACE}"    ${EMPTY}"
     Set Global Variable    ${status_list}    ${temp_list}
@@ -153,7 +152,7 @@ Compare Status List
    [Arguments]    ${expected}    ${actual}
    @{expected_list}=    Split String    ${expected}    ,    
    @{actual_list}=    Split String    ${actual}    ,
-   :For    ${current}    in    @{expected_list}
+   :For    ${current}    IN    @{expected_list}
    \    Should Contain    ${actual_list}    ${current}
 
 Change Management DB Failover Template
