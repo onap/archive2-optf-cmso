@@ -58,7 +58,7 @@ public class DispatcherServiceImpl implements DispacherService {
     DispatchJob dispatchJob;
 
     @Autowired
-    CMSOptimizerClient sniroClient;
+    CMSOptimizerClient optimizerClient;
 
     @Autowired
     TmStatusClient tmStatusClient;
@@ -85,7 +85,7 @@ public class DispatcherServiceImpl implements DispacherService {
     public Response dispatchOptimizer(Integer id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchOptimizer entered {}", id);
         try {
-            sniroClient.scheduleSniroOptimization(id);
+            optimizerClient.scheduleOptimization(id);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             debug.error(e.getMessage(), e);

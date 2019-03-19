@@ -56,7 +56,7 @@
 		<pact.version>3.3.9</pact.version>
         <spring.version>5.0.10.RELEASE</spring.version>
 		<spring.boot.version>2.1.3.RELEASE</spring.boot.version>
-		<springfox.swagger2.version>2.9.2</springfox.swagger2.version>
+		<swagger.core.version>2.0.0</swagger.core.version>
 
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -65,7 +65,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 		<mariadb.version>2.2.1</mariadb.version>
-		<swagger.directory>${basedir}/src/main/resources/swagger-ui/dist</swagger.directory>
+		<swagger.directory>${basedir}/src/main/resources/META-INF/resources/swagger/</swagger.directory>
         <aaf.version>2.1.4</aaf.version>
 
 		<!-- Sonar -->
@@ -230,15 +230,23 @@
 
 		<!--Swagger Dependencies -->
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>${springfox.swagger2.version}</version>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-jaxrs2</artifactId>
+			<version>${swagger.core.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>${springfox.swagger2.version}</version>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-jaxrs2-servlet-initializer</artifactId>
+			<version>${swagger.core.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jersey2-jaxrs</artifactId>
+			<version>1.5.0</version>
+		</dependency>
+		
+		
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>

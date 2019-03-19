@@ -34,6 +34,7 @@ package org.onap.optf.cmso.service.rs;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -55,11 +56,17 @@ import com.att.eelf.configuration.EELFManager;
 public class HealthCheckImpl implements HealthCheck {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
+    @Context 
+    UriInfo uri;
+    
+    @Context
+    HttpServletRequest request;
+    
     @Autowired
     TmClient tmClient;
 
     @Autowired
-    CMSOptimizerClient sniroClient;
+    CMSOptimizerClient optimizerClient;
 
     @Autowired
     ApprovalTypeDAO approvalTypeDAO;
@@ -71,7 +78,7 @@ public class HealthCheckImpl implements HealthCheck {
     MsoStatusClient msoStatusClient;
 
     @Override
-    public Response healthCheck(String apiVersion, Boolean checkInterfaces, UriInfo uri, HttpServletRequest request) {
+    public Response healthCheck(String apiVersion, Boolean checkInterfaces) {
         debug.debug("Entered healthcheck");
         Response response = null;
         HealthCheckMessage hc = new HealthCheckMessage();
@@ -80,7 +87,7 @@ public class HealthCheckImpl implements HealthCheck {
         if (checkInterfaces) {
             addToHealthCheckMessage(hc, tmClient.healthCheck());
             addToHealthCheckMessage(hc, msoStatusClient.healthCheck());
-            addToHealthCheckMessage(hc, sniroClient.healthCheck());
+            addToHealthCheckMessage(hc, optimizerClient.healthCheck());
         }
         addToHealthCheckMessage(hc, this.healthCheck());
 
