@@ -28,7 +28,7 @@ Create Schedule
 	${nodelist}=   Split String    ${NODES}   ,
 	${nn}=    Catenate    1
     # Support up to 4 ChangeWindows
-    : For   ${i}   in range   1    4    
+    : For   ${i}   IN RANGE   1    4    
     \  ${today}=    Evaluate   ((${i}-1)*1440)+${minutesFromNow}
     \  ${tomorrow}   Evaluate   ${today}+1440 
     \  ${last_time}   Evaluate  ${today}+30   
@@ -36,7 +36,7 @@ Create Schedule
     \  ${end_time}=    Get Current Date   UTC   + ${tomorrow} minutes   result_format=${UTC}
     \  Set To Dictionary    ${map}   start_time${i}=${start_time}   end_time${i}=${end_time}      
 
-	: For   ${vnf}   in    @{nodelist}
+	: For   ${vnf}   IN    @{nodelist}
 	\   Set To Dictionary    ${map}   node${nn}   ${vnf}   
 	\   ${nn}=   Evaluate    ${nn}+1     
 

@@ -17,5 +17,5 @@ class HTTPUtils:
     
     def b64_encode(self, instring):
         "" 
-        return base64.b64encode(instring)
+        return base64.b64encode(bytes(instring,encoding='utf8'))
 
