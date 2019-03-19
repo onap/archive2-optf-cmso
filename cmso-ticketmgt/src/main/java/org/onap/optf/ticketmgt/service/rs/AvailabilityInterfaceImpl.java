@@ -40,6 +40,7 @@ import org.onap.observations.Observation;
 import org.onap.optf.ticketmgt.common.LogMessages;
 import org.onap.optf.ticketmgt.service.rs.models.ActiveTicketsRequest;
 import org.onap.optf.ticketmgt.service.rs.models.ActiveTicketsResponse;
+import org.onap.optf.ticketmgt.service.rs.models.ActiveTicketsResponse.ActiveTicketResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
@@ -73,6 +74,7 @@ public class AvailabilityInterfaceImpl  implements AvailabilityInterface {
         {
         	ActiveTicketsResponse atr = new ActiveTicketsResponse();
         	atr.setRequestId(activeTicketsRequest.getRequestId());
+        	atr.setStatus(ActiveTicketResponseStatus.COMPLETED);
             response = Response.ok(atr).build();
 //        } catch (CMSException e) {
 //            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -84,6 +86,53 @@ public class AvailabilityInterfaceImpl  implements AvailabilityInterface {
             response = Response.serverError().build();
         }
         Observation.report(LogMessages.GET_ACTIVE_TICKETS, "Returned", request.getRemoteAddr(), id, response.getStatusInfo().toString());
+		return response;
+	}
+
+
+	@Override
+	public Response pollActiveTickets(String apiVersion, String id) {
+		// TODO Auto-generated method stub
+        Observation.report(LogMessages.POLL_ACTIVE_TICKETS, "Received", request.getRemoteAddr(), id, "");
+        Response response = null;
+        try 
+        {
+        	ActiveTicketsResponse atr = new ActiveTicketsResponse();
+        	atr.setRequestId(id);
+        	atr.setStatus(ActiveTicketResponseStatus.COMPLETED);
+            response = Response.ok(atr).build();
+//        } catch (CMSException e) {
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//        	Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
+//            response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
+        } catch (Exception e) {
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            response = Response.serverError().build();
+        }
+        Observation.report(LogMessages.POLL_ACTIVE_TICKETS, "Returned", request.getRemoteAddr(), id, response.getStatusInfo().toString());
+		return response;
+	}
+
+
+	@Override
+	public Response deleteActiveTicketsRequest(String apiVersion, String id) {
+		// TODO Auto-generated method stub
+        Observation.report(LogMessages.DELETE_ACTIVE_TICKETS, "Received", request.getRemoteAddr(), id, "");
+        Response response = null;
+        try 
+        {
+            response = Response.noContent().build();
+//        } catch (CMSException e) {
+//            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//        	Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
+//            response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
+        } catch (Exception e) {
+        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            response = Response.serverError().build();
+        }
+        Observation.report(LogMessages.DELETE_ACTIVE_TICKETS, "Returned", request.getRemoteAddr(), id, response.getStatusInfo().toString());
 		return response;
 	}
 }

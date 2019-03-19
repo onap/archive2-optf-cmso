@@ -48,11 +48,22 @@ public class ActiveTicketsResponse implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(ActiveTicketsResponse.class);
 
+    public enum ActiveTicketResponseStatus
+    {
+    	IN_PROGESS,
+    	COMPLETED,
+    }
     @ApiModelProperty(value = "Unique Id of the request")
     private String requestId;
 
     @ApiModelProperty(value = "List of TicketData for the requested elements. A single ticket may apply to more than 1 passed elementId.")
     private List<TicketData> elements = new ArrayList<>();
+    
+    @ApiModelProperty(value = "Status of ticket request. IN_PROGRESS will indicate asynchronous processing is required.")
+    private ActiveTicketResponseStatus status;
+ 
+    @ApiModelProperty(value = "If request is asynchronous (IN_PROGRESS), suggested interval to the next poll.")
+    private Integer pollingSeconds;
     
     public String getRequestId() {
 		return requestId;
@@ -68,6 +79,22 @@ public class ActiveTicketsResponse implements Serializable {
 
 	public void setElements(List<TicketData> elements) {
 		this.elements = elements;
+	}
+
+	public ActiveTicketResponseStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(ActiveTicketResponseStatus status) {
+		this.status = status;
+	}
+
+	public Integer getPollingSeconds() {
+		return pollingSeconds;
+	}
+
+	public void setPollingSeconds(Integer pollingSeconds) {
+		this.pollingSeconds = pollingSeconds;
 	}
 
 	public String toString() {

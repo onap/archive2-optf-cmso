@@ -31,7 +31,9 @@
 
 package org.onap.optf.ticketmgt.service.rs;
 
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -63,8 +65,10 @@ public interface AvailabilityInterface {
     @Produces({MediaType.APPLICATION_JSON})
     @RequestMapping(value = "/{apiVersion}/activetickets", method = RequestMethod.POST, 
     		consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "", notes = "API to support conflict avoidance. Retrieves the active ticket data for the "
-    		+ "passed criteria to detemine availability of passed elements within the passed time window", 
+    @ApiOperation(value = "Request Active Tickets", notes = "API to support conflict avoidance. Retrieves the active ticket data for the "
+    		+ "passed criteria to detemine availability of passed elements within the passed time window."
+    		+ "\nIf the request results in asynchronous processging, IN_PROGRESS status will be returned and the "
+    		+ "optimizer will begin to poll the request until COMPLETED.", 
     		response = ActiveTicketsResponse.class)
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), 
@@ -75,6 +79,41 @@ public interface AvailabilityInterface {
             @ApiParam(value = "Active ticket criteria (elements and change windows).")  ActiveTicketsRequest activeTicketsRequest
             );
 
+    @GET
+    @Path("/activetickets/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RequestMapping(value = "/{apiVersion}/activetickets/{id}", method = RequestMethod.GET, 
+    		consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Poll Active Tickets Request", notes = "Poll for the status of the request id. Optimizser will "
+    		+ " poll until status is COMPLETED and issue acknowledge (DELETE) API to acknowledge the "
+    		+ "receipt of the response.", 
+    		response = ActiveTicketsResponse.class)
+    @ApiResponses(
+            value = {@ApiResponse(code = 200, message = "OK"), 
+            		@ApiResponse(code = 404, message = "Not found.", response = CMSRequestError.class),
+                    @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
+    public Response pollActiveTickets(
+            @ApiParam(value = "v1") @PathParam("apiVersion") @PathVariable(value="v1") @DefaultValue("v1") String apiVersion,
+            @ApiParam(value = "Active tickets request id.")  @PathParam("id") String id
+            );
+
+    @DELETE
+    @Path("/activetickets/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @RequestMapping(value = "/{apiVersion}/activetickets/{id}", method = RequestMethod.DELETE, 
+    		consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Acknowledge Active Tickets Response", notes = "API call used to acknowledge the receipt"
+    		+ " of a COMPLETED asynchronous request to enable the Ticket Management service to remove it from their cache."
+    		+ " The service may remove from the cache on the poll request. The optimizer will treat Not found reponse on as normal.", 
+    		response = ActiveTicketsResponse.class)
+    @ApiResponses(
+            value = {@ApiResponse(code = 204, message = "OK"), 
+            		@ApiResponse(code = 404, message = "Not found", response = CMSRequestError.class),
+                    @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
+    public Response deleteActiveTicketsRequest(
+            @ApiParam(value = "v1") @PathParam("apiVersion") @PathVariable(value="v1") @DefaultValue("v1") String apiVersion,
+            @ApiParam(value = "Active tickets request id.")  @PathParam("id") String id
+            );
 
 
 }
