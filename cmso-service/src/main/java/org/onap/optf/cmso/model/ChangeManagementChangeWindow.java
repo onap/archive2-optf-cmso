@@ -32,17 +32,20 @@
 package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -59,8 +62,7 @@ public class ChangeManagementChangeWindow implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @JsonIgnore
     @Column(name = "finish_time")
@@ -81,18 +83,11 @@ public class ChangeManagementChangeWindow implements Serializable {
     private String startTime;
 
     @JsonIgnore
-    @Column(name = "change_management_groups_id")
-    private Integer changeManagementGroupsId;
+    @Column(name = "change_management_group_uuid")
+    private UUID changeManagementGroupUuid;
 
     public ChangeManagementChangeWindow() {}
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFinishTime() {
         if (finishTimeMillis != null)
@@ -110,15 +105,29 @@ public class ChangeManagementChangeWindow implements Serializable {
 
     public void setStartTime(String startTime) {}
 
-    public Integer getChangeManagementGroupsId() {
-        return changeManagementGroupsId;
-    }
 
-    public void setChangeManagementGroupsId(Integer changeManagementGroupsId) {
-        this.changeManagementGroupsId = changeManagementGroupsId;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public Long getFinishTimeMillis() {
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+
+	public UUID getChangeManagementGroupUuid() {
+		return changeManagementGroupUuid;
+	}
+
+
+	public void setChangeManagementGroupUuid(UUID changeManagementGroupUuid) {
+		this.changeManagementGroupUuid = changeManagementGroupUuid;
+	}
+
+
+	public Long getFinishTimeMillis() {
         return finishTimeMillis;
     }
 

@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,21 +33,23 @@ package org.onap.optf.cmso.model.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ChangeManagementGroupDAO extends PagingAndSortingRepository<ChangeManagementGroup, Integer> {
-    Optional<ChangeManagementGroup> findById(Integer id);
+public interface ChangeManagementGroupDAO extends PagingAndSortingRepository<ChangeManagementGroup, UUID> {
+    Optional<ChangeManagementGroup> findById(UUID id);
 
     ChangeManagementGroup save(ChangeManagementGroup persisted);
 
     void delete(ChangeManagementGroup toDelete);
 
-    @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesId = ?1")
-    List<ChangeManagementGroup> findBySchedulesID(Integer id);
+    @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesUuid = ?1")
+    List<ChangeManagementGroup> findBySchedulesID(UUID id);
 
-    @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesId = ?1 AND d.groupId = ?2")
-    ChangeManagementGroup findOneBySchedulesIDGroupID(Integer id, String groupId);
+    @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesUuid = ?1 AND d.groupId = ?2")
+    ChangeManagementGroup findOneBySchedulesIDGroupID(UUID id, String groupId);
 
 }

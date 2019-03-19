@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class ChangeManagementDetailDAOImpl implements ChangeManagementDetailDAO 
     @Override
     public List<ChangeManagementDetail> searchScheduleDetails(String where, int limit) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select distinct" + " s.id as id," + " s.vnf_name as vnf_name," + " s.vnf_id as vnf_id,"
+        sql.append("select distinct" + " s.uuid as uuid," + " s.vnf_name as vnf_name," + " s.vnf_id as vnf_id,"
                 + " s.status as status," + " s.tm_change_id as tm_change_Id," + " s.start_time as start_time,"
                 + " s.finish_time as finish_time," + " s.mso_request_id as mso_request_id,"
                 + " s.mso_status as mso_status," + " s.mso_message as mso_message," + " s.mso_time as mso_time,"
@@ -54,17 +54,17 @@ public class ChangeManagementDetailDAOImpl implements ChangeManagementDetailDAO 
                 + " s.status_message as status_message," + " s.tm_approval_status as tm_approval_status,"
                 + " s.tm_status as tm_status," + " g.group_id as group_id,"
                 + " g.last_instance_start_time as last_instance_start_time," + " g.policy_id as policy_id,"
-                + " g.schedules_id as schedules_id"
+                + " g.schedules_uuid as schedules_uuid"
                 // + " ss.schedule_id as scheduleId,"
                 // + " dd.name"
                 + " from" + " CHANGE_MANAGEMENT_SCHEDULES s"
-                + " inner join CHANGE_MANAGEMENT_GROUPS g on s.change_management_groups_id = g.id"
-                + " inner join SCHEDULES ss on g.schedules_id = ss.id "
-                + " left outer join DOMAIN_DATA dd on ss.id = dd.schedules_id"
-                + " left outer join SCHEDULE_APPROVALS sa on ss.id = sa.schedules_id"
-                + " left outer join APPROVAL_TYPES at on sa.approval_type_id = at.id ");
+                + " inner join CHANGE_MANAGEMENT_GROUPS g on s.change_management_group_uuid = g.uuid"
+                + " inner join SCHEDULES ss on g.schedules_uuid = ss.uuid "
+                + " left outer join DOMAIN_DATA dd on ss.uuid = dd.schedules_uuid"
+                + " left outer join SCHEDULE_APPROVALS sa on ss.uuid = sa.schedules_uuid"
+                + " left outer join APPROVAL_TYPES at on sa.approval_types_uuid = at.uuid ");
         sql.append(where);
-        sql.append(" order by id ");
+        sql.append(" order by uuid ");
         if (limit > 0)
             sql.append("LIMIT " + limit);
 

@@ -35,7 +35,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import javax.ws.rs.core.Response.Status;
+
 import org.onap.optf.cmso.common.ApprovalStatusEnum;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
@@ -54,6 +57,7 @@ import org.onap.optf.cmso.service.rs.models.ApprovalMessage;
 import org.onap.optf.cmso.service.rs.models.ScheduleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -82,6 +86,7 @@ public class BaseSchedulerServiceImpl {
             throw new CMSAlreadyExistsException(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
         }
         s = new Schedule();
+        s.setUuid(UUID.randomUUID());
         s.setUserId(scheduleMessage.getUserId());
         s.setCreateDateTimeMillis(System.currentTimeMillis());
         s.setDomain(scheduleMessage.getDomain());
@@ -96,6 +101,7 @@ public class BaseSchedulerServiceImpl {
         s.setStatus(CMSStatusEnum.PendingSchedule.toString());
         scheduleDAO.save(s);
         for (DomainData dd : domainData) {
+        	dd.setUuid(UUID.randomUUID());
             s.addDomainData(dd);
             domainDataDAO.save(dd);
         }
@@ -153,15 +159,16 @@ public class BaseSchedulerServiceImpl {
         if (s.getScheduleApprovals() != null) {
             for (ScheduleApproval scheduleApproval : s.getScheduleApprovals()) {
                 if (scheduleApproval.getUserId().equals(approvalMessage.getApprovalUserId())
-                        && scheduleApproval.getApprovalTypeId().equals(approvalType.getId())) {
+                        && scheduleApproval.getApprovalTypesUuid().equals(approvalType.getUuid())) {
                     sa = scheduleApproval;
                 }
             }
         }
         if (sa == null) {
             sa = new ScheduleApproval();
+            sa.setUuid(UUID.randomUUID());
             sa.setSchedule(s);
-            sa.setApprovalTypeId(approvalType.getId());
+            sa.setApprovalTypesUuid(approvalType.getUuid());
             sa.setUserId(approvalMessage.getApprovalUserId());
         }
         // Ignore what time is on the message
@@ -181,18 +188,18 @@ public class BaseSchedulerServiceImpl {
     }
 
     private boolean allApprovalsReceived(Schedule schedule, ScheduleApproval sa) {
-        Map<Integer, Integer> requiredApprovalsByType = new HashMap<Integer, Integer>(); // Approval
+        Map<UUID, Integer> requiredApprovalsByType = new HashMap<>(); // Approval
                                                                                          // countdown
-        Map<Integer, ApprovalType> approvalsByType = new HashMap<Integer, ApprovalType>(); // Just
+        Map<UUID, ApprovalType> approvalsByType = new HashMap<>(); // Just
                                                                                            // for
                                                                                            // logging
 
         List<ApprovalType> approvalTypes = approvalTypeDAO.findByDomain(schedule.getDomain());
         for (ApprovalType at : approvalTypes) {
-            Integer type = at.getId();
+            UUID type = at.getUuid();
             Integer count = at.getApprovalCount();
             requiredApprovalsByType.put(type, count);
-            approvalsByType.put(at.getId(), at);
+            approvalsByType.put(at.getUuid(), at);
         }
 
         // Account for approvals so far
@@ -205,17 +212,17 @@ public class BaseSchedulerServiceImpl {
         }
         for (ScheduleApproval approval : existingApprovals) {
             if (approval.getStatus().equals(ApprovalStatusEnum.Accepted.toString())) {
-                Integer remaining = requiredApprovalsByType.get(approval.getApprovalTypeId());
+                Integer remaining = requiredApprovalsByType.get(approval.getApprovalTypesUuid());
                 if (remaining != null) {
                     remaining = remaining - 1;
-                    requiredApprovalsByType.put(approval.getApprovalTypeId(), remaining);
+                    requiredApprovalsByType.put(approval.getApprovalTypesUuid(), remaining);
                 } else {
-                    log.warn("Ignored Unidentified approval type {0} for domain {1}", approval.getApprovalTypeId(),
+                    log.warn("Ignored Unidentified approval type {0} for domain {1}", approval.getApprovalTypesUuid(),
                             schedule.getDomain());
                 }
             }
         }
-        for (Integer id : requiredApprovalsByType.keySet()) {
+        for (UUID id : requiredApprovalsByType.keySet()) {
             Integer remaining = requiredApprovalsByType.get(id);
             if (remaining > 0) {
                 return false;

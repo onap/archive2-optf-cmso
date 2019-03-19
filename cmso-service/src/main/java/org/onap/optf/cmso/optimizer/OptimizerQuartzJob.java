@@ -33,6 +33,8 @@ package org.onap.optf.cmso.optimizer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -57,6 +59,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 
@@ -107,7 +110,7 @@ public class OptimizerQuartzJob extends QuartzJobBean {
     }
 
     public void scheduleOptimization(Schedule s) {
-        Integer id = s.getId();
+        UUID id = s.getUuid();
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("cmso.dispatch.url", "http://localhost:8089");

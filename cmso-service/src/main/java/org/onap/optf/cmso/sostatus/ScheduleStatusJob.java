@@ -33,6 +33,7 @@ package org.onap.optf.cmso.sostatus;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -93,8 +94,8 @@ public class ScheduleStatusJob implements Job {
             // First poll SO for WF status
             List<ChangeManagementSchedule> list = cmScheduleDAO.findAllTriggered();
             for (ChangeManagementSchedule s : list) {
-                debug.debug("Dispathcing to check status of CM schedule Id=" + s.getId());
-                dispatchMso(s.getId());
+                debug.debug("Dispathcing to check status of CM schedule Id=" + s.getUuid());
+                dispatchMso(s.getUuid());
             }
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
@@ -106,7 +107,7 @@ public class ScheduleStatusJob implements Job {
             List<Schedule> list = scheduleDAO.findAllInProgress(DomainsEnum.ChangeManagement.toString());
             for (Schedule s : list) {
                 debug.debug("Dispatching to check status of scheduleId=" + s.getScheduleId());
-                dispatchScheduleStatusChecker(s.getId());
+                dispatchScheduleStatusChecker(s.getUuid());
             }
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
@@ -114,12 +115,12 @@ public class ScheduleStatusJob implements Job {
         debug.debug(LogMessages.SCHEDULE_STATUS_JOB, "Exited");
     }
 
-    public void dispatchScheduleStatusChecker(Integer id) {
+    public void dispatchScheduleStatusChecker(UUID uuid) {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("cmso.dispatch.url", "http://localhost:8089");
             String path = env.getProperty("cmso.dispatch.status.path", "/cmso/dispatch/schedulestatus/");
-            url = url + path + id;
+            url = url + path + uuid;
             String user = env.getProperty("mechid.user", "");
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
@@ -152,12 +153,12 @@ public class ScheduleStatusJob implements Job {
 
     }
 
-    public void dispatchMso(Integer id) {
+    public void dispatchMso(UUID uuid) {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("cmso.dispatch.url", "http://localhost:8089");
             String path = env.getProperty("cmso.dispatch.sostatus.path", "/cmso/dispatch/sostatus/");
-            url = url + path + id;
+            url = url + path + uuid;
             String user = env.getProperty("mechid.user", "");
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();

@@ -32,6 +32,7 @@
 package org.onap.optf.cmso.dispatcher;
 
 import java.util.Map;
+import java.util.UUID;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -103,19 +104,19 @@ public class CmJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         Mdc.quartzJobBegin(context);
         debug.debug(LogMessages.CM_JOB, "Entered");
-        Integer id = context.getJobDetail().getJobDataMap().getInt("key");
+        String id = context.getJobDetail().getJobDataMap().getString("key");
         try {
             // Hand this off to a transactional service
             loopback(id);
         } catch (Exception e) {
             log.warn("Unexpected exception", e);
         } finally {
-            dispatchedEventList.remove(id);
+            dispatchedEventList.remove(UUID.fromString(id));
         }
         debug.debug(LogMessages.CM_JOB, "Exited");
     }
 
-    public void loopback(Integer id) {
+    public void loopback(String id) {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("cmso.dispatch.url", "http://localhost:8089");

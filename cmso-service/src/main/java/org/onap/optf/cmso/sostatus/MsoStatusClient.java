@@ -34,6 +34,7 @@ package org.onap.optf.cmso.sostatus;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -87,10 +88,11 @@ public class MsoStatusClient {
     @Autowired
     PropertiesManagement pm;
 
-    public void execute(Integer id) throws JobExecutionException {
+    public void execute(String id) throws JobExecutionException {
         debug.debug(LogMessages.MSO_STATUS_JOB, "Entered", id.toString());
         try {
-            ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(id);
+        	UUID uuid = UUID.fromString(id);
+            ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(uuid);
             if (cmSchedule == null) {
                 Observation.report(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id.toString());
                 return;

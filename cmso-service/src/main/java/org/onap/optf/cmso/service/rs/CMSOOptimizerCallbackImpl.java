@@ -167,7 +167,7 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                     DateTime latestInstanceStartTime =
                             convertDate(sniroSchedule.getLatestInstanceStartTime(), "latestInstanceStartTime");
                     DateTime startTime = convertDate(sniroSchedule.getStartTime(), "startTime");
-                    ChangeManagementGroup group = cmGroupDAO.findOneBySchedulesIDGroupID(schedule.getId(), groupId);
+                    ChangeManagementGroup group = cmGroupDAO.findOneBySchedulesIDGroupID(schedule.getUuid(), groupId);
                     if (group == null) {
                         throw new CMSException(Status.PRECONDITION_FAILED,
                                 LogMessages.CHANGE_MANAGEMENT_GROUP_NOT_FOUND, schedule.getScheduleId(), groupId);
@@ -232,7 +232,7 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     private void processNode(Schedule schedule, ChangeManagementGroup group, String node,
             Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
         Map<String, Long> map = startAndFinishTimeMap.get(node);
-        ChangeManagementSchedule detail = cmScheduleDAO.findOneByGroupIDAndVnfName(group.getId(), node);
+        ChangeManagementSchedule detail = cmScheduleDAO.findOneByGroupIDAndVnfName(group.getUuid(), node);
         if (detail == null) {
             throw new CMSException(Status.NOT_FOUND, LogMessages.UNABLE_TO_LOCATE_SCHEDULE_DETAIL,
                     schedule.getScheduleId(), group.getGroupId(), node);

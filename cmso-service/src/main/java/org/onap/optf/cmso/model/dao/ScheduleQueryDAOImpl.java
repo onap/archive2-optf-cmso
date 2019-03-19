@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,14 +46,14 @@ public class ScheduleQueryDAOImpl implements ScheduleQueryDAO {
     @Override
     public List<ScheduleQuery> searchSchedules(String where, int limit) {
         StringBuilder sql = new StringBuilder();
-        sql.append("select distinct" + " ss.id as id" + " from" + " SCHEDULES ss"
-                + " left outer join CHANGE_MANAGEMENT_GROUPS g on ss.id = g.schedules_id"
-                + " left outer join CHANGE_MANAGEMENT_SCHEDULES s on g.id =  s.change_management_groups_id"
-                + " left outer join DOMAIN_DATA dd on ss.id = dd.schedules_id"
-                + " left outer join SCHEDULE_APPROVALS sa on ss.id = sa.schedules_id"
-                + " left outer join APPROVAL_TYPES at on sa.approval_type_id = at.id ");
+        sql.append("select distinct" + " ss.uuid as uuid" + " from" + " SCHEDULES ss"
+                + " left outer join CHANGE_MANAGEMENT_GROUPS g on ss.uuid = g.schedules_uuid"
+                + " left outer join CHANGE_MANAGEMENT_SCHEDULES s on g.uuid =  s.change_management_group_uuid"
+                + " left outer join DOMAIN_DATA dd on ss.uuid = dd.schedules_uuid"
+                + " left outer join SCHEDULE_APPROVALS sa on ss.uuid = sa.schedules_uuid"
+                + " left outer join APPROVAL_TYPES at on sa.approval_types_uuid = at.uuid ");
         sql.append(where);
-        sql.append(" order by id ");
+        sql.append(" order by uuid ");
         if (limit > 0)
             sql.append("LIMIT " + limit);
 

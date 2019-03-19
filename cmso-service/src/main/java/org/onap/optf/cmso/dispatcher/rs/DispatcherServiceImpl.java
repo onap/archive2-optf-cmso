@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.dispatcher.rs;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -68,10 +70,11 @@ public class DispatcherServiceImpl implements DispacherService {
 
     @Override
     @Transactional
-    public Response dispatchSchedule(Integer id, UriInfo uri, HttpServletRequest request) {
+    public Response dispatchSchedule(String id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchSchedule entered  {}" , id);
         try {
-            dispatchJob.execute(id);
+        	UUID uuid = UUID.fromString(id);
+            dispatchJob.execute(uuid);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             debug.error(e.getMessage(), e);
@@ -82,10 +85,11 @@ public class DispatcherServiceImpl implements DispacherService {
 
     @Override
     @Transactional
-    public Response dispatchOptimizer(Integer id, UriInfo uri, HttpServletRequest request) {
+    public Response dispatchOptimizer(String id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchOptimizer entered {}", id);
         try {
-            optimizerClient.scheduleOptimization(id);
+        	UUID uuid = UUID.fromString(id);
+            optimizerClient.scheduleOptimization(uuid);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             debug.error(e.getMessage(), e);
@@ -97,7 +101,7 @@ public class DispatcherServiceImpl implements DispacherService {
 
     @Override
     @Transactional
-    public Response dispatchScheduleStatus(Integer id, UriInfo uri, HttpServletRequest request) {
+    public Response dispatchScheduleStatus(String id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchScheduleStatus entered {}", id);
         try {
             tmStatusClient.checkStatus(id);
@@ -111,7 +115,7 @@ public class DispatcherServiceImpl implements DispacherService {
 
     @Override
     @Transactional
-    public Response dispatchSoStatus(Integer id, UriInfo uri, HttpServletRequest request) {
+    public Response dispatchSoStatus(String id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchSoStatus entered {}", id);
         try {
             msoStatusClient.execute(id);

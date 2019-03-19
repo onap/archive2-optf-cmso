@@ -34,22 +34,25 @@ package org.onap.optf.cmso.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -64,8 +67,7 @@ public class Schedule implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @JsonIgnore
     @Column(name = "create_date_time")
@@ -160,15 +162,23 @@ public class Schedule implements Serializable {
 
     public Schedule() {}
 
-    public Integer getId() {
-        return this.id;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
 
-    public String getCreateDateTime() {
+	public void setDomainData(List<DomainData> domainData) {
+		this.domainData = domainData;
+	}
+
+	public void setScheduleApprovals(List<ScheduleApproval> scheduleApprovals) {
+		this.scheduleApprovals = scheduleApprovals;
+	}
+
+	public String getCreateDateTime() {
         if (createDateTimeMillis != null)
             return ISODateTimeFormat.dateTimeNoMillis().print(this.createDateTimeMillis);
         return null;

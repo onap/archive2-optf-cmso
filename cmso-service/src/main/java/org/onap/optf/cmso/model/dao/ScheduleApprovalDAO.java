@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,11 +32,13 @@
 package org.onap.optf.cmso.model.dao;
 
 import java.util.Optional;
+import java.util.UUID;
+
 import org.onap.optf.cmso.model.ScheduleApproval;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ScheduleApprovalDAO extends PagingAndSortingRepository<ScheduleApproval, Integer> {
-    Optional<ScheduleApproval> findById(Integer id);
+public interface ScheduleApprovalDAO extends PagingAndSortingRepository<ScheduleApproval, UUID> {
+    Optional<ScheduleApproval> findById(UUID id);
 
     ScheduleApproval save(ScheduleApproval persisted);
 

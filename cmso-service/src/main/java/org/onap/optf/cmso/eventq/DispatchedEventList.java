@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,6 +33,8 @@ package org.onap.optf.cmso.eventq;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,18 +47,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class DispatchedEventList {
 
-    private Set<Integer> list = new HashSet<>();
+    private Set<UUID> list = new HashSet<>();
 
-    public synchronized void addToDispathcedEventList(Integer id) {
+    public synchronized void addToDispathcedEventList(UUID id) {
         list.add(id);
     }
 
-    public synchronized void remove(Integer id) {
+    public synchronized void remove(UUID id) {
         list.remove(id);
     }
 
-    public synchronized boolean isAlreadyDispatched(Integer id) {
-        return list.contains(id);
+    public synchronized boolean isAlreadyDispatched(UUID uuid) {
+        return list.contains(uuid);
     }
 
 }

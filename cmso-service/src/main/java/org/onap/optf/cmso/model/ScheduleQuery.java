@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.model;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -38,15 +40,16 @@ import javax.persistence.Id;
 @Entity
 public class ScheduleQuery {
     @Id
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "uuid")
+    private UUID uuid;
 
-    public Integer getId() {
-        return id;
-    }
+	public UUID getUuid() {
+		return uuid;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
 
 }

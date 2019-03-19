@@ -32,10 +32,10 @@
 package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -51,8 +51,7 @@ public class ApprovalType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @Column(name = "approval_count")
     private Integer approvalCount;
@@ -66,15 +65,18 @@ public class ApprovalType implements Serializable {
 
     public ApprovalType() {}
 
-    public Integer getId() {
-        return this.id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public Integer getApprovalCount() {
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+	public Integer getApprovalCount() {
         return this.approvalCount;
     }
 

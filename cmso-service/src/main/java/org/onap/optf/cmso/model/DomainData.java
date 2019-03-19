@@ -32,15 +32,17 @@
 package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.swagger.annotations.ApiModel;
 
 /**
@@ -56,29 +58,31 @@ public class DomainData implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-   private Integer id;
+   private UUID uuid;
 
     private String name;
 
     private String value;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "schedules_id", nullable = false, updatable = false)
+    @JoinColumn(name = "schedules_uuid", nullable = false, updatable = false)
     @JsonIgnore
     private Schedule schedule;
 
     public DomainData() {}
 
-    public Integer getId() {
-        return this.id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public String getName() {
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+	public String getName() {
         return this.name;
     }
 

@@ -59,7 +59,7 @@ public interface DispacherService {
     @ApiOperation(value = "", notes = "Does dispsatch of provided cm schedule id.", response = Integer.class)
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Request failed")})
-    public Response dispatchSchedule(@ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") Integer id,
+    public Response dispatchSchedule(@ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") String id,
             @Context UriInfo uri, @Context HttpServletRequest request);
 
     // ******************************************************************
@@ -70,7 +70,7 @@ public interface DispacherService {
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Request failed")})
     public Response dispatchOptimizer(
-            @ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") Integer id, @Context UriInfo uri,
+            @ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") String id, @Context UriInfo uri,
             @Context HttpServletRequest request);
 
     // ******************************************************************
@@ -81,7 +81,7 @@ public interface DispacherService {
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Request failed")})
     public Response dispatchScheduleStatus(
-            @ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") Integer id, @Context UriInfo uri,
+            @ApiParam(value = "Identifier", allowMultiple = false) @PathParam("id") String id, @Context UriInfo uri,
             @Context HttpServletRequest request);
 
     // ******************************************************************
@@ -91,7 +91,7 @@ public interface DispacherService {
     @ApiOperation(value = "", notes = "Does dispsatch of provided cm schedule id.", response = Integer.class)
     @ApiResponses(
             value = {@ApiResponse(code = 200, message = "OK"), @ApiResponse(code = 400, message = "Request failed")})
-    public Response dispatchSoStatus(@ApiParam(value = "Identifier", allowMultiple = true) @PathParam("id") Integer id,
+    public Response dispatchSoStatus(@ApiParam(value = "Identifier", allowMultiple = true) @PathParam("id") String id,
             @Context UriInfo uri, @Context HttpServletRequest request);
 
 }

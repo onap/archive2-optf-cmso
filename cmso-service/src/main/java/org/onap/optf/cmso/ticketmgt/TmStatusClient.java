@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
@@ -97,11 +99,12 @@ public class TmStatusClient {
     TmClient tmClient;
 
     @Transactional
-    public void checkStatus(Integer id) {
+    public void checkStatus(String id) {
         debug.debug("Entered checkStatus id=" + id);
         try {
             // Multiple cmso instance support - re-get the record with a Schedule lock
-            Schedule s = scheduleDAO.lockOne(id);
+        	UUID uuid = UUID.fromString(id);
+            Schedule s = scheduleDAO.lockOne(uuid);
             if (!s.getStatus().equals(CMSStatusEnum.NotificationsInitiated.toString())) {
                 debug.debug(s.getScheduleId() + " is no longer in " + CMSStatusEnum.NotificationsInitiated.toString()
                         + " : it is " + s.getStatus());
@@ -110,7 +113,7 @@ public class TmStatusClient {
             }
             Map<GroupAuditStatus, List<ChangeManagementGroup>> groupStatus =
                     new HashMap<GroupAuditStatus, List<ChangeManagementGroup>>();
-            List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(id);
+            List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(uuid);
 
             // Close tickets for completed VNFs
             for (ChangeManagementGroup group : groups) {
@@ -155,7 +158,7 @@ public class TmStatusClient {
         Map<String, List<ChangeManagementSchedule>> inProgress = new HashMap<String, List<ChangeManagementSchedule>>();
         Map<String, List<ChangeManagementSchedule>> completed = new HashMap<String, List<ChangeManagementSchedule>>();
         Map<String, List<ChangeManagementSchedule>> tmClosed = new HashMap<String, List<ChangeManagementSchedule>>();
-        List<ChangeManagementSchedule> cmSchedules = cmScheduleDAO.findByChangeManagementGroupId(group.getId());
+        List<ChangeManagementSchedule> cmSchedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
         for (ChangeManagementSchedule cmSchedule : cmSchedules) {
             String status = cmSchedule.getStatus();
             String changeId = cmSchedule.getTmChangeId();
@@ -230,7 +233,7 @@ public class TmStatusClient {
         Set<String> failedNames = new HashSet<String>();
         Set<String> completedNames = new HashSet<String>();
         Long startDate = group.getStartTimeMillis();
-        List<ChangeManagementSchedule> cmSchedules = cmScheduleDAO.findByChangeManagementGroupId(group.getId());
+        List<ChangeManagementSchedule> cmSchedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
         for (ChangeManagementSchedule cmSchedule : cmSchedules) {
             String vnfName = cmSchedule.getVnfName();
             vnfNames.add(vnfName);

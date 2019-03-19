@@ -32,18 +32,21 @@
 package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -61,8 +64,7 @@ public class ChangeManagementSchedule implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @ApiModelProperty(value = "TM Change Id")
     @Column(name = "tm_change_id")
@@ -107,9 +109,9 @@ public class ChangeManagementSchedule implements Serializable {
     @Column(name = "vnf_name")
     private String vnfName;
 
-    @Column(name = "change_management_groups_id")
+    @Column(name = "change_management_group_uuid")
     @JsonIgnore
-    private Integer changeManagementGroupsId;
+    private UUID changeManagementGroupUuid;
 
     @JsonIgnore
     @Column(name = "dispatch_time")
@@ -162,14 +164,6 @@ public class ChangeManagementSchedule implements Serializable {
 
     public ChangeManagementSchedule() {}
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getFinishTime() {
         if (finishTimeMillis != null)
             return ISODateTimeFormat.dateTimeNoMillis().print(finishTimeMillis);
@@ -218,15 +212,25 @@ public class ChangeManagementSchedule implements Serializable {
         this.tmChangeId = tmChangeId;
     }
 
-    public Integer getChangeManagementGroupsId() {
-        return changeManagementGroupsId;
-    }
 
-    public void setChangeManagementGroupsId(Integer changeManagementGroupsId) {
-        this.changeManagementGroupsId = changeManagementGroupsId;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public String getDispatchTime() {
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+	public UUID getChangeManagementGroupUuid() {
+		return changeManagementGroupUuid;
+	}
+
+	public void setChangeManagementGroupUuid(UUID changeManagementGroupUuid) {
+		this.changeManagementGroupUuid = changeManagementGroupUuid;
+	}
+
+	public String getDispatchTime() {
         if (dispatchTimeMillis != null)
             return ISODateTimeFormat.dateTimeNoMillis().print(dispatchTimeMillis);
         return null;

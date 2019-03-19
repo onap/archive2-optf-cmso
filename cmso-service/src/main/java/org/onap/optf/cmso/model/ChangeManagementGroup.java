@@ -33,17 +33,20 @@ package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -60,8 +63,7 @@ public class ChangeManagementGroup implements Serializable {
 
     @JsonIgnore
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @JsonIgnore
     @Column(name = "finish_time")
@@ -95,8 +97,8 @@ public class ChangeManagementGroup implements Serializable {
     private String startTime;
 
     @JsonIgnore
-    @Column(name = "schedules_id")
-    private Integer schedulesId;
+    @Column(name = "schedules_uuid")
+    private UUID schedulesUuid;
 
     @Column(name = "additional_duration_in_secs")
     @ApiModelProperty(value = "Time added to the workflow interval to allow for rollback in case of failure.")
@@ -122,13 +124,6 @@ public class ChangeManagementGroup implements Serializable {
 
     public ChangeManagementGroup() {}
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getFinishTime() {
         if (finishTimeMillis != null)
@@ -162,13 +157,6 @@ public class ChangeManagementGroup implements Serializable {
 
     public void setStartTime(String startTime) {}
 
-    public Integer getSchedulesId() {
-        return schedulesId;
-    }
-
-    public void setSchedulesId(Integer schedulesId) {
-        this.schedulesId = schedulesId;
-    }
 
     public Integer getAdditionalDurationInSecs() {
         return additionalDurationInSecs;
@@ -233,5 +221,25 @@ public class ChangeManagementGroup implements Serializable {
     public void setChangeManagementSchedules(List<ChangeManagementSchedule> changeManagementSchedules) {
         this.changeManagementSchedules = changeManagementSchedules;
     }
+
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+	public UUID getSchedulesUuid() {
+		return schedulesUuid;
+	}
+
+
+	public void setSchedulesUuid(UUID schedulesUuid) {
+		this.schedulesUuid = schedulesUuid;
+	}
 
 }

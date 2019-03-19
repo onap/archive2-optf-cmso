@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.sostatus;
 
+import java.util.UUID;
+
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
@@ -73,20 +75,21 @@ public class MsoStatusJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         Mdc.quartzJobBegin(context);
-        Integer id = context.getJobDetail().getJobDataMap().getInt(ContextKeys.scheduleId.toString());
+        String id = context.getJobDetail().getJobDataMap().getString(ContextKeys.scheduleId.toString());
         String requestId = context.getJobDetail().getJobDataMap().getString(ContextKeys.msoRequestId.toString());
         debug.debug(LogMessages.MSO_STATUS_JOB, "Entered", requestId, id.toString());
         try {
-            ChangeManagementSchedule cmSchedule = cmScheduleDAO.findById(id).orElse(null);
+        	UUID uuid = UUID.fromString(id);
+            ChangeManagementSchedule cmSchedule = cmScheduleDAO.findById(uuid).orElse(null);
             if (cmSchedule == null) {
-                log.warn(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id.toString(), requestId);
+                log.warn(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id, requestId);
                 return;
             }
             mso.poll(cmSchedule);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
-        debug.debug(LogMessages.MSO_STATUS_JOB, "Exited", requestId, id.toString());
+        debug.debug(LogMessages.MSO_STATUS_JOB, "Exited", requestId, id);
     }
 
 }

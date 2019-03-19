@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MultivaluedMap;
@@ -143,15 +144,15 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             }
             Iterator<ScheduleQuery> iter = list.iterator();
             while (iter.hasNext()) {
-                Schedule s = scheduleDAO.findById(iter.next().getId()).orElse(null);
+                Schedule s = scheduleDAO.findById(iter.next().getUuid()).orElse(null);
                 if (s != null) {
                     schedules.add(s);
                     if (includeDetails) {
-                        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getId());
+                        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getUuid());
                         s.setGroups(groups);
                         for (ChangeManagementGroup g : groups) {
                             List<ChangeManagementSchedule> cmSchedules =
-                                    cmScheduleDAO.findByChangeManagementGroupId(g.getId());
+                                    cmScheduleDAO.findByChangeManagementGroupId(g.getUuid());
                             g.setChangeManagementSchedules(cmSchedules);
                         }
                     }
@@ -300,7 +301,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
         CMSInfo schedulingInfo = scheduleMessage.getSchedulingInfo();
         for (VnfDetailsMessage vnfDetail : schedulingInfo.getVnfDetails()) {
             ChangeManagementGroup cmg = new ChangeManagementGroup();
-            cmg.setSchedulesId(schedule.getId());
+            cmg.setUuid(UUID.randomUUID());
+            cmg.setSchedulesUuid(schedule.getUuid());
             cmg.setGroupId("");
             if (vnfDetail.getGroupId() != null)
                 cmg.setGroupId(vnfDetail.getGroupId());
@@ -311,7 +313,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             cmGroupDAO.save(cmg);
             for (ChangeWindowMessage cw : vnfDetail.getChangeWindow()) {
                 ChangeManagementChangeWindow cmcw = new ChangeManagementChangeWindow();
-                cmcw.setChangeManagementGroupsId(cmg.getId());
+                cmcw.setUuid(UUID.randomUUID());
+                cmcw.setChangeManagementGroupUuid(cmg.getUuid());
                 DateTime start = CMSOOptimizerCallbackImpl.convertISODate(cw.getStartTime(), "startTime");
                 DateTime end = CMSOOptimizerCallbackImpl.convertISODate(cw.getEndTime(), "startTime");
                 cmcw.setStartTimeMillis(start.getMillis());
@@ -321,7 +324,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
 
             for (String vnf : vnfDetail.getNode()) {
                 ChangeManagementSchedule cms = new ChangeManagementSchedule();
-                cms.setChangeManagementGroupsId(cmg.getId());
+                cms.setUuid(UUID.randomUUID());
+                cms.setChangeManagementGroupUuid(cmg.getUuid());
                 cms.setVnfName(vnf);
                 cms.setStatus(CMSStatusEnum.PendingSchedule.toString());
                 cmScheduleDAO.save(cms);
@@ -333,7 +337,8 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
         CMSInfo schedulingInfo = scheduleMessage.getSchedulingInfo();
         for (VnfDetailsMessage vnfDetail : schedulingInfo.getVnfDetails()) {
             ChangeManagementGroup cmg = new ChangeManagementGroup();
-            cmg.setSchedulesId(schedule.getId());
+            cmg.setUuid(UUID.randomUUID());
+            cmg.setSchedulesUuid(schedule.getUuid());
             cmg.setGroupId("");
             int duration = schedulingInfo.getNormalDurationInSeconds();
             int backout = schedulingInfo.getAdditionalDurationInSeconds();
@@ -346,20 +351,22 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
             cmGroupDAO.save(cmg);
             for (String vnf : vnfDetail.getNode()) {
                 ChangeManagementSchedule cms = new ChangeManagementSchedule();
-                cms.setChangeManagementGroupsId(cmg.getId());
+                cms.setUuid(UUID.randomUUID());
+                cms.setChangeManagementGroupUuid(cmg.getUuid());
                 cms.setVnfName(vnf);
                 cms.setStatus(CMSStatusEnum.PendingApproval.toString());
                 cmScheduleDAO.save(cms);
             }
             schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
+            scheduleDAO.save(schedule);
         }
     }
 
     private void deleteChangeManagement(Schedule schedule) throws CMSException {
-        List<ChangeManagementGroup> cmgs = cmGroupDAO.findBySchedulesID(schedule.getId());
+        List<ChangeManagementGroup> cmgs = cmGroupDAO.findBySchedulesID(schedule.getUuid());
 
         for (ChangeManagementGroup cmg : cmgs) {
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(cmg.getId());
+            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(cmg.getUuid());
             for (ChangeManagementSchedule s : schedules) {
                 CMSStatusEnum currentState = CMSStatusEnum.Completed.fromString(s.getStatus());
                 switch (currentState) {
@@ -494,7 +501,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
 
     private void processApproveScheduleRequest(Schedule s, ApprovalMessage approval, List<DomainData> domainData)
             throws CMSException {
-        s = scheduleDAO.lockOne(s.getId());
+        s = scheduleDAO.lockOne(s.getUuid());
         String domain = DomainsEnum.ChangeManagement.toString();
         processApproval(s, domain, approval);
         if (s.getStatus().equals(CMSStatusEnum.Accepted.toString())) {
@@ -510,10 +517,10 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
 
         Integer max_vnfs_per_ticket = env.getProperty("tm.vnfs.per.ticket", Integer.class, 1);
 
-        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getId());
+        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getUuid());
         for (ChangeManagementGroup group : groups) {
 
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getId());
+            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
             List<List<ChangeManagementSchedule>> ticketList = new ArrayList<List<ChangeManagementSchedule>>();
             List<ChangeManagementSchedule> current = null;
             for (ChangeManagementSchedule cms : schedules) {
@@ -560,9 +567,9 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
 
     private void updateChangeManagementSchedules(Schedule s, CMSStatusEnum approvalrejected) {
         debug.debug("Entered updateChangeManagementSchedules");
-        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getId());
+        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(s.getUuid());
         for (ChangeManagementGroup group : groups) {
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getId());
+            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
             for (ChangeManagementSchedule schedule : schedules) {
                 schedule.setStatus(approvalrejected.toString());
                 cmScheduleDAO.save(schedule);
@@ -603,7 +610,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
                         DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
             Iterator<ChangeManagementDetail> iter = list.iterator();
-            Map<Integer, Schedule> scheduleMap = new HashMap<Integer, Schedule>();
+            Map<UUID, Schedule> scheduleMap = new HashMap<UUID, Schedule>();
             while (iter.hasNext()) {
                 ChangeManagementDetail cms = iter.next();
                 CmDetailsMessage msg = buildResponse(cms, scheduleMap);
@@ -636,7 +643,7 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
 
     }
 
-    private CmDetailsMessage buildResponse(ChangeManagementDetail cms, Map<Integer, Schedule> scheduleMap) {
+    private CmDetailsMessage buildResponse(ChangeManagementDetail cms, Map<UUID, Schedule> scheduleMap) {
         CmDetailsMessage msg = new CmDetailsMessage();
         msg.setVnfId(cms.getVnfId());
         msg.setVnfName(cms.getVnfName());
@@ -656,17 +663,17 @@ public class CMSOServiceImpl extends BaseSchedulerServiceImpl implements CMSOSer
         msg.setMsoRequestId(cms.getMsoRequestId());
         msg.setMsoStatus(cms.getMsoStatus());
         msg.setMsoTimeMillis(cms.getMsoTimeMillis());
-        if (!scheduleMap.containsKey(cms.getSchedulesId())) {
-            Schedule schedule = scheduleDAO.findById(cms.getSchedulesId()).orElse(null);
+        if (!scheduleMap.containsKey(cms.getSchedulesUuid())) {
+            Schedule schedule = scheduleDAO.findById(cms.getSchedulesUuid()).orElse(null);
             if (schedule != null) {
                 // DO not innclude in the results
                 schedule.setScheduleInfo(null);
                 // schedule.setSchedule(null);
-                scheduleMap.put(cms.getSchedulesId(), schedule);
+                scheduleMap.put(cms.getSchedulesUuid(), schedule);
             }
         }
-        if (scheduleMap.containsKey(cms.getSchedulesId())) {
-            msg.setScheduleRequest(scheduleMap.get(cms.getSchedulesId()));
+        if (scheduleMap.containsKey(cms.getSchedulesUuid())) {
+            msg.setScheduleRequest(scheduleMap.get(cms.getSchedulesUuid()));
         }
         return msg;
     }

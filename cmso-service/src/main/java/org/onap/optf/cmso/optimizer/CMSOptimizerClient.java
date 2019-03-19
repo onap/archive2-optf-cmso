@@ -85,7 +85,7 @@ public class CMSOptimizerClient {
     @Autowired
     PropertiesManagement pm;
 
-    public boolean scheduleOptimization(Integer id) {
+    public boolean scheduleOptimization(UUID uuid) {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String optimizerurl = env.getProperty("cmso.optimizer.url");
@@ -94,7 +94,7 @@ public class CMSOptimizerClient {
             Integer maxAttempts = env.getProperty("cmso.optimizer.maxAttempts", Integer.class, 20);
 
             // Ensure that only one cmso is requsting this call to optimizer
-            Schedule schedule = scheduleDAO.lockOne(id);
+            Schedule schedule = scheduleDAO.lockOne(uuid);
             if (!schedule.getStatus().equals(CMSStatusEnum.PendingSchedule.toString()))
                 return false;
 

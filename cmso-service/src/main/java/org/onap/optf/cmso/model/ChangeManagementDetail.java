@@ -31,16 +31,19 @@
 
 package org.onap.optf.cmso.model;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
+
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -59,8 +62,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class ChangeManagementDetail {
     @Id
     @JsonIgnore
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    private UUID uuid;
 
     @ApiModelProperty(value = "Name of the VNF.")
     @Column(name = "vnf_name")
@@ -168,7 +170,8 @@ public class ChangeManagementDetail {
     private String msoTime;
 
     @JsonIgnore
-    private Integer schedules_id;
+    @Column(name = "schedules_uuid")
+    private UUID schedulesUuid;
 
     public String getVnfName() {
         return vnfName;
@@ -242,15 +245,27 @@ public class ChangeManagementDetail {
         this.policyId = policyId;
     }
 
-    public Integer getSchedulesId() {
-        return schedules_id;
-    }
 
-    public void setSchedulesId(Integer schedules_id) {
-        this.schedules_id = schedules_id;
-    }
+    public UUID getUuid() {
+		return uuid;
+	}
 
-    public Long getStartTimeMillis() {
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+
+
+	public UUID getSchedulesUuid() {
+		return schedulesUuid;
+	}
+
+	public void setSchedulesUuid(UUID schedulesUuid) {
+		this.schedulesUuid = schedulesUuid;
+	}
+
+	public Long getStartTimeMillis() {
         return startTimeMillis;
     }
 

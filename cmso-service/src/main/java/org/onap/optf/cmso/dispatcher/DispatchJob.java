@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ import java.net.InetAddress;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
@@ -52,6 +54,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.att.eelf.i18n.EELFResourceManager;
@@ -86,15 +89,15 @@ public class DispatchJob {
     @Autowired
     Environment env;
 
-    public void execute(Integer id) throws JobExecutionException {
+    public void execute(UUID id) throws JobExecutionException {
         debug.debug(LogMessages.CM_JOB, "Entered");
         try {
             // No other instance can read this cmso until we are done.
             ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(id);
             cmSchedule.setDispatcherInstance(InetAddress.getLocalHost().getHostAddress());
-            ChangeManagementGroup group = cmGroupDAO.findById(cmSchedule.getChangeManagementGroupsId()).orElse(null);
+            ChangeManagementGroup group = cmGroupDAO.findById(cmSchedule.getChangeManagementGroupUuid()).orElse(null);
             if (group != null) {
-                Schedule schedule = scheduleDAO.findById(group.getSchedulesId()).orElse(null);
+                Schedule schedule = scheduleDAO.findById(group.getSchedulesUuid()).orElse(null);
                 if (schedule != null) {
                     schedule.setStatus(CMSStatusEnum.NotificationsInitiated.toString());
                     if (safeToDispatch(cmSchedule, schedule))

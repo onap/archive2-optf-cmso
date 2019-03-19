@@ -32,19 +32,22 @@
 package org.onap.optf.cmso.model;
 
 import java.io.Serializable;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
 import org.joda.time.format.ISODateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -60,9 +63,8 @@ public class ScheduleApproval implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @JsonIgnore
-    private Integer id;
+    private UUID uuid;
 
     @JsonIgnore
     @Column(name = "approval_date_time")
@@ -82,23 +84,16 @@ public class ScheduleApproval implements Serializable {
     private String userId;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "schedules_id", nullable = false, updatable = false)
+    @JoinColumn(name = "schedules_uuid", nullable = false, updatable = false)
     @JsonIgnore
     private Schedule schedule;
 
     @JsonIgnore
-    @Column(name = "approval_type_id")
-    private Integer approvalTypeId;
+    @Column(name = "approval_types_uuid")
+    private UUID approvalTypesUuid;
 
     public ScheduleApproval() {}
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getApprovalDateTime() {
         if (approvalDateTimeMillis != null)
@@ -124,13 +119,6 @@ public class ScheduleApproval implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getApprovalTypeId() {
-        return approvalTypeId;
-    }
-
-    public void setApprovalTypeId(Integer approvalTypeId) {
-        this.approvalTypeId = approvalTypeId;
-    }
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
@@ -147,5 +135,27 @@ public class ScheduleApproval implements Serializable {
     public void setApprovalDateTimeMillis(Long approvalDateTimeMillis) {
         this.approvalDateTimeMillis = approvalDateTimeMillis;
     }
+
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+
+	public UUID getApprovalTypesUuid() {
+		return approvalTypesUuid;
+	}
+
+
+	public void setApprovalTypesUuid(UUID approvalTypesUuid) {
+		this.approvalTypesUuid = approvalTypesUuid;
+	}
+
+
 
 }

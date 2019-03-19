@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,29 +33,32 @@ package org.onap.optf.cmso.model.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import javax.persistence.LockModeType;
+
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ChangeManagementScheduleDAO extends PagingAndSortingRepository<ChangeManagementSchedule, Integer> {
-    Optional<ChangeManagementSchedule> findById(Integer id);
+public interface ChangeManagementScheduleDAO extends PagingAndSortingRepository<ChangeManagementSchedule, UUID> {
+    Optional<ChangeManagementSchedule> findById(UUID id);
 
     ChangeManagementSchedule save(ChangeManagementSchedule persisted);
 
     void delete(ChangeManagementSchedule toDelete);
 
-    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.changeManagementGroupsId = ?1")
-    List<ChangeManagementSchedule> findByChangeManagementGroupId(Integer id);
+    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.changeManagementGroupUuid = ?1")
+    List<ChangeManagementSchedule> findByChangeManagementGroupId(UUID id);
 
     @Modifying
-    @Query(value = "DELETE FROM ChangeManagementSchedule d WHERE d.changeManagementGroupsId = ?1")
-    public int deleteByChangeManagementGroupsId(Integer id);
+    @Query(value = "DELETE FROM ChangeManagementSchedule d WHERE d.changeManagementGroupUuid = ?1")
+    public int deleteByChangeManagementGroupsId(UUID id);
 
-    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.changeManagementGroupsId = ?1 AND d.vnfName = ?2")
-    ChangeManagementSchedule findOneByGroupIDAndVnfName(Integer id, String vnfName);
+    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.changeManagementGroupUuid = ?1 AND d.vnfName = ?2")
+    ChangeManagementSchedule findOneByGroupIDAndVnfName(UUID id, String vnfName);
 
     @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE (d.status = ?1 AND d.startTimeMillis <= ?2) or d.status = 'Scheduled Immediate' order by d.startTimeMillis")
     List<ChangeManagementSchedule> findByStatusAndEndTime(String status, Long date);
@@ -70,8 +73,8 @@ public interface ChangeManagementScheduleDAO extends PagingAndSortingRepository<
     @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.tmApprovalStatus = 'Pending Approval'")
     List<ChangeManagementSchedule> findAllAwaitingTmApproval();
 
-    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.id = ?1")
+    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.uuid = ?1")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    ChangeManagementSchedule lockOne(Integer id);
+    ChangeManagementSchedule lockOne(UUID id);
 
 }

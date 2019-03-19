@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,24 +33,26 @@ package org.onap.optf.cmso.model.dao;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.onap.optf.cmso.model.ChangeManagementChangeWindow;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface ChangeManagementChangeWindowDAO
-        extends PagingAndSortingRepository<ChangeManagementChangeWindow, Integer> {
-    Optional<ChangeManagementChangeWindow> findById(Integer id);
+        extends PagingAndSortingRepository<ChangeManagementChangeWindow, UUID> {
+    Optional<ChangeManagementChangeWindow> findById(UUID id);
 
     ChangeManagementChangeWindow save(ChangeManagementChangeWindow persisted);
 
     void delete(ChangeManagementChangeWindow toDelete);
 
-    @Query(value = "SELECT d FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupsId = ?1")
-    List<ChangeManagementChangeWindow> findByGroupsID(Integer id);
+    @Query(value = "SELECT d FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupUuid = ?1")
+    List<ChangeManagementChangeWindow> findByGroupsUUID(UUID id);
 
     @Modifying
-    @Query(value = "DELETE FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupsId = ?1")
-    int deleteByChangeManagementGroupId(int id);
+    @Query(value = "DELETE FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupUuid = ?1")
+    int deleteByChangeManagementGroupUuid(UUID id);
 
 }
