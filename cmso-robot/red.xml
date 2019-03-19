@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
-  Copyright © 2017-2018 AT&T Intellectual Property.
+  Copyright © 2017-2019 AT&T Intellectual Property.
   Modifications Copyright © 2018 IBM.
   
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,28 +29,25 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
 <projectConfiguration>
-    <configVersion>1.0</configVersion>
-    <robotExecEnvironment path="C:\Python27"/>
-    <relativeTo>PROJECT</relativeTo>
-    <referencedLibrary type="PYTHON" name="PycURLLibrary" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="RequestsLibrary" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="Selenium2Library" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="selenium" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="SSHLibrary" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="HttpLibrary" path="cmso-robot/robot/library"/>
-    <referencedLibrary type="PYTHON" name="HttpLibrary.HTTP" path="cmso-robot/robot/library"/>
+    <configVersion>1</configVersion>
+    <relativeTo>WORKSPACE</relativeTo>
+    <referencedLibrary type="PYTHON" name="RequestsLibrary" path="cmso-robot/library"/>
+    <referencedLibrary type="PYTHON" name="SeleniumLibrary" path="cmso-robot/library"/>
+    <referencedLibrary type="PYTHON" name="selenium" path="cmso-robot/library"/>
+    <referencedLibrary type="PYTHON" name="SSHLibrary" path="cmso-robot/library"/>
     <referencedLibrary type="PYTHON" name="StringTemplater" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
     <referencedLibrary type="PYTHON" name="UUID" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
     <referencedLibrary type="PYTHON" name="OSUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
     <referencedLibrary type="PYTHON" name="HTTPUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
     <referencedLibrary type="PYTHON" name="JSONUtils" path="cmso-robot/robot/locallibrary/cmsoUtils"/>
+    
     <pythonpath>
-        <path location="robot/library"/>
+    	<path location="cmso-robot/library"/>
     </pythonpath>
     <classpath/>
     <variableFiles path="cmso-robot/robot/assets/test_properties.py"/>
+    
     <excludedForValidation/>
     <isValidatedFileSizeCheckingEnabled>true</isValidatedFileSizeCheckingEnabled>
     <validatedFileMaxSize>1024</validatedFileMaxSize>

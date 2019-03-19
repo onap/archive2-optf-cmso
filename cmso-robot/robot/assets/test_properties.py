@@ -4,8 +4,8 @@ from os.path import isfile, join
 # Should be provided in Jenkins job
 
 GLOBAL_SCHEDULER_URL = "http://127.0.0.1:8080"
-GLOBAL_SCHEDULER_USER = "onap-user"
-GLOBAL_SCHEDULER_PASSWORD = "pwd"
+GLOBAL_SCHEDULER_USER = "oof@oof.onap.org"
+GLOBAL_SCHEDULER_PASSWORD = "demo123456!"
 
 GLOBAL_CALLBACK_USERID = "onap-user"
 GLOBAL_CALLBACK_PASSWORD = "onap-user"
