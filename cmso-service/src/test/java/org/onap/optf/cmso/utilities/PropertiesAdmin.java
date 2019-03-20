@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,19 +34,24 @@ package org.onap.optf.cmso.utilities;
 import org.onap.optf.cmso.common.PropertiesManagement;
 
 public class PropertiesAdmin {
-    public static void main(String[] args) {
-        PropertiesManagement pm = new PropertiesManagement();
-        if (args.length < 1) {
-            System.out.println("Missing argument");
-            return;
-        }
-        String value = "";
-        if (args[0].startsWith("dec:")) {
-            value = PropertiesManagement.getDecryptedValue(args[0].substring(4));
-        } else {
-            value = pm.getEncryptedValue(args[0]);
-        }
-        System.out.println(args[0] + " : " + value);
-    }
+	/**
+	 * Test properties admin.
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		PropertiesManagement pm = new PropertiesManagement();
+		if (args.length < 1) {
+			System.out.println("Missing argument");
+			return;
+		}
+		String value = "";
+		if (args[0].startsWith("dec:")) {
+			value = PropertiesManagement.getDecryptedValue(args[0].substring(4));
+		} else {
+			value = pm.getEncryptedValue(args[0]);
+		}
+		System.out.println(args[0] + " : " + value);
+	}
 
 }
