@@ -3,7 +3,7 @@ Documentation     The main interface for interacting with VID. It handles low le
 Library           Collections
 Library           OSUtils
 Library           OperatingSystem
-Library           Selenium2Library
+Library           SeleniumLibrary
 
 *** Variables ***
 ${CHROME_DRIVER_WIN32_PATH}            drivers/win32
