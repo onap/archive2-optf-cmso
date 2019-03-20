@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,26 +35,33 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Map;
 import java.util.Scanner;
+
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 public class JtestHelper {
     private static String templatefolder = "src/test/templates" + File.separator;
 
+    /**
+     * Resolve the template
+     * @param filename
+     * @param values
+     * @return
+     */
     public static String template(String filename, Map<String, String> values) {
         String data = "";
-        Scanner s = null;
+        Scanner ssss = null;
         try {
-            File t = new File(templatefolder + filename);
-            s = new Scanner(t);
-            s.useDelimiter("\\Z");
-            data = s.next();
+            File ttt = new File(templatefolder + filename);
+            ssss = new Scanner(ttt);
+            ssss.useDelimiter("\\Z");
+            data = ssss.next();
             StrSubstitutor ss = new StrSubstitutor(values);
             data = ss.replace(data);
         } catch (FileNotFoundException e) {
             data = "";
         } finally {
-            if (s != null)
-                s.close();
+            if (ssss != null)
+                ssss.close();
         }
         return data;
     }

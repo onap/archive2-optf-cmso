@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,9 +40,15 @@ public class JpaInit {
 
     private static AtomicBoolean initialized = new AtomicBoolean(false);
 
+    /**
+     * Initialize the entity manager
+     * @param entityManager
+     */
     public static void init(TestEntityManager entityManager) {
         if (initialized.compareAndSet(true, true))
+        {
             return;
+        }
         Domain d = new Domain();
         d.setDomain("ChangeManagement");
         entityManager.persist(d);
