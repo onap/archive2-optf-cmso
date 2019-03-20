@@ -64,6 +64,7 @@
     <modules>
         <module>cmso-service</module>
         <module>cmso-database</module>
+        <module>cmso-robot</module>
     </modules>
 
 	<build> 
