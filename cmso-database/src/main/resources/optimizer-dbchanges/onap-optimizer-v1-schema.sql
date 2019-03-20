@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`topology` (
   topology_start BIGINT(20) NULL DEFAULT NULL,
   topology_end BIGINT(20) NULL DEFAULT NULL,
   topology_retries INT NULL DEFAULT NULL,
+  topology_polling_interval INT NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`tickets` (
   tickets_start BIGINT(20) NULL DEFAULT NULL,
   tickets_end BIGINT(20) NULL DEFAULT NULL,
   tickets_retries INT NULL DEFAULT NULL,
+  topology_polling_interval INT NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
@@ -46,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`optimizer` (
   optimize_start BIGINT(20) NULL DEFAULT NULL,
   optimize_end BIGINT(20) NULL DEFAULT NULL,
   optimize_retries INT NULL DEFAULT NULL,
+  optimize_polling_interval INT NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;

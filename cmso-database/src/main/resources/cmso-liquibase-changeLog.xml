@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!--
-  Copyright © 2017-2018 AT&T Intellectual Property.
+  Copyright © 2017-2019 AT&T Intellectual Property.
   Modifications Copyright © 2018 IBM.
   
   Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,6 +43,13 @@
 			</not>
 		</preConditions>
 		<sqlFile path="cmso-dbchangelog/onap-cmso-v1-schema.sql" />
+	</changeSet>
+
+	<changeSet author="ONAP" id="cmso-v1.1-schema1">
+		<sqlFile path="cmso-dbchangelog/onap-cmso-v1.1-drop-indices.sql" />
+		<sqlFile path="cmso-dbchangelog/onap-cmso-v1.1-add-uuid.sql" />
+		<sqlFile path="cmso-dbchangelog/onap-cmso-v1.1-restore-indices.sql" />
+		<sqlFile path="cmso-dbchangelog/onap-cmso-v1.1-drop-ids.sql" />
 	</changeSet>
 
 </databaseChangeLog>
