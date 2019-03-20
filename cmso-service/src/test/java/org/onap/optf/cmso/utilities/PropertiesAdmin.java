@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,10 @@ package org.onap.optf.cmso.utilities;
 import org.onap.optf.cmso.common.PropertiesManagement;
 
 public class PropertiesAdmin {
+	/**
+	 * Test properties admin
+	 * @param args
+	 */
     public static void main(String[] args) {
         PropertiesManagement pm = new PropertiesManagement();
         if (args.length < 1) {
