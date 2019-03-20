@@ -27,7 +27,7 @@
 
 	<packaging>jar</packaging>
 
-	<name>cmso</name>
+	<name>cmso-ticketmgt</name>
 
 	<properties>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
@@ -378,7 +378,7 @@
 					<apiVersion>1.23</apiVersion>
 					<images>
 						<image>
-							<name>onap/optf-cmso-tciketmgt</name>
+							<name>onap/optf-cmso-ticketmgt</name>
 							<alias>onap-optf-cmso-tciketmgt</alias>
 							<build>
 								<cleanup>true</cleanup>
