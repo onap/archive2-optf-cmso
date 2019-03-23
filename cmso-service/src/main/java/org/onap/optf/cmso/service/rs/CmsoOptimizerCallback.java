@@ -50,7 +50,7 @@ import io.swagger.annotations.ApiResponses;
 @Api("CMSO Optimized Schedule API")
 @Path("/{apiVersion}")
 @Produces({MediaType.APPLICATION_JSON})
-public interface CMSOptimizerCallback {
+public interface CmsoOptimizerCallback {
 
     // ******************************************************************
     @POST
