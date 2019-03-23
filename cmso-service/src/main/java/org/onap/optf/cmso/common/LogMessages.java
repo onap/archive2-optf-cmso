@@ -1,27 +1,27 @@
 /*
  * Copyright © 2017-2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,17 +31,14 @@
 
 package org.onap.optf.cmso.common;
 
+import com.att.eelf.configuration.EELFManager;
+import com.att.eelf.i18n.EELFResourceManager;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import javax.ws.rs.core.Response.Status;
-
 import org.apache.log4j.Level;
 import org.onap.observations.ObservationInterface;
-
-import com.att.eelf.configuration.EELFManager;
-import com.att.eelf.i18n.EELFResourceManager;
 
 public enum LogMessages implements ObservationInterface {
 
@@ -71,7 +68,7 @@ public enum LogMessages implements ObservationInterface {
 	OUTGOING_MESSAGE("Outgoing message method={0} path={1}", Status.OK, Level.INFO, true, false),
 	OUTGOING_MESSAGE_RETURNED("Outgoing message returned method={0} path={1} status={2}", Status.OK, Level.INFO, true, false),
 
-    // TODO: Review the status and level of the remaining enums	
+    // TODO: Review the status and level of the remaining enums
 	UNABLE_TO_ALLOCATE_VNF_TIMESLOTS("Unable to allocate VNF timeslots with Optimizer results startTime={0}, latestStartTime={1}, totalDuration={2}, concurrency={3} nvfs={4}", Status.OK, Level.INFO),
 	UNABLE_TO_LOCATE_SCHEDULE_DETAIL("Unable to locate ChangeManagementSchedule for VNF. scheduleId={0}, groupId={1}, vnfName={2}", Status.OK, Level.INFO),
 	CM_JOB("Quartz scheduling of CmJob: {0}", Status.OK, Level.INFO),
@@ -102,9 +99,10 @@ public enum LogMessages implements ObservationInterface {
 	TM_UPDATE_CHANGE_RECORD("TM Update Change Record:{0} : Schedule ID: {1} : Change Id : {2} : URL : {3}", Status.OK, Level.INFO),
 	UNABLE_TO_UPDATE_CHANGE_TICKET("Unable to update change ticket in TM: Schedule ID: {0} : changeid: {1} :  Reason: {2}", Status.OK, Level.INFO),
 	UNAUTHORIZED("Authorization failed.", Status.FORBIDDEN, Level.INFO),
-	UNAUTHENTICATED("Authentication failed.", Status.UNAUTHORIZED, Level.INFO), 
+	UNAUTHENTICATED("Authentication failed.", Status.UNAUTHORIZED, Level.INFO),
 	UNRECOGNIZED_MSO_STATUS("Unrecognized status returned by MSO {0}", Status.INTERNAL_SERVER_ERROR, Level.ERROR),
 	UNABLE_TO_PARSE_MSO_RESPONSE("Unable to parse status message from MSO {0} : {1}", Status.INTERNAL_SERVER_ERROR, Level.ERROR),
+	MISSING_VALID_GROUP_FOR_ELEMENT("Element {0} returned by optimizer has invalid group id", Status.INTERNAL_SERVER_ERROR, Level.ERROR),
 	;
 	private final String defaultId;
 	private final String defaultMessage;
@@ -116,7 +114,7 @@ public enum LogMessages implements ObservationInterface {
 	private final Boolean audit;
 	private final Boolean metric;
 
-	
+
 	private LogMessages(String message, Status code, Level l)
 	{
 		defaultMessage = message;
@@ -140,7 +138,7 @@ public enum LogMessages implements ObservationInterface {
 		this.defaultResolution = "No resolution needed";
 		this.defaultAction = "No action is required";
 	}
-	
+
 	private LogMessages(String message, Status code, Level l, String id, String resolution, String action)
 	{
 		level=l;
@@ -152,16 +150,16 @@ public enum LogMessages implements ObservationInterface {
 		this.audit = false;
 		this.metric = false;
 	}
-	
+
 	static {
 		EELFResourceManager.loadMessageBundle("logmessages");
 	}
-	
+
 	public String genProperties()
 	{
 		// Use this to regenerate properties file. The desire to change messages without updating code is
-		// well understood, but the developer should be able to code the defaults without having to update 2 different files and 
-		// get it wrong. 
+		// well understood, but the developer should be able to code the defaults without having to update 2 different files and
+		// get it wrong.
 		StringBuilder sb = new StringBuilder();
 		sb.append("# Generated from ").append(this.getClass().getName()).append("\n");
 		for (LogMessages lm : values())
@@ -176,7 +174,7 @@ public enum LogMessages implements ObservationInterface {
 		return sb.toString();
 	}
 
-	
+
 	// interface methods
 	@Override
 	public Level getLevel() {return level;}
@@ -192,15 +190,15 @@ public enum LogMessages implements ObservationInterface {
 	public Boolean getAudit() { return audit; }
 	@Override
 	public Boolean getMetric() { return metric; }
-	
+
 	public static void main(String argv[])
 	{
 		System.out.println(LogMessages.UNEXPECTED_EXCEPTION.genProperties());
-		try 
+		try
 		{
 			Files.write(Paths.get("src/main/resources/logmessages.properties"), LogMessages.UNEXPECTED_EXCEPTION.genProperties().getBytes());
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			EELFManager.getInstance().getDebugLogger().debug("Failed to update properties file.", e);
 
@@ -222,16 +220,16 @@ public enum LogMessages implements ObservationInterface {
 				sb.append("</tr>\n");
 			}
 		}
-		try 
+		try
 		{
 			Files.write(Paths.get("logmessages.html"), sb.toString().getBytes());
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			EELFManager.getInstance().getDebugLogger().debug("Failed to update properties html file.", e);
 
 		}
-				
+
 	}
 
 }

@@ -1,27 +1,27 @@
 /*
  * Copyright © 2017-2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,17 +31,18 @@
 
 package org.onap.optf.cmso.service.rs;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
@@ -62,10 +63,6 @@ import org.onap.optf.cmso.optimizer.bean.CMSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implements CMSOptimizerCallback {
     private static EELFLogger log = EELFManager.getInstance().getLogger(CMSOOptimizerCallbackImpl.class);
@@ -74,12 +71,12 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
 
-    @Context 
+    @Context
     UriInfo uri;
-    
+
     @Context
     HttpServletRequest request;
-    
+
 
     @Autowired
     ChangeManagementScheduleDAO cmScheduleDAO;
@@ -204,11 +201,11 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     }
 
     public static void makeMap(Long startTime, Long latestInstanceStartTime, int concurrencyLimit, long totalDuration,
-            List<String> nodes, Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
+            List<String> nodeList, Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
         Long nextStartTime = null;
         Long nextFinishTime = null;
-        for (int nodeNumber = 0; nodeNumber < nodes.size(); nodeNumber++) {
-            String node = nodes.get(nodeNumber);
+        for (int nodeNumber = 0; nodeNumber < nodeList.size(); nodeNumber++) {
+            String node = nodeList.get(nodeNumber);
             if (nodeNumber % concurrencyLimit == 0) {
                 if (nodeNumber == 0)
                     nextStartTime = startTime;
@@ -217,7 +214,7 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                 if (nextStartTime > latestInstanceStartTime) {
                     throw new CMSException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_ALLOCATE_VNF_TIMESLOTS,
                             startTime.toString(), latestInstanceStartTime.toString(), String.valueOf(totalDuration),
-                            String.valueOf(concurrencyLimit), String.valueOf(nodes.size()));
+                            String.valueOf(concurrencyLimit), String.valueOf(nodeList.size()));
                 }
                 nextFinishTime = nextStartTime + totalDuration;
             }
@@ -232,7 +229,7 @@ public class CMSOOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     private void processNode(Schedule schedule, ChangeManagementGroup group, String node,
             Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
         Map<String, Long> map = startAndFinishTimeMap.get(node);
-        ChangeManagementSchedule detail = cmScheduleDAO.findOneByGroupIDAndVnfName(group.getUuid(), node);
+        ChangeManagementSchedule detail = cmScheduleDAO.findOneByGroupUuidAndVnfName(group.getUuid(), node);
         if (detail == null) {
             throw new CMSException(Status.NOT_FOUND, LogMessages.UNABLE_TO_LOCATE_SCHEDULE_DETAIL,
                     schedule.getScheduleId(), group.getGroupId(), node);

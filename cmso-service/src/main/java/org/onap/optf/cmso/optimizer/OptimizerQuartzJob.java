@@ -1,27 +1,27 @@
 /*
  * Copyright © 2017-2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,17 +31,17 @@
 
 package org.onap.optf.cmso.optimizer;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CMSStatusEnum;
@@ -59,9 +59,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 @Component
 @DisallowConcurrentExecution
@@ -91,14 +88,20 @@ public class OptimizerQuartzJob extends QuartzJobBean {
         // return;
 
         try {
-            // This job will look at the schedules waiting to go to SNIRO
-            // (PendingSchedule),
+            // This job will look at the schedules waiting to go to Optimizer or waiting on response from optimizer
+            // (PendingSchedule, PendingOptimizer),
             // schedule the request and update the status to PendingSchedule
             // and update the state to OptimizationInProgress
             List<Schedule> schedules = scheduleDAO.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
                     CMSStatusEnum.PendingSchedule.toString());
             for (Schedule s : schedules) {
                 scheduleOptimization(s);
+            }
+            List<Schedule> inProgressSchedules = scheduleDAO.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
+                    CMSStatusEnum.OptimizationInProgress.toString());
+            for (Schedule s : inProgressSchedules)
+            {
+              scheduleOptimization(s);
             }
 
         } catch (Exception e) {
@@ -149,16 +152,16 @@ public class OptimizerQuartzJob extends QuartzJobBean {
      * According to the documentation I read, Quartz would queue a job without
      * waiting for the completion of the job with @DisallowConcurrentExecution to
      * complete so that there would be a backlog of triggers to process
-     * 
+     *
      * This was designed to spin though these stale triggers. When this didn't work,
      * I discovered that the behavior is that Quartz will wait for the appropriate
      * interval after @DisallowConcurrentExecution jobs complete.
-     * 
+     *
      * I tested by adding a sleep for an interval > the trigger interval
-     * 
+     *
      * QUartz appears to do what makes sense. Leaving this here in case issues
      * arise...
-     * 
+     *
      */
     @SuppressWarnings("unused")
     private boolean isStale(JobExecutionContext context) {

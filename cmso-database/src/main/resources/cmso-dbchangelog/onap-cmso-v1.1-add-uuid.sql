@@ -91,3 +91,5 @@ update SCHEDULE_APPROVALS set approval_types_uuid =
 	(select distinct s.uuid from SCHEDULE_APPROVALS t, APPROVAL_TYPES s where t.approval_type_id = s.id);
 
 SET SQL_SAFE_UPDATES = 1;
+
+ALTER TABLE CHANGE_MANAGEMENT_SCHEDULES ADD COLUMN request LONGTEXT NULL DEFAULT NULL;
