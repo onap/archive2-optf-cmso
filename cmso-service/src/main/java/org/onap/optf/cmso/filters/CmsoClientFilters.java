@@ -45,7 +45,7 @@ import org.onap.observations.Mdc;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.filters.MessageHeaders.HeadersEnum;
-import org.onap.optf.cmso.service.rs.CMSOServiceImpl;
+import org.onap.optf.cmso.service.rs.CmsoServiceImpl;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -54,9 +54,9 @@ import com.att.eelf.configuration.EELFManager;
 
 // @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Component
-public class CMSOClientFilters implements ClientRequestFilter, ClientResponseFilter {
+public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFilter {
 
-    private static EELFLogger log = EELFManager.getInstance().getLogger(CMSOServiceImpl.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(CmsoServiceImpl.class);
     private static String appId = "cmso";
 
     @Override

@@ -58,7 +58,7 @@ import org.onap.optf.cmso.common.CmHelpers;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.filters.CMSOClientFilters;
+import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.DomainData;
@@ -455,7 +455,7 @@ public class TmClient {
 
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
-            client.register(new CMSOClientFilters());
+            client.register(new CmsoClientFilters());
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             ObjectMapper mapper = new ObjectMapper();
@@ -488,7 +488,7 @@ public class TmClient {
 
                 Client client = ClientBuilder.newClient();
                 client.register(new BasicAuthenticatorFilter(user, pass));
-                client.register(new CMSOClientFilters());
+                client.register(new CmsoClientFilters());
                 WebTarget target = client.target(url);
                 Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
                 ObjectMapper mapper = new ObjectMapper();

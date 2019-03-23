@@ -1,5 +1,6 @@
 /*
- * Copyright © 2019 AT&T Intellectual Property.
+ * Copyright © 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright © 2018 IBM.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,33 +29,21 @@
  * limitations under the License.
 */
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.model.dao;
 
-import org.onap.optf.cmso.SpringProfiles;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import java.util.Optional;
+import java.util.UUID;
+import org.onap.optf.cmso.model.ElementData;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-@Configuration
-@EnableWebSecurity
-@ComponentScan("org.onap.optf")
-@Profile(SpringProfiles.AAF_AUTHENTICATION)
-public class AafSecurityConfig extends WebSecurityConfigurerAdapter {
-
+public interface ElementDataDAO extends PagingAndSortingRepository<ElementData, UUID> {
+    @Override
+    Optional<ElementData> findById(UUID id);
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-    }
+    ElementData save(ElementData persisted);
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    void delete(ElementData toDelete);
 
-        http.csrf().disable();
-
-    }
 }

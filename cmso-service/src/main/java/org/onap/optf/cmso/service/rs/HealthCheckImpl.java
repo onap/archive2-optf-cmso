@@ -40,7 +40,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.onap.optf.cmso.model.ApprovalType;
 import org.onap.optf.cmso.model.dao.ApprovalTypeDAO;
-import org.onap.optf.cmso.optimizer.CMSOptimizerClient;
+import org.onap.optf.cmso.optimizer.CmsoOptimizerClient;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
 import org.onap.optf.cmso.service.rs.models.HealthCheckMessage;
 import org.onap.optf.cmso.sostatus.MsoStatusClient;
@@ -66,7 +66,7 @@ public class HealthCheckImpl implements HealthCheck {
     TmClient tmClient;
 
     @Autowired
-    CMSOptimizerClient optimizerClient;
+    CmsoOptimizerClient optimizerClient;
 
     @Autowired
     ApprovalTypeDAO approvalTypeDAO;
