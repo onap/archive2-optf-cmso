@@ -1,5 +1,6 @@
-/*
- * Copyright © 2017-2019 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
+/*******************************************************************************
+ *
+ * Copyright © 2019 AT&T Intellectual Property.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -22,9 +23,9 @@
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ ******************************************************************************/
 
-package org.onap.optf.cmso.service.rs.models.v2;
+package org.onap.optf.cmso.optimizer.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -33,85 +34,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * The Class NameValue.
- */
-@ApiModel(value = "Name Value Data", description = "Instance of a name/value")
-public class NameValue implements Serializable {
+@ApiModel(value = "Optimizer Schedule Info", description = "Schedule Information returned from optimizer request.")
+public class OptimizerScheduleInfo implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(NameValue.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizerScheduleInfo.class);
 
-    /**
-     * Instantiates a new name value.
-     */
-    public NameValue() {
+    @ApiModelProperty(value = "Lists of elements with start times.")
+    private List<ScheduledElement> scheduledElements = new ArrayList<>();
 
-    }
-
-    /**
-     * Instantiates a new name value.
-     *
-     * @param name the name
-     * @param value the value
-     */
-    public NameValue(String name, Object value) {
-        this.name  = name;
-        this.value = value;
-    }
-
-    @ApiModelProperty(value = "Name.")
-    private String name;
-
-    @ApiModelProperty(value = "Value.")
-    private Object value;
+    @ApiModelProperty(value = "Lists of elements that were not able to be scheduled.")
+    private List<UnScheduledElement> unScheduledElements = new ArrayList<>();
 
 
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
+    public List<ScheduledElement> getScheduledElements() {
+        return scheduledElements;
     }
 
 
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.name = name;
+    public void setScheduledElements(List<ScheduledElement> scheduledElements) {
+        this.scheduledElements = scheduledElements;
     }
 
 
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public Object getValue() {
-        return value;
+    public List<UnScheduledElement> getUnScheduledElements() {
+        return unScheduledElements;
     }
 
 
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(Object value) {
-        this.value = value;
+    public void setUnScheduledElements(List<UnScheduledElement> unScheduledElements) {
+        this.unScheduledElements = unScheduledElements;
     }
 
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
@@ -122,5 +79,4 @@ public class NameValue implements Serializable {
         }
         return "";
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2019 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
+ * Copyright © 2017-2018 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.optf.cmso.service.rs.models.v2;
+package org.onap.optf.cmso.optimizer.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -33,85 +33,64 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * The Class NameValue.
- */
-@ApiModel(value = "Name Value Data", description = "Instance of a name/value")
-public class NameValue implements Serializable {
+@ApiModel(value = "Optimizer Response", description = "Response to optimizer request for the requested elements.")
+public class OptimizerResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(NameValue.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizerResponse.class);
 
-    /**
-     * Instantiates a new name value.
-     */
-    public NameValue() {
-
+    public enum OptimizeScheduleStatus {
+        CREATED, PENDING_TOPOLOGY, PENDING_TICKETS, PENDING_OPTIMIZER, COMPLETED, FAILED, DELETED,
     }
 
-    /**
-     * Instantiates a new name value.
-     *
-     * @param name the name
-     * @param value the value
-     */
-    public NameValue(String name, Object value) {
-        this.name  = name;
-        this.value = value;
+    @ApiModelProperty(value = "Unique Id of the request")
+    private String requestId;
+
+    @ApiModelProperty(value = "Status of the optimization")
+    private OptimizeScheduleStatus status;
+
+    @ApiModelProperty(value = "Message for failed optimization")
+    private String errorMessage;
+
+
+    @ApiModelProperty(value = "List of schedules returned by the optimizer.")
+    private List<OptimizerScheduleInfo> schedules = new ArrayList<>();
+
+    public String getRequestId() {
+        return requestId;
     }
 
-    @ApiModelProperty(value = "Name.")
-    private String name;
-
-    @ApiModelProperty(value = "Value.")
-    private Object value;
-
-
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
 
-    /**
-     * Sets the name.
-     *
-     * @param name the new name
-     */
-    public void setName(String name) {
-        this.name = name;
+    public List<OptimizerScheduleInfo> getSchedules() {
+        return schedules;
     }
 
-
-    /**
-     * Gets the value.
-     *
-     * @return the value
-     */
-    public Object getValue() {
-        return value;
+    public void setSchedules(List<OptimizerScheduleInfo> schedules) {
+        this.schedules = schedules;
     }
 
-
-    /**
-     * Sets the value.
-     *
-     * @param value the new value
-     */
-    public void setValue(Object value) {
-        this.value = value;
+    public OptimizeScheduleStatus getStatus() {
+        return status;
     }
 
+    public void setStatus(OptimizeScheduleStatus status) {
+        this.status = status;
+    }
 
-    /**
-     * To string.
-     *
-     * @return the string
-     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();

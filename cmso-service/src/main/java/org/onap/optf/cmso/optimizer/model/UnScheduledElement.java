@@ -25,7 +25,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.service.rs.models.v2;
+package org.onap.optf.cmso.optimizer.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -37,32 +37,57 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel(value = "Supported Policy Information", description = "Policy Information returned from get policies API.")
-public class PolicyInfo implements Serializable {
+@ApiModel(value = "Unscheduled Element", description = "Scheduled element returned by the optimizer.")
+public class UnScheduledElement implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(PolicyInfo.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(UnScheduledElement.class);
 
-    @ApiModelProperty(value = "Policy name")
-    private String policyName;
-
-    @ApiModelProperty(value = "Named values to modify/override policy attributes.")
-    public List<NameValue> policyModifiers = new ArrayList<>();
-
-    public String getPolicyName() {
-        return policyName;
+    public enum NotScheduledReason {
+        ConcurrencyConstraint, AvailabilityConstraint, Other,
     }
 
-    public void setPolicyName(String policyName) {
-        this.policyName = policyName;
+    @ApiModelProperty(value = "Element identifier")
+    private String elementId;
+
+    @ApiModelProperty(value = "Group identifier")
+    private String groupId;
+
+    @ApiModelProperty(value = "List of reasons not able to schedule this element.")
+    private List<NotScheduledReason> notScheduledReaons = new ArrayList<>();
+
+    @ApiModelProperty(value = "List of messages not able to schedule this element.")
+    private List<String> notScheduledMessages = new ArrayList<>();
+
+    public String getElementId() {
+        return elementId;
     }
 
-
-    public List<NameValue> getPolicyModifiers() {
-        return policyModifiers;
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 
-    public void setPolicyModifiers(List<NameValue> policyModifiers) {
-        this.policyModifiers = policyModifiers;
+    public List<NotScheduledReason> getNotScheduledReaons() {
+        return notScheduledReaons;
+    }
+
+    public void setNotScheduledReaons(List<NotScheduledReason> notScheduledReaons) {
+        this.notScheduledReaons = notScheduledReaons;
+    }
+
+    public List<String> getNotScheduledMessages() {
+        return notScheduledMessages;
+    }
+
+    public void setNotScheduledMessages(List<String> notScheduledMessages) {
+        this.notScheduledMessages = notScheduledMessages;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     @Override

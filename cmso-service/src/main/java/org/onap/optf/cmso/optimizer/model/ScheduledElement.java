@@ -25,7 +25,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.service.rs.models.v2;
+package org.onap.optf.cmso.optimizer.model;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -34,35 +34,84 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@ApiModel(value = "Supported Policy Information", description = "Policy Information returned from get policies API.")
-public class PolicyInfo implements Serializable {
+@ApiModel(value = "Scheduled Element", description = "Scheduled element returned by the optimizer.")
+public class ScheduledElement implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(PolicyInfo.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(ScheduledElement.class);
 
-    @ApiModelProperty(value = "Policy name")
-    private String policyName;
-
-    @ApiModelProperty(value = "Named values to modify/override policy attributes.")
-    public List<NameValue> policyModifiers = new ArrayList<>();
-
-    public String getPolicyName() {
-        return policyName;
+    public enum ScheduleType {
+        UNKNOWN, GROUP_DISPATCH, INDIVIDUAL,
     }
 
-    public void setPolicyName(String policyName) {
-        this.policyName = policyName;
+    @ApiModelProperty(value = "Element identifier")
+    private String elementId;
+
+    @ApiModelProperty(value = "Group identifier")
+    private String groupId;
+
+    private ScheduleType scheduleType = ScheduleType.UNKNOWN;
+
+    @ApiModelProperty(value = "Earliest time for which changes may begin.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
+    private Date startTime;
+
+    @ApiModelProperty(value = "Latest time by which all changes must be completed.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
+    private Date endTime;
+
+    @ApiModelProperty(value = "Expected duration of change in seconds.")
+    private Long durationSeconds;
+
+    public String getElementId() {
+        return elementId;
+    }
+
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
     }
 
 
-    public List<NameValue> getPolicyModifiers() {
-        return policyModifiers;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setPolicyModifiers(List<NameValue> policyModifiers) {
-        this.policyModifiers = policyModifiers;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public ScheduleType getScheduleType() {
+        return scheduleType;
+    }
+
+    public void setScheduleType(ScheduleType scheduleType) {
+        this.scheduleType = scheduleType;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Long getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(Long durationSeconds) {
+        this.durationSeconds = durationSeconds;
     }
 
     @Override

@@ -56,7 +56,7 @@ import org.springframework.stereotype.Component;
 @Priority(1)
 @Provider
 @Component
-public class CMSOContainerFilters implements ContainerRequestFilter, ContainerResponseFilter {
+public class CmsoContainerFilters implements ContainerRequestFilter, ContainerResponseFilter {
 
 
 	@Context

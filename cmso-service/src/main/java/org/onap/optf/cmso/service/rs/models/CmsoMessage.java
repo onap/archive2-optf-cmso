@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,28 +31,28 @@
 
 package org.onap.optf.cmso.service.rs.models;
 
-import java.io.Serializable;
-import org.onap.optf.cmso.common.LogMessages;
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
+import java.io.Serializable;
+import org.onap.optf.cmso.common.LogMessages;
 
 /**
  * The persistent class for the approval_types database table.
  * 
  */
 @ApiModel
-public class CMSMessage extends ScheduleMessage implements Serializable {
+public class CmsoMessage extends ScheduleMessage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
-    private CMSInfo schedulingInfo;
+    private CmsoInfo schedulingInfo;
 
     @Override
-    public CMSInfo getSchedulingInfo() {
+    public CmsoInfo getSchedulingInfo() {
         // TODO Auto-generated method stub
         return schedulingInfo;
     }
@@ -62,7 +62,7 @@ public class CMSMessage extends ScheduleMessage implements Serializable {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String jsonString = mapper.writeValueAsString(info);
-            schedulingInfo = mapper.readValue(jsonString, CMSInfo.class);
+            schedulingInfo = mapper.readValue(jsonString, CmsoInfo.class);
         } catch (Exception e) {
             debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
