@@ -47,11 +47,9 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  */
 @ApiModel(value = "Optimized Schedule Request", description = "Request to schedule VNF change management workflow(s).")
-public abstract class OptimizedScheduleMessage implements Serializable {
+public class OptimizedScheduleMessage implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizedScheduleMessage.class);
-
-    // public abstract void setSchedulingInfo(Object schedulingInfo);
 
     @ApiModelProperty(value = "Schedule domain : ChangeManagement")
     private String domain;
