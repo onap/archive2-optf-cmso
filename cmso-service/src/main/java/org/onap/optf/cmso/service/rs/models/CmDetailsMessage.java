@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,11 +31,11 @@
 
 package org.onap.optf.cmso.service.rs.models;
 
+import io.swagger.annotations.ApiModel;
 import java.io.Serializable;
 import java.util.List;
 import org.onap.optf.cmso.model.ChangeManagementDetail;
 import org.onap.optf.cmso.model.Schedule;
-import io.swagger.annotations.ApiModel;
 
 /**
  * The persistent class for the change_management_groups database table.
