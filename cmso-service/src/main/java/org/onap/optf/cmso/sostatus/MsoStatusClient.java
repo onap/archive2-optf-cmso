@@ -1,41 +1,39 @@
 /*
- * Copyright © 2017-2019 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *         http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * Copyright © 2017-2019 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ *
+ * Unless otherwise specified, all documentation contained herein is licensed under the Creative
+ * Commons License, Attribution 4.0 Intl. (the "License"); you may not use this documentation except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * https://creativecommons.org/licenses/by/4.0/
+ *
+ * Unless required by applicable law or agreed to in writing, documentation distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
- * Unless otherwise specified, all documentation contained herein is licensed
- * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
- * you may not use this documentation except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *         https://creativecommons.org/licenses/by/4.0/
- * 
- * Unless required by applicable law or agreed to in writing, documentation
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+ */
 
 package org.onap.optf.cmso.sostatus;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,44 +41,38 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.onap.observations.Mdc;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CMSStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
-import org.onap.optf.cmso.filters.CMSOClientFilters;
+import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
 import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
 import org.onap.optf.cmso.model.dao.ScheduleDAO;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
 import org.onap.optf.cmso.so.bean.MsoOrchestrationQueryResponse;
-import org.onap.optf.cmso.so.bean.MsoOrchestrationQueryResponse.MSO_STATUS;
+import org.onap.optf.cmso.so.bean.MsoOrchestrationQueryResponse.MsoStatus;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 @Component
 public class MsoStatusClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupdao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
     Environment env;
@@ -88,22 +80,33 @@ public class MsoStatusClient {
     @Autowired
     PropertiesManagement pm;
 
+    /**
+     * Execute.
+     *
+     * @param id the id
+     * @throws JobExecutionException the job execution exception
+     */
     public void execute(String id) throws JobExecutionException {
         debug.debug(LogMessages.MSO_STATUS_JOB, "Entered", id.toString());
         try {
-        	UUID uuid = UUID.fromString(id);
-            ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(uuid);
+            UUID uuid = UUID.fromString(id);
+            ChangeManagementSchedule cmSchedule = cmScheduleDao.lockOne(uuid);
             if (cmSchedule == null) {
                 Observation.report(LogMessages.MSO_POLLING_MISSING_SCHEDULE, id.toString());
                 return;
             }
             poll(cmSchedule);
         } catch (Exception e) {
-        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
         debug.debug(LogMessages.MSO_STATUS_JOB, "Exited", id.toString());
     }
 
+    /**
+     * Poll.
+     *
+     * @param cmSchedule the cm schedule
+     */
     @Transactional
     public void poll(ChangeManagementSchedule cmSchedule) {
         Map<String, String> mdcSave = Mdc.save();
@@ -113,12 +116,13 @@ public class MsoStatusClient {
             String url = env.getProperty("so.url");
             String user = env.getProperty("so.user");
             String pass = pm.getProperty("so.pass", "");
-            if (!url.endsWith("/"))
+            if (!url.endsWith("/")) {
                 url = url + "/";
+            }
             url = url + requestId;
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
-            client.register(new CMSOClientFilters());
+            client.register(new CmsoClientFilters());
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
@@ -132,11 +136,11 @@ public class MsoStatusClient {
                     if (resp != null) {
                         cmSchedule.setMsoStatus(resp.getRequestState());
                         cmSchedule.setMsoMessage(resp.getStatusMessage());
-                        MSO_STATUS msoStatus = MSO_STATUS.UNKNOWN;
+                        MsoStatus msoStatus = MsoStatus.UNKNOWN;
                         try {
-                            msoStatus = MSO_STATUS.valueOf(resp.getRequestState());
+                            msoStatus = MsoStatus.valueOf(resp.getRequestState());
                         } catch (Exception e) {
-                        	Observation.report(LogMessages.UNRECOGNIZED_MSO_STATUS, resp.getRequestState());
+                            Observation.report(LogMessages.UNRECOGNIZED_MSO_STATUS, resp.getRequestState());
                         }
                         long finishTime = getFinishTime(resp);
                         switch (msoStatus) {
@@ -161,16 +165,14 @@ public class MsoStatusClient {
 
                 }
                     break;
-                case 404: // Not found
-                {
+                case 404: { // Not found
                     // Do not keep polling...
                     cmSchedule.setStatus(CMSStatusEnum.Failed.toString());
                     cmSchedule.setMsoStatus("Not found");
                     cmSchedule.setMsoMessage("Call to MSO Failed :" + response.toString());
                 }
                     break;
-                case 400: // Bad request
-                {
+                case 400: { // Bad request
                     // Do not keep polling...
                     cmSchedule.setStatus(CMSStatusEnum.Error.toString());
                     cmSchedule.setMsoStatus("Bad Request");
@@ -191,7 +193,7 @@ public class MsoStatusClient {
             cmSchedule.setMsoStatus("ConnectionException");
             cmSchedule.setMsoMessage("Could not call MSO:" + e.getMessage());
         } catch (Exception e) {
-        	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             // Probably a transient error... Keep polling
             cmSchedule.setMsoTimeMillis(System.currentTimeMillis());
             cmSchedule.setMsoStatus("Exception");
@@ -200,7 +202,7 @@ public class MsoStatusClient {
             Mdc.restore(mdcSave);
         }
         // Propagate final MSO status to top level
-        cmScheduleDAO.save(cmSchedule);
+        cmScheduleDao.save(cmSchedule);
         propagateStatus(cmSchedule);
 
     }
@@ -214,7 +216,8 @@ public class MsoStatusClient {
                 Date dateTime = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z").parse(timestr);
                 finishTime = dateTime.getTime();
             } catch (Exception e) {
-            	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse MSO finish timestamp: " + timestr);
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e,
+                                "Unable to parse MSO finish timestamp: " + timestr);
             }
         }
         return finishTime;
@@ -232,22 +235,26 @@ public class MsoStatusClient {
             ObjectNode request = (ObjectNode) json.get("request");
             ObjectNode requestStatus = (ObjectNode) request.get("requestStatus");
             MsoOrchestrationQueryResponse msoResponse =
-                    om.treeToValue(requestStatus, MsoOrchestrationQueryResponse.class);
+                            om.treeToValue(requestStatus, MsoOrchestrationQueryResponse.class);
             return msoResponse;
         } catch (Exception e) {
-        	Observation.report(LogMessages.UNABLE_TO_PARSE_MSO_RESPONSE, e, e.getMessage(), resp);
+            Observation.report(LogMessages.UNABLE_TO_PARSE_MSO_RESPONSE, e, e.getMessage(), resp);
         }
         return null;
     }
 
+    /**
+     * Health check.
+     *
+     * @return the health check component
+     */
     public HealthCheckComponent healthCheck() {
         Map<String, String> mdcSave = Mdc.save();
         String requestId = "healthCheck";
         String url = env.getProperty("so.url", "");
-        String user = env.getProperty("so.user", "");
-        String pass = pm.getProperty("so.pass", "");
-        if (!url.endsWith("/"))
+        if (!url.endsWith("/")) {
             url = url + "/";
+        }
         url = url + "healthcheck";
 
         HealthCheckComponent hcc = new HealthCheckComponent();
@@ -255,8 +262,11 @@ public class MsoStatusClient {
         hcc.setUrl(url);
 
         Client client = ClientBuilder.newClient();
+        String user = env.getProperty("so.user", "");
+        String pass = pm.getProperty("so.pass", "");
+
         client.register(new BasicAuthenticatorFilter(user, pass));
-        client.register(new CMSOClientFilters());
+        client.register(new CmsoClientFilters());
 
         WebTarget target = client.target(url);
         Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
