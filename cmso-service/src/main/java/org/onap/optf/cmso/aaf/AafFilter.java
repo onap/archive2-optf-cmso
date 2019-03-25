@@ -1,33 +1,41 @@
-/**
- * ============LICENSE_START=======================================================
- * org.onap.optf.cmso
- * ================================================================================
- * Copyright © 2019 AT&T Intellectual Property. All rights reserved.
- * ================================================================================
+/*******************************************************************************
+ * Copyright © 2019 AT&T Intellectual Property.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * ============LICENSE_END=========================================================
- */
-package org.onap.optf.cmso.aaf;
+ *
+ *
+ * Unless otherwise specified, all documentation contained herein is licensed
+ * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
+ * you may not use this documentation except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         https://creativecommons.org/licenses/by/4.0/
+ *
+ * Unless required by applicable law or agreed to in writing, documentation
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
+package org.onap.optf.cmso.aaf;
 
 import java.io.IOException;
 import java.util.Properties;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.aaf.cadi.PropAccess;
 import org.onap.aaf.cadi.filter.CadiFilter;
 import org.onap.observations.Observation;
@@ -40,7 +48,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * AAF authentication filter
+ * AAF authentication filter.
  */
 
 @Component
@@ -49,6 +57,12 @@ public class AafFilter extends OrderedRequestContextFilter {
 
     private final CadiFilter cadiFilter;
 
+    /**
+     * Instantiates a new aaf filter.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     public AafFilter() throws IOException, ServletException {
         Properties cadiProperties = new Properties();
         cadiProperties.load(Application.class.getClassLoader().getResourceAsStream("cadi.properties"));
@@ -57,13 +71,13 @@ public class AafFilter extends OrderedRequestContextFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws IOException, ServletException {
         cadiFilter.doFilter(request, response, filterChain);
-        if(response.getStatus() ==401){
-        	Observation.report(LogMessages.UNAUTHENTICATED);
-            ResponseFormatter.errorResponse(request, response, 
-            		new CMSException(LogMessages.UNAUTHENTICATED.getStatus(), 
-            		LogMessages.UNAUTHENTICATED, ""));
+        if (response.getStatus() == 401) {
+            Observation.report(LogMessages.UNAUTHENTICATED);
+            ResponseFormatter.errorResponse(request, response,
+                            new CMSException(LogMessages.UNAUTHENTICATED.getStatus(), LogMessages.UNAUTHENTICATED, ""));
         }
     }
 
