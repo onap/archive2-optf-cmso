@@ -46,7 +46,7 @@ import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.eventq.DispatchedEventList;
-import org.onap.optf.cmso.filters.CMSOClientFilters;
+import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
 import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
 import org.onap.optf.cmso.model.dao.ScheduleDAO;
@@ -126,7 +126,7 @@ public class CmJob implements Job {
             String pass = pm.getProperty("mechid.pass", "");
             Client client = ClientBuilder.newClient();
             client.register(new BasicAuthenticatorFilter(user, pass));
-			client.register(new CMSOClientFilters());
+			client.register(new CmsoClientFilters());
             WebTarget target = client.target(url);
             Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
             Response response = null;
