@@ -1,27 +1,27 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
- * 
+ * Copyright Â© 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright Â© 2018 IBM.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,13 @@
 
 package org.onap.optf.cmso.ticketmgt.bean;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
@@ -40,14 +47,10 @@ import org.onap.optf.cmso.common.LogMessages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+/**
+ * The Class BuildCreateRequest.
+ */
 @Component
 public class BuildCreateRequest {
 
@@ -58,6 +61,9 @@ public class BuildCreateRequest {
     // This is for example purposes only ans every provider
     // will have unique requirements.
     // This assumes multiple VNFs can appear on a single ticket
+    /**
+     * The Enum Variables.
+     */
     //
     public enum Variables {
         vnfList(168), requesterId(50), plannedStartDate(15), plannedEndDate(15), validationStartTime(
@@ -71,19 +77,30 @@ public class BuildCreateRequest {
             this.maxLength = max;
         }
 
+        /**
+         * Gets the max length.
+         *
+         * @return the max length
+         */
         public int getMaxLength() {
             return maxLength;
         }
     }
 
-    private static EELFLogger log = EELFManager.getInstance().getLogger(BuildCreateRequest.class);
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
     Environment env;
 
+    /**
+     * Creates the change record request.
+     *
+     * @param variables the variables
+     * @param assetList the asset list
+     * @param workflowName the workflow name
+     * @return the json node
+     */
     public JsonNode createChangeRecordRequest(Map<String, Object> variables, List<TmAsset> assetList,
             String workflowName) {
         JsonNode rawjson = getYaml("CreateChangeTicket");
@@ -91,24 +108,48 @@ public class BuildCreateRequest {
         return json;
     }
 
+    /**
+     * Creates the close cancel change record.
+     *
+     * @param variables the variables
+     * @return the json node
+     */
     public JsonNode createCloseCancelChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("CloseCancelChangeRecord");
         JsonNode json = substituteJson(rawjson, variables);
         return json;
     }
 
+    /**
+     * Creates the cancel change record.
+     *
+     * @param variables the variables
+     * @return the json node
+     */
     public JsonNode createCancelChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("CancelChangeRecord");
         JsonNode json = substituteJson(rawjson, variables);
         return json;
     }
 
+    /**
+     * Creates the update change record.
+     *
+     * @param variables the variables
+     * @return the json node
+     */
     public JsonNode createUpdateChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("UpdateChangeRecord");
         JsonNode json = substituteJson(rawjson, variables);
         return json;
     }
 
+    /**
+     * Creates the get change record.
+     *
+     * @param variables the variables
+     * @return the json node
+     */
     public JsonNode createGetChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("GetChangeRecord");
         JsonNode json = substituteJson(rawjson, variables);
@@ -171,17 +212,27 @@ public class BuildCreateRequest {
     }
 
     private boolean isInteger(String name) {
-        if (name.equals(Variables.plannedEndDate.toString()))
+        if (name.equals(Variables.plannedEndDate.toString())) {
             return true;
-        if (name.equals(Variables.plannedStartDate.toString()))
+        }
+        if (name.equals(Variables.plannedStartDate.toString())) {
             return true;
-        if (name.equals(Variables.actualStartDate.toString()))
+        }
+        if (name.equals(Variables.actualStartDate.toString())) {
             return true;
-        if (name.equals(Variables.actualEndDate.toString()))
+        }
+        if (name.equals(Variables.actualEndDate.toString())) {
             return true;
+        }
         return false;
     }
 
+    /**
+     * Gets the yaml.
+     *
+     * @param workflowName the workflow name
+     * @return the yaml
+     */
     public JsonNode getYaml(String workflowName) {
         JsonNode json = null;
         // Get the YAML file for this workflow
