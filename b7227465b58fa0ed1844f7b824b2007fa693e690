@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa8947d3_f386f222",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/optimizer/OptimizerQuartzJob.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-25T22:17:02Z",
+      "side": 1,
+      "message": "are these the correct package names ?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 20
+      },
+      "revId": "b7227465b58fa0ed1844f7b824b2007fa693e690",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
