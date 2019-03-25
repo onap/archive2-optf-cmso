@@ -40,10 +40,10 @@ import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletProperties;
 import org.onap.optf.cmso.dispatcher.rs.DispatcherServiceImpl;
-import org.onap.optf.cmso.filters.CMSOContainerFilters;
+import org.onap.optf.cmso.filters.CmsoContainerFilters;
 import org.onap.optf.cmso.service.rs.AdminToolImpl;
-import org.onap.optf.cmso.service.rs.CMSOOptimizerCallbackImpl;
-import org.onap.optf.cmso.service.rs.CMSOServiceImpl;
+import org.onap.optf.cmso.service.rs.CmsoOptimizerCallbackImpl;
+import org.onap.optf.cmso.service.rs.CmsoServiceImpl;
 import org.onap.optf.cmso.service.rs.HealthCheckImpl;
 import org.onap.optf.cmso.test.loopback.SchedulerTestLoopbackServiceImpl;
 import org.onap.optf.cmso.test.loopback.TicketMgtLoopbackServiceImpl;
@@ -75,8 +75,8 @@ public class JerseyConfiguration extends ResourceConfig {
 
     @Autowired
     public JerseyConfiguration( /* LogRequestFilter lrf */ ) {
-        register(CMSOServiceImpl.class);
-        register(CMSOOptimizerCallbackImpl.class);
+        register(CmsoServiceImpl.class);
+        register(CmsoOptimizerCallbackImpl.class);
         register(SchedulerTestLoopbackServiceImpl.class);
         register(TicketMgtLoopbackServiceImpl.class);
         register(HealthCheckImpl.class);
@@ -89,7 +89,7 @@ public class JerseyConfiguration extends ResourceConfig {
 
         // TODO: Examine which logging features to enable
         register(new LoggingFeature(log));
-        register(CMSOContainerFilters.class);
+        register(CmsoContainerFilters.class);
     }
 
     @Bean
