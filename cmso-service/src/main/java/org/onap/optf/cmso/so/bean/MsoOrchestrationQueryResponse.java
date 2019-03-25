@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@
 package org.onap.optf.cmso.so.bean;
 
 public class MsoOrchestrationQueryResponse {
-    public enum MSO_STATUS {
+    public enum MsoStatus {
         UNKNOWN, COMPLETE, FAILED, IN_PROGRESS,
     }
 
