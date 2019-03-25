@@ -13,7 +13,7 @@ DEFAULT CHARACTER SET = utf8;
 
 CREATE TABLE IF NOT EXISTS `optimizer`.`response` (
   uuid BINARY(16) NOT NULL,
-  repsonse LONGTEXT NULL DEFAULT NULL,
+  response LONGTEXT NULL DEFAULT NULL,
   delivered_time BIGINT(20) NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`))
 ENGINE = InnoDB
