@@ -22,9 +22,7 @@ Create Schedule
     ${testid}=   Catenate   ${uuid}
     ${testid}=   Get Substring   ${testid}   -4
     ${dict}=   Create Dictionary   serviceInstanceId=${uuid}   parent_service_model_name=${uuid}
-    ${callbackData}=   Fill JSON Template File    ${VID_TEMPLATES}/VidCallbackData.json.template   ${dict} 
-    ${callbackDataString}=   Json Escape    ${callbackData}   
-	${map}=   Create Dictionary   uuid=${uuid}   callbackUrl=${GLOBAL_CALLBACK_URL}   callbackData=${callbackDataString}    testid=${testid}   workflow=${workflow}      userId=${GLOBAL_CALLBACK_USERID}
+	${map}=   Create Dictionary   uuid=${uuid}   callbackUrl=${GLOBAL_CALLBACK_URL}    testid=${testid}   workflow=${workflow}      userId=${GLOBAL_CALLBACK_USERID}
 	${nodelist}=   Split String    ${NODES}   ,
 	${nn}=    Catenate    1
     # Support up to 4 ChangeWindows
@@ -36,10 +34,22 @@ Create Schedule
     \  ${end_time}=    Get Current Date   UTC   + ${tomorrow} minutes   result_format=${UTC}
     \  Set To Dictionary    ${map}   start_time${i}=${start_time}   end_time${i}=${end_time}      
 
+    ${requestList}=   Create List 
+    
 	: For   ${vnf}   IN    @{nodelist}
 	\   Set To Dictionary    ${map}   node${nn}   ${vnf}   
-	\   ${nn}=   Evaluate    ${nn}+1     
+	\   ${nn}=   Evaluate    ${nn}+1
+	\   Set To DIctionary   ${dict}   vnfName=${vnf}      
+    \   ${requestInfo}=   Fill JSON Template File    ${VID_TEMPLATES}/VidCallbackData.json.template   ${dict}
+    \   Append To List   ${requestList}   ${requestInfo}
 
+
+    ${callBackDataMap}=  Create Dictionary   requestType=Update   requestDetails=${requestList}
+    
+    ${callbackDataString}=   Json Escape    ${callbackDataMap}   
+
+    Log    ${callbackDataString}
+    Set To Dictionary   ${map}   callbackData=${callbackDataString}   
 
     ${data}=   Fill JSON Template File    ${TEMPLATES}/${request_file}   ${map}    
     ${resp}=   Post Change Management   auth   schedules/${uuid}   data=${data}
