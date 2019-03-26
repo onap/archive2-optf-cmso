@@ -15,7 +15,7 @@
 	
 		"vnfDetails" : [{
 				"node" : [
-					"dummy{node}"
+					"${node1}"
 				]
 			}
 		]
