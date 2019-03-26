@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4994e082_5d602b89",
+        "filename": "cmso-service/src/test/java/org/onap/optf/cmso/JpaInit.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-26T14:11:09Z",
+      "side": 1,
+      "message": "Please fix.",
+      "range": {
+        "startLine": 3,
+        "startChar": 27,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "fd50550662f8e047fb762e4904f681da824b53d9",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
