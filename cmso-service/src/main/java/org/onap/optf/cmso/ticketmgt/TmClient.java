@@ -1,36 +1,37 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *         http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+ * Copyright © 2017-2018 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ *
+ *
+ * Unless otherwise specified, all documentation contained herein is licensed under the Creative
+ * Commons License, Attribution 4.0 Intl. (the "License"); you may not use this documentation except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * https://creativecommons.org/licenses/by/4.0/
+ *
+ * Unless required by applicable law or agreed to in writing, documentation distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
- * Unless otherwise specified, all documentation contained herein is licensed
- * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
- * you may not use this documentation except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *         https://creativecommons.org/licenses/by/4.0/
- * 
- * Unless required by applicable law or agreed to in writing, documentation
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
-*/
+ */
 
 package org.onap.optf.cmso.ticketmgt;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -48,7 +48,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import org.apache.commons.text.StringSubstitutor;
 import org.joda.time.format.ISODateTimeFormat;
 import org.onap.observations.Mdc;
@@ -58,7 +57,7 @@ import org.onap.optf.cmso.common.CmHelpers;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.filters.CMSOClientFilters;
+import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.DomainData;
@@ -76,13 +75,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
+/**
+ * The Class TmClient.
+ */
 @Component
 public class TmClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
@@ -94,7 +89,7 @@ public class TmClient {
     PropertiesManagement pm;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
     BuildCreateRequest buildCreateRequest;
@@ -102,8 +97,18 @@ public class TmClient {
     @Autowired
     TmEndpoints tmEndpoints;
 
+    /**
+     * Creates the change ticket.
+     *
+     * @param schedule the schedule
+     * @param group the group
+     * @param vnfNames the vnf names
+     * @param domainData the domain data
+     * @return the string
+     * @throws CMSException the CMS exception
+     */
     public String createChangeTicket(Schedule schedule, ChangeManagementGroup group, List<String> vnfNames,
-            List<DomainData> domainData) throws CMSException {
+                    List<DomainData> domainData) throws CMSException {
 
         String changeId = "";
         String workflowName = CmHelpers.getDomainData(domainData, CmDomainDataEnum.WorkflowName);
@@ -115,15 +120,34 @@ public class TmClient {
         return changeId;
     }
 
+    /**
+     * Close ticket.
+     *
+     * @param schedule the schedule
+     * @param group the group
+     * @param cmSchedules the cm schedules
+     * @param changeId the change id
+     * @param closureCode the closure code
+     * @param closingComments the closing comments
+     * @throws CMSException the CMS exception
+     */
     public void closeTicket(Schedule schedule, ChangeManagementGroup group, List<ChangeManagementSchedule> cmSchedules,
-            String changeId, ClosureCode closureCode, String closingComments) throws CMSException {
+                    String changeId, ClosureCode closureCode, String closingComments) throws CMSException {
         Map<String, Object> variables =
-                getCloseVariables(schedule, group, cmSchedules, changeId, closureCode, closingComments);
+                        getCloseVariables(schedule, group, cmSchedules, changeId, closureCode, closingComments);
         JsonNode closeChangeRecord = buildCreateRequest.createCloseCancelChangeRecord(variables);
         debug.debug("closeChangeRecord=" + closeChangeRecord.toString());
         postCloseChangeTicket(closeChangeRecord, schedule.getScheduleId(), changeId);
     }
 
+    /**
+     * Cancel ticket.
+     *
+     * @param schedule the schedule
+     * @param cms the cms
+     * @param changeId the change id
+     * @throws CMSException the CMS exception
+     */
     public void cancelTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CMSException {
         Map<String, Object> variables = getCancelVariables(schedule, changeId);
         JsonNode cancelChangeRecord = buildCreateRequest.createCancelChangeRecord(variables);
@@ -131,6 +155,14 @@ public class TmClient {
         postCloseChangeTicket(cancelChangeRecord, schedule.getScheduleId(), changeId);
     }
 
+    /**
+     * Update ticket.
+     *
+     * @param schedule the schedule
+     * @param cms the cms
+     * @param changeId the change id
+     * @throws CMSException the CMS exception
+     */
     public void updateTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CMSException {
         Map<String, Object> variables = getUpdateVariables(schedule, changeId);
         JsonNode updateChangeRecord = buildCreateRequest.createUpdateChangeRecord(variables);
@@ -138,6 +170,12 @@ public class TmClient {
         postUpdateChangeTicket(updateChangeRecord, schedule.getScheduleId(), changeId);
     }
 
+    /**
+     * Gets the change ticket.
+     *
+     * @param changeId the change id
+     * @return the change ticket
+     */
     public TmChangeInfo getChangeTicket(String changeId) {
         Map<String, String> mdcSave = Mdc.save();
         try {
@@ -155,7 +193,7 @@ public class TmClient {
                     break;
                 default: {
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "TM", String.valueOf(response.getStatus()),
-                            response.toString());
+                                    response.toString());
                 }
             }
         } catch (Exception e) {
@@ -167,29 +205,37 @@ public class TmClient {
     }
 
     private Map<String, Object> getCloseVariables(Schedule schedule, ChangeManagementGroup group,
-            List<ChangeManagementSchedule> cmSchedules, String changeId, ClosureCode closureCode,
-            String closingComments) {
+                    List<ChangeManagementSchedule> cmSchedules, String changeId, ClosureCode closureCode,
+                    String closingComments) {
         String requesterId = schedule.getUserId();
-        Map<String, Object> variables = new HashMap<String, Object>();
-        if (requesterId.length() > Variables.requesterId.getMaxLength())
+        if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
+        }
         long actualStartDate = 0;
         long actualEndDate = 0;
         for (ChangeManagementSchedule cms : cmSchedules) {
-            if (cms.getDispatchTimeMillis() != null)
-                if (actualStartDate == 0 || cms.getDispatchTimeMillis() < actualStartDate)
+            if (cms.getDispatchTimeMillis() != null) {
+                if (actualStartDate == 0 || cms.getDispatchTimeMillis() < actualStartDate) {
                     actualStartDate = cms.getDispatchTimeMillis();
-            if (cms.getExecutionCompletedTimeMillis() != null)
-                if (cms.getExecutionCompletedTimeMillis() > actualEndDate)
+                }
+            }
+            if (cms.getExecutionCompletedTimeMillis() != null) {
+                if (cms.getExecutionCompletedTimeMillis() > actualEndDate) {
                     actualEndDate = cms.getExecutionCompletedTimeMillis();
+                }
+            }
         }
         if (closureCode != ClosureCode.Successful) {
-            if (actualEndDate == 0)
+            if (actualEndDate == 0) {
                 actualEndDate = System.currentTimeMillis();
-            if (actualStartDate == 0)
+            }
+            if (actualStartDate == 0) {
                 actualStartDate = actualEndDate - 1000;
+            }
 
         }
+        Map<String, Object> variables = new HashMap<String, Object>();
+
         variables.put(Variables.status.toString(), "Closed");
         variables.put(Variables.requesterId.toString(), requesterId);
         variables.put(Variables.actualStartDate.toString(), actualStartDate / 1000);
@@ -203,8 +249,9 @@ public class TmClient {
     private Map<String, Object> getCancelVariables(Schedule schedule, String changeId) {
         String requesterId = schedule.getUserId();
         Map<String, Object> variables = new HashMap<String, Object>();
-        if (requesterId.length() > Variables.requesterId.getMaxLength())
+        if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
+        }
         variables.put(Variables.requesterId.toString(), requesterId);
         variables.put(Variables.changeId.toString(), changeId);
         return variables;
@@ -213,15 +260,16 @@ public class TmClient {
     private Map<String, Object> getUpdateVariables(Schedule schedule, String changeId) {
         String requesterId = schedule.getUserId();
         Map<String, Object> variables = new HashMap<String, Object>();
-        if (requesterId.length() > Variables.requesterId.getMaxLength())
+        if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
+        }
         variables.put(Variables.requesterId.toString(), requesterId);
         variables.put(Variables.changeId.toString(), changeId);
         return variables;
     }
 
     private void postCloseChangeTicket(JsonNode closeChangeRecord, String scheduleId, String changeId)
-            throws CMSException {
+                    throws CMSException {
         Map<String, String> mdcSave = Mdc.save();
         try {
             Response response = null;
@@ -241,24 +289,24 @@ public class TmClient {
                     debug.debug("response=" + respString);
                     if (!isAlreadyClosed(respString)) {
                         Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
-                                response.toString() + " : " + respString);
+                                        response.toString() + " : " + respString);
                         throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
-                                scheduleId, changeId, respString);
+                                        scheduleId, changeId, respString);
                     }
                 }
                     break;
                 default: {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
-                            response.toString() + " : " + message);
+                                    response.toString() + " : " + message);
                     throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
-                            scheduleId, changeId, message);
+                                    scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET, scheduleId,
-                    changeId, e.toString());
+                            changeId, e.toString());
         } finally {
             Mdc.restore(mdcSave);
         }
@@ -300,36 +348,38 @@ public class TmClient {
     }
 
     private Map<String, Object> getVariables(Schedule schedule, ChangeManagementGroup group, List<String> vnfNames,
-            List<DomainData> domainData) {
-        Long plannedStartDate = group.getStartTimeMillis();
-        Long plannedEndDate = group.getFinishTimeMillis();
-        Long validationStartTime = plannedStartDate + group.getNormalDurationInSecs();
-        Long backoutStartTime = plannedEndDate - group.getAdditionalDurationInSecs();
+                    List<DomainData> domainData) {
         String requesterId = schedule.getUserId();
         Map<String, Object> variables = new HashMap<String, Object>();
 
         String vnfList = vnfNames.toString();
-        if (vnfList.length() > Variables.vnfList.getMaxLength())
+        if (vnfList.length() > Variables.vnfList.getMaxLength()) {
             vnfList = vnfList.substring(0, Variables.vnfList.getMaxLength());
-        if (requesterId.length() > Variables.requesterId.getMaxLength())
+        }
+        if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
+        }
 
         variables.put(Variables.vnfList.toString(), vnfList);
         variables.put(Variables.vnfName.toString(), vnfNames.get(0));
         variables.put(Variables.requesterId.toString(), requesterId);
+        Long plannedStartDate = group.getStartTimeMillis();
+        Long plannedEndDate = group.getFinishTimeMillis();
         variables.put(Variables.plannedStartDate.toString(), plannedStartDate / 1000);
         variables.put(Variables.plannedEndDate.toString(), plannedEndDate / 1000);
+        Long validationStartTime = plannedStartDate + group.getNormalDurationInSecs();
+        Long backoutStartTime = plannedEndDate - group.getAdditionalDurationInSecs();
         variables.put(Variables.validationStartTime.toString(), validationStartTime / 1000);
         variables.put(Variables.backoutStartTime.toString(), backoutStartTime / 1000);
         // These will be display UTC -
         variables.put(Variables.validationStartTimeDisplay.toString(),
-                ISODateTimeFormat.dateTimeNoMillis().print(validationStartTime));
+                        ISODateTimeFormat.dateTimeNoMillis().print(validationStartTime));
         variables.put(Variables.backoutStartTimeDisplay.toString(),
-                ISODateTimeFormat.dateTimeNoMillis().print(backoutStartTime));
+                        ISODateTimeFormat.dateTimeNoMillis().print(backoutStartTime));
         variables.put(Variables.plannedStartTimeDisplay.toString(),
-                ISODateTimeFormat.dateTimeNoMillis().print(plannedStartDate));
+                        ISODateTimeFormat.dateTimeNoMillis().print(plannedStartDate));
         variables.put(Variables.plannedEndTimeDisplay.toString(),
-                ISODateTimeFormat.dateTimeNoMillis().print(plannedEndDate));
+                        ISODateTimeFormat.dateTimeNoMillis().print(plannedEndDate));
 
         // Ticket field values can be passed in via the DomainData
         JsonNode defaultValues = buildCreateRequest.getYaml("DefaultChangeTicketProperties");
@@ -384,24 +434,24 @@ public class TmClient {
                         }
                     } else {
                         Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
-                                response.toString() + " : " + "Response is empty");
+                                        response.toString() + " : " + "Response is empty");
                         throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
-                                scheduleId, "Response is empty");
+                                        scheduleId, "Response is empty");
                     }
                 }
                     break;
                 default: {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
-                            response.toString() + " : " + message);
+                                    response.toString() + " : " + message);
                     throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
-                            scheduleId, message);
+                                    scheduleId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
-                    e.toString());
+                            e.toString());
         } finally {
             Mdc.restore(mdcSave);
         }
@@ -409,7 +459,7 @@ public class TmClient {
     }
 
     private String postUpdateChangeTicket(JsonNode updateChangeRecord, String scheduleId, String changeId)
-            throws CMSException {
+                    throws CMSException {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("vtm.url") + env.getProperty("vtm.updatePath");
@@ -429,50 +479,21 @@ public class TmClient {
                 default: {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
-                            response.toString() + " : " + message);
+                                    response.toString() + " : " + message);
                     throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET,
-                            scheduleId, changeId, message);
+                                    scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET, scheduleId,
-                    changeId, e.toString());
+                            changeId, e.toString());
         } finally {
             Mdc.restore(mdcSave);
         }
         return changeId;
     }
 
-    private Response vtmPostOld(String url, Object request, String scheduleId) throws CMSException {
-        Response response = null;
-        try {
-            String user = env.getProperty("vtm.user");
-            String pass = pm.getProperty("vtm.pass", "");
-            // Cannot provide changeId. Interesting.
-            // This should be replaced by fetch
-            // For now, make a best effort to get the passed changeId
-
-            Client client = ClientBuilder.newClient();
-            client.register(new BasicAuthenticatorFilter(user, pass));
-            client.register(new CMSOClientFilters());
-            WebTarget target = client.target(url);
-            Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonRequest = mapper.writeValueAsString(request);
-            debug.debug("vTM URL = " + url + " user=" + user + " : " + jsonRequest);
-            response = invocationBuilder.post(Entity.json(request));
-            // String message = response.readEntity(String.class);
-            // debug.debug("Return from " + url + " : " + response.toString() + "\n" +
-            // message);
-            debug.debug("Return from " + url + " : " + response.toString());
-        } catch (Exception e) {
-            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
-            throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
-                    e.getMessage());
-        }
-        return response;
-    }
 
     private Response tmPost(Endpoint ep, Object request, String scheduleId) throws CMSException {
         Response response = null;
@@ -488,7 +509,7 @@ public class TmClient {
 
                 Client client = ClientBuilder.newClient();
                 client.register(new BasicAuthenticatorFilter(user, pass));
-                client.register(new CMSOClientFilters());
+                client.register(new CmsoClientFilters());
                 WebTarget target = client.target(url);
                 Invocation.Builder invocationBuilder = target.request(MediaType.APPLICATION_JSON);
                 ObjectMapper mapper = new ObjectMapper();
@@ -503,25 +524,31 @@ public class TmClient {
             } catch (ProcessingException e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
                 url = tmEndpoints.getNextEndpoint(ep, endpoints);
-                if (url == null || !tryNextURL(e)) {
+                if (url == null || !tryNextUrl(e)) {
                     throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
-                            scheduleId, e.getMessage());
+                                    scheduleId, e.getMessage());
                 }
             } catch (Exception e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
                 throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
-                        scheduleId, e.getMessage());
+                                scheduleId, e.getMessage());
             }
         }
         return response;
     }
 
-    private boolean tryNextURL(ProcessingException e) {
-        if (e.getCause() instanceof UnknownHostException)
+    private boolean tryNextUrl(ProcessingException exc) {
+        if (exc.getCause() instanceof UnknownHostException) {
             return true;
+        }
         return true;
     }
 
+    /**
+     * Health check.
+     *
+     * @return the health check component
+     */
     public HealthCheckComponent healthCheck() {
         // No op
         HealthCheckComponent hcc = new HealthCheckComponent();
