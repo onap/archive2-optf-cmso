@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa9681ab_4d38fd3b",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/service/rs/models/v2/ElementInfo.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-26T01:22:52Z",
+      "side": 1,
+      "message": "Remove HTML tags perhaps ?",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 6
+      },
+      "revId": "4d24621b0533e7ff8a51e252827f710321f0eacb",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
