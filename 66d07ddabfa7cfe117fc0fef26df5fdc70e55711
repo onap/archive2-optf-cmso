@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3520b41_0bc18540",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/ticketmgt/bean/BuildCreateRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-26T01:25:53Z",
+      "side": 1,
+      "message": "Please fix",
+      "range": {
+        "startLine": 3,
+        "startChar": 27,
+        "endLine": 3,
+        "endChar": 28
+      },
+      "revId": "66d07ddabfa7cfe117fc0fef26df5fdc70e55711",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
