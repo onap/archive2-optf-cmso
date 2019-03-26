@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "890d54a7_bbc8fcb9",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/test/loopback/TicketMgtLoopbackServiceImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-26T01:25:10Z",
+      "side": 1,
+      "message": "Please fix",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "81d74432a3af795b00a9dcb4f8f811297dc22efc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f9d3469_a93d7e73",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/ticketmgt/TmEndpoints.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-26T01:25:10Z",
+      "side": 1,
+      "message": "Please fix",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "81d74432a3af795b00a9dcb4f8f811297dc22efc",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
