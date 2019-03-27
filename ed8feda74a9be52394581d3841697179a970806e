@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6246c340_e5e81d6e",
+        "filename": "cmso-topology/src/test/java/org/onap/optf/cmso/service/rs/MockHttpServletRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-27T18:02:19Z",
+      "side": 1,
+      "message": "Please fix.",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "ed8feda74a9be52394581d3841697179a970806e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "222f8958_6c551430",
+        "filename": "cmso-topology/src/test/java/org/onap/optf/cmso/utilities/PropertiesAdmin.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-27T18:02:19Z",
+      "side": 1,
+      "message": "Please fix",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 14
+      },
+      "revId": "ed8feda74a9be52394581d3841697179a970806e",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
