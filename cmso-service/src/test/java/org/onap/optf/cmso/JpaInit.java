@@ -12,10 +12,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
  * ============LICENSE_END=========================================================================================
- * 
+ *
  */
 
- package org.onap.optf.cmso;
+package org.onap.optf.cmso;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.onap.optf.cmso.model.ApprovalType;
