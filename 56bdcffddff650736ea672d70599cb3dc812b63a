@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f540a892_d1802631",
+        "filename": "cmso-topology/src/main/docker/assembly/cmso-files.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 2041
+      },
+      "writtenOn": "2019-03-27T17:43:25Z",
+      "side": 1,
+      "message": "Please remove ecomp references.",
+      "range": {
+        "startLine": 2,
+        "startChar": 1,
+        "endLine": 2,
+        "endChar": 11
+      },
+      "revId": "56bdcffddff650736ea672d70599cb3dc812b63a",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
