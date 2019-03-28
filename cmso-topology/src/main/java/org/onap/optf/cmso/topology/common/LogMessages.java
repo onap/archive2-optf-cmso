@@ -43,7 +43,7 @@ public enum LogMessages implements ObservationInterface {
     CREATE_TICKET("Create Ticket {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
     CANCEL_TICKET("Cancel ticket {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
     UPDATE_TICKET("Update ticket {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
-    GET_ACTIVE_TICKETS("Get active tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
+    GET_CURRENT_TOPOLOGY("Get active tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
     SEARCH_TICKETS("Search tickets {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
 
     TICKET_NOT_FOUND("Ticket not found id={0}", Status.NOT_FOUND, Level.INFO),

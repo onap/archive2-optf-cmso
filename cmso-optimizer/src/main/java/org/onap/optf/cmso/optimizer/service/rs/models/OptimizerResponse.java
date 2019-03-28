@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.optf.cmso.topology.service.rs.models;
+package org.onap.optf.cmso.optimizer.service.rs.models;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
@@ -36,49 +36,27 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ApiModel(value = "Topology Response", description = "Response to topology query for the requested elements.")
-public class TopologyResponse implements Serializable {
+@ApiModel(value = "Optimizer Response", description = "Response to optimizer request for the requested elements.")
+public class OptimizerResponse implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(TopologyResponse.class);
+    private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizerResponse.class);
 
-    public enum TopologyRequestStatus {
-        IN_PROGRESS, COMPLETED, FAILED
+    public enum OptimizeScheduleStatus {
+        CREATED, PENDING_TOPOLOGY, PENDING_TICKETS, PENDING_OPTIMIZER, COMPLETED, FAILED, DELETED,
     }
 
     @ApiModelProperty(value = "Unique Id of the request")
     private String requestId;
 
-    @ApiModelProperty(value = "List of elements for for which topology has been requested.")
-    private List<ElementInfo> elements = new ArrayList<>();
+    @ApiModelProperty(value = "Status of the optimization")
+    private OptimizeScheduleStatus status;
 
-    @ApiModelProperty(value = "List of referenced elements representing the topology that has been requested.")
-    private List<ReferencedElementInfo> referencedElements = new ArrayList<>();
-
-    @ApiModelProperty(value = "Status of asynchronous request. COMPLETED is returned on initial synchonous request. "
-                    + "If IN_PROGRESS is returned, the optimizer will enter asynchronous polling mode.")
-    private TopologyRequestStatus status;
-
-    @ApiModelProperty(value = "FAILED request error message.")
+    @ApiModelProperty(value = "Message for failed optimization")
     private String errorMessage;
 
-    @ApiModelProperty(value = "If request is asynchronous (IN_PROGRESS), suggested interval to the next poll.")
-    private Integer pollingSeconds;
 
-    public TopologyRequestStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TopologyRequestStatus status) {
-        this.status = status;
-    }
-
-    public Integer getPollingSeconds() {
-        return pollingSeconds;
-    }
-
-    public void setPollingSeconds(Integer pollingSeconds) {
-        this.pollingSeconds = pollingSeconds;
-    }
+    @ApiModelProperty(value = "List of schedules returned by the optimizer.")
+    private List<OptimizerScheduleInfo> schedules = new ArrayList<>();
 
     public String getRequestId() {
         return requestId;
@@ -88,20 +66,21 @@ public class TopologyResponse implements Serializable {
         this.requestId = requestId;
     }
 
-    public List<ElementInfo> getElements() {
-        return elements;
+
+    public List<OptimizerScheduleInfo> getSchedules() {
+        return schedules;
     }
 
-    public void setElements(List<ElementInfo> elements) {
-        this.elements = elements;
+    public void setSchedules(List<OptimizerScheduleInfo> schedules) {
+        this.schedules = schedules;
     }
 
-    public List<ReferencedElementInfo> getReferencedElements() {
-        return referencedElements;
+    public OptimizeScheduleStatus getStatus() {
+        return status;
     }
 
-    public void setReferencedElements(List<ReferencedElementInfo> referencedElements) {
-        this.referencedElements = referencedElements;
+    public void setStatus(OptimizeScheduleStatus status) {
+        this.status = status;
     }
 
     public String getErrorMessage() {
