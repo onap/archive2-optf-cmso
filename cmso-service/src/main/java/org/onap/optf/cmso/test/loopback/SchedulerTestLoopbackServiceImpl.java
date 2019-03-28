@@ -42,6 +42,7 @@ import org.joda.time.DateTime;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.optimizer.model.OptimizerElementInfo;
 import org.onap.optf.cmso.optimizer.model.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.model.OptimizerResponse;
 import org.onap.optf.cmso.optimizer.model.OptimizerScheduleInfo;
@@ -50,7 +51,6 @@ import org.onap.optf.cmso.optimizer.model.ScheduledElement.ScheduleType;
 import org.onap.optf.cmso.optimizer.model.UnScheduledElement;
 import org.onap.optf.cmso.service.rs.CmsoOptimizerCallbackImpl;
 import org.onap.optf.cmso.service.rs.models.v2.ChangeWindow;
-import org.onap.optf.cmso.service.rs.models.v2.ElementInfo;
 import org.onap.optf.cmso.wf.bean.WfCmResponse200;
 import org.onap.optf.cmso.wf.bean.WfMsoRequestReferences;
 import org.onap.optf.cmso.wf.bean.WfMsoResponse;
@@ -111,7 +111,7 @@ public class SchedulerTestLoopbackServiceImpl implements SchedulerTestLoopbackSe
         Map<String, String> nodes = new HashMap<>();
         List<String> nodeList = new ArrayList<>();
         // get total number of nodes across all groups.
-        for (ElementInfo sr : request.getElements()) {
+        for (OptimizerElementInfo sr : request.getElements()) {
             nodes.put(sr.getElementId(), sr.getGroupId());
             nodeList.add(sr.getElementId());
         }
