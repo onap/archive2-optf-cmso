@@ -48,7 +48,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 public class DispatcherServiceImpl implements DispacherService {
-    private static EELFLogger log = EELFManager.getInstance().getLogger(DispatcherServiceImpl.class);
     private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();

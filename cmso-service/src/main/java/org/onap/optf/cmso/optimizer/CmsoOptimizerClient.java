@@ -52,9 +52,11 @@ import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.DomainData;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.optimizer.model.OptimizerElementInfo;
 import org.onap.optf.cmso.optimizer.model.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.model.OptimizerResponse;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
+import org.onap.optf.cmso.service.rs.models.v2.ElementInfo;
 import org.onap.optf.cmso.service.rs.models.v2.NameValue;
 import org.onap.optf.cmso.service.rs.models.v2.SchedulingData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -315,7 +317,7 @@ public class CmsoOptimizerClient {
             orequest.setPolicies(info.getPolicies());
             orequest.setRequestId(schedule.getScheduleId());
             orequest.setCommonData(marshallCommonData(schedule));
-            orequest.setElements(info.getElements());
+            orequest.setElements(marshallElements(info));
             orequest.setAdditionalDuration(info.getAdditionalDurationInSeconds());
             orequest.setNormalDuration(info.getNormalDurationInSeconds());
             orequest.setConcurrencyLimit(info.getConcurrencyLimit());
@@ -332,6 +334,20 @@ public class CmsoOptimizerClient {
             scheduleDAO.save(schedule);
         }
         return null;
+    }
+
+    private List<OptimizerElementInfo> marshallElements(SchedulingData info)
+    {
+        List<OptimizerElementInfo> list = new ArrayList<>();
+        List<ElementInfo> elementList = info.getElements();
+        for (ElementInfo element : elementList) {
+            OptimizerElementInfo optElement = new OptimizerElementInfo();
+            optElement.setElementData(element.getElementData());
+            optElement.setElementId(element.getElementId());
+            optElement.setGroupId(element.getGroupId());
+            list.add(optElement );
+        }
+        return list;
     }
 
     private List<NameValue> marshallCommonData(Schedule schedule) {

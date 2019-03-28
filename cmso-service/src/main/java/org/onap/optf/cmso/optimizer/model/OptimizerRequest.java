@@ -65,7 +65,7 @@ public class OptimizerRequest implements Serializable {
     private List<ChangeWindow> changeWindows = new ArrayList<>();
 
     @ApiModelProperty(value = "List of the elements to schedule.")
-    private List<ElementInfo> elements = new ArrayList<>();
+    private List<OptimizerElementInfo> elements = new ArrayList<>();
 
     @ApiModelProperty(value = "List of the policies to control optimization.")
     private List<PolicyInfo> policies = new ArrayList<>();
@@ -100,12 +100,12 @@ public class OptimizerRequest implements Serializable {
     }
 
 
-    public List<ElementInfo> getElements() {
+    public List<OptimizerElementInfo> getElements() {
         return elements;
     }
 
 
-    public void setElements(List<ElementInfo> elements) {
+    public void setElements(List<OptimizerElementInfo> elements) {
         this.elements = elements;
     }
 
