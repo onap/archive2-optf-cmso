@@ -60,7 +60,7 @@ public class HealthCheckImpl implements HealthCheck {
         HealthCheckMessage hc = new HealthCheckMessage();
         hc.setHealthy(true);
 
-        addToHealthCheckMessage(hc, this.healthCheckDb());
+        //addToHealthCheckMessage(hc, this.healthCheckDb());
 
         if (hc.getHealthy()) {
             response = Response.ok().entity(hc).build();
@@ -87,7 +87,7 @@ public class HealthCheckImpl implements HealthCheck {
      */
     private HealthCheckComponent healthCheckDb() {
         HealthCheckComponent hcc = new HealthCheckComponent();
-        hcc.setName("Ticket Management Database");
+        hcc.setName("Database");
         String url = env.getProperty("spring.datasource.url");
         hcc.setUrl(url);
         try {

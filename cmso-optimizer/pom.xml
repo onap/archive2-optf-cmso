@@ -239,8 +239,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
+			<groupId>org.scala-saddle</groupId>
+			<artifactId>google-rfc-2445</artifactId>
+			<version>20110304</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
