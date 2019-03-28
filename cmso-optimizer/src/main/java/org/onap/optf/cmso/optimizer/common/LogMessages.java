@@ -72,6 +72,7 @@ public enum LogMessages implements ObservationInterface {
     TOPOLOGY_REQUEST("Topology request {0} for {1} URL: {1}", Status.OK, Level.INFO),
     OPTIMIZER_REQUEST("OPtimizer request {0} for {1} Command: {1}", Status.OK, Level.INFO),
     TICKETS_REQUEST("Tickets request {0} for {1} URL: {1}", Status.OK, Level.INFO),
+    UNSUPPORTED_PERIODIC_TIME("Unsupported periodic time from policy: {0}", Status.INTERNAL_SERVER_ERROR, Level.ERROR),
 
     ;
     private final String defaultId;
