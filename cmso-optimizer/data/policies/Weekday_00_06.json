@@ -1,0 +1,38 @@
+{
+    "service": "TimeLimitAndVerticalTopology",
+    "policyName": "CMSO.Weekday_00_06",
+    "description": "dev instance",
+    "templateVersion": "Dublin",
+    "version": "0001",
+    "priority": "4",
+    "riskType": "test",
+    "riskLevel": "3",
+    "guard": "False",
+    "content": {
+        "serviceType": "networkOnDemand",
+        "identity": "vnf_upgrade_policy",
+        "policyScope": {
+            "serviceType": ["networkOnDemand"],
+            "aicZone": [
+                " "
+            ],
+            "entityType": ["vnf"]
+        },
+        "timeSchedule": {
+            "allowedPeriodicTime": [
+                {
+                    "day": "weekday",
+                    "timeRange": [
+                        {
+                            "start_time": "00:00:00+00:00",
+                            "end_time": "06:00:00+00:00"
+                        }
+                    ]
+                }
+            ]
+        },
+        "nodeType": ["vnf"],
+        "type": "timeLimitAndVerticalTopology",
+        "conflictScope": "vnf_pserver"
+    }
+}
