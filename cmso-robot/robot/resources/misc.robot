@@ -22,9 +22,12 @@ Validate Status
     
 Validate JSON Error
     [Documentation]     Fails if messageIds do not match. expected_errors should be a list but a string would likely work as well
-    [Arguments]    ${resp_json}    ${expected_errors}
+    [Arguments]    ${resp_json}    ${expected_errors}    ${listVars}
     ${result}=   Get From Dictionary   ${resp_json['requestError']}   messageId   
+    ${variables}=   Get From Dictionary   ${resp_json['requestError']}   variables   
     Should Contain    ${expected_errors}    ${result}    #checks expected_errors list for the actual error received from schedule
+    :for    ${var}   IN   @{listVars}
+    \    Should Contain   ${variables}   ${var}
     
 Check ATTIDs Template
    [Documentation]    This just checks a list of uuids 
