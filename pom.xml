@@ -38,7 +38,7 @@
 	<parent>
 		<groupId>org.onap.oparent</groupId>
 		<artifactId>oparent</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.3</version>
 	</parent>
 
 	<groupId>org.onap.optf.cmso</groupId>
@@ -64,6 +64,8 @@
     <modules>
         <module>cmso-database</module>
         <module>cmso-service</module>
+        <module>cmso-optimizer</module>
+        <module>cmso-topology</module>
         <module>cmso-ticketmgt</module>
         <module>cmso-robot</module>
     </modules>

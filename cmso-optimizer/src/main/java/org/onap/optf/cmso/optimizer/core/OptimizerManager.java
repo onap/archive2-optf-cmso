@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.optimizer.clients.ticketmgt.TicketMgtRequestManager;
+import org.onap.optf.cmso.optimizer.clients.ticketmgt.models.ActiveTicketsResponse;
 import org.onap.optf.cmso.optimizer.clients.topology.TopologyRequestManager;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
@@ -47,6 +49,9 @@ public class OptimizerManager {
 
     @Autowired
     TopologyRequestManager topologyRequestManager;
+
+    @Autowired
+    TicketMgtRequestManager ticketMgtRequestManager;
 
     /**
      * Validate optimizer request.
@@ -115,8 +120,7 @@ public class OptimizerManager {
         UUID uuid = UUID.fromString(request.getRequestId());
         Request requestRow = null;
         Optional<Request> rrOptional = requestDao.findById(uuid);
-        if (rrOptional.isPresent())
-        {
+        if (rrOptional.isPresent()) {
             requestRow = rrOptional.get();
         }
         OptimizerResponse optimizerResponse = new OptimizerResponse();
@@ -135,39 +139,82 @@ public class OptimizerManager {
         }
         requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
         requestDao.save(requestRow);
-        TopologyResponse topologyResponse = topologyRequestManager.createTopologyRequest(uuid);
+        initiateDataGathering(requestRow);
+        requestDao.save(requestRow);
+        OptimizeScheduleStatus status = OptimizeScheduleStatus.valueOf(requestRow.getStatus());
+        optimizerResponse.setStatus(status);
+        optimizerResponse.setErrorMessage("");
+        return optimizerResponse;
+    }
+
+    private void initiateDataGathering(Request requestRow) throws CmsoException {
+        TopologyResponse topologyResponse = topologyRequestManager.createTopologyRequest(requestRow);
         if (topologyResponse != null) {
-            switch (topologyResponse.getStatus())
-            {
+            switch (topologyResponse.getStatus()) {
                 case COMPLETED:
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.PENDING_TICKETS.toString());
-                    optimizerResponse.setStatus(OptimizeScheduleStatus.PENDING_TICKETS);
+                    initiateDataGathering(requestRow); // continue synchronous flow
+                    return;
+                case FAILED:
+                    requestRow.setRequestStart(System.currentTimeMillis());
+                    requestRow.setRequestEnd(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
+                    return;
+                case IN_PROGRESS:
+                    requestRow.setRequestStart(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY.toString());
+                    break;
+                default:
+                    break;
+            }
+        }
+        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.FAILED_TO_CREATE_TOPOLOGY_REQUEST,
+                        requestRow.getUuid().toString());
+    }
 
+    private void initiateTicketGathering(Request requestRow) throws CmsoException {
+        ActiveTicketsResponse apiResponse = ticketMgtRequestManager.createTicketsRequest(requestRow);
+        if (apiResponse != null) {
+            switch (apiResponse.getStatus()) {
+                case COMPLETED:
+                    requestRow.setRequestStart(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.PENDING_OPTIMIZER.toString());
+                    initiateOptimizer(requestRow);
                     break;
                 case FAILED:
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setRequestEnd(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
-                    optimizerResponse.setStatus(OptimizeScheduleStatus.FAILED);
-                    optimizerResponse.setErrorMessage(topologyResponse.getErrorMessage());
                     break;
                 case IN_PROGRESS:
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY.toString());
-                    optimizerResponse.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY);
+                    break;
+                default:
                     break;
             }
-        } else {
-            requestRow.setRequestStart(System.currentTimeMillis());
-            requestRow.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY.toString());
-            requestDao.save(requestRow);
-            return null;
         }
-        requestDao.save(requestRow);
-        return optimizerResponse;
+        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.FAILED_TO_CREATE_TICKET_REQUEST,
+                        requestRow.getUuid().toString());
     }
 
+
+    private void initiateOptimizer(Request requestRow) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @SuppressWarnings("unused")
+    private Request getRequestRow(UUID uuid) throws CmsoException {
+        Request requestRow = null;
+        Optional<Request> requestOptional = requestDao.findById(uuid);
+        if (requestOptional.isPresent()) {
+            return requestOptional.get();
+        }
+        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.EXPECTED_DATA_NOT_FOUND,
+                        requestRow.toString(), "Request table");
+    }
 
 
 }
