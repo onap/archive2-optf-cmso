@@ -44,12 +44,9 @@ public class PolicyManager {
         TimeLimitAndVerticalTopology returnPolicy = null;
         if (policy != null) {
             ObjectMapper om = new ObjectMapper();
-            try
-            {
+            try {
                 returnPolicy = om.convertValue(policy.getContent(), TimeLimitAndVerticalTopology.class);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             }
         }
