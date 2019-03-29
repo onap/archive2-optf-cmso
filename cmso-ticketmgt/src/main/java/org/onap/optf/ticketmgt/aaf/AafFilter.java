@@ -22,12 +22,10 @@ package org.onap.optf.ticketmgt.aaf;
 
 import java.io.IOException;
 import java.util.Properties;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.aaf.cadi.PropAccess;
 import org.onap.aaf.cadi.filter.CadiFilter;
 import org.onap.observations.Observation;
@@ -57,14 +55,14 @@ public class AafFilter extends OrderedRequestContextFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        if(!request.getRequestURI().matches("^.*/util/echo$")){
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws IOException, ServletException {
+        if (!request.getRequestURI().matches("^.*/util/echo$")) {
             cadiFilter.doFilter(request, response, filterChain);
-            if(response.getStatus() >=400 && response.getStatus() < 500){
-            	Observation.report(LogMessages.UNAUTHENTICATED);
-                ResponseFormatter.errorResponse(request, response, 
-                		new CMSException(LogMessages.UNAUTHENTICATED.getStatus(), 
-                		LogMessages.UNAUTHENTICATED, ""));
+            if (response.getStatus() >= 400 && response.getStatus() < 500) {
+                Observation.report(LogMessages.UNAUTHENTICATED);
+                ResponseFormatter.errorResponse(request, response, new CMSException(
+                                LogMessages.UNAUTHENTICATED.getStatus(), LogMessages.UNAUTHENTICATED, ""));
             }
         } else {
             filterChain.doFilter(request, response);

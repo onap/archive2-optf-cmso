@@ -33,7 +33,6 @@ package org.onap.optf.ticketmgt.filters;
 
 import java.io.IOException;
 import java.util.UUID;
-
 import javax.annotation.Priority;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.WebApplicationException;
@@ -46,7 +45,6 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.Provider;
-
 import org.onap.observations.Mdc;
 import org.onap.observations.MessageHeaders;
 import org.onap.observations.MessageHeaders.HeadersEnum;
@@ -60,18 +58,17 @@ import org.springframework.stereotype.Component;
 public class CMSOContainerFilters implements ContainerRequestFilter, ContainerResponseFilter {
 
 
-	@Context
-	private HttpServletRequest servletRequest;
+    @Context
+    private HttpServletRequest servletRequest;
 
     @Override
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
-            throws IOException {
+                    throws IOException {
         try {
-			Mdc.auditEnd(requestContext, responseContext);
-			Observation.report(LogMessages.INCOMING_MESSAGE_RESPONSE, 
-					requestContext.getMethod(),
-					requestContext.getUriInfo().getPath().toString(),
-					responseContext.getStatusInfo().toString());
+            Mdc.auditEnd(requestContext, responseContext);
+            Observation.report(LogMessages.INCOMING_MESSAGE_RESPONSE, requestContext.getMethod(),
+                            requestContext.getUriInfo().getPath().toString(),
+                            responseContext.getStatusInfo().toString());
             MultivaluedMap<String, String> reqHeaders = requestContext.getHeaders();
             MultivaluedMap<String, Object> respHeaders = responseContext.getHeaders();
             String minorVersion = (String) reqHeaders.getFirst(HeadersEnum.MinorVersion.toString());
@@ -81,9 +78,9 @@ public class CMSOContainerFilters implements ContainerRequestFilter, ContainerRe
 
         } catch (Exception e) {
             if (e instanceof WebApplicationException) {
-            	Observation.report(LogMessages.EXPECTED_EXCEPTION, e.getMessage());
+                Observation.report(LogMessages.EXPECTED_EXCEPTION, e.getMessage());
             } else {
-            	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             }
         }
     }
@@ -92,10 +89,9 @@ public class CMSOContainerFilters implements ContainerRequestFilter, ContainerRe
     public void filter(ContainerRequestContext requestContext) throws IOException {
         try {
             // On the way in
-			Mdc.auditStart(requestContext, servletRequest);
-			Observation.report(LogMessages.INCOMING_MESSAGE, 
-					requestContext.getMethod(),
-					requestContext.getUriInfo().getPath().toString());
+            Mdc.auditStart(requestContext, servletRequest);
+            Observation.report(LogMessages.INCOMING_MESSAGE, requestContext.getMethod(),
+                            requestContext.getUriInfo().getPath().toString());
 
             String majorVersion = requestContext.getUriInfo().getPath();
             if (majorVersion != null) {
@@ -133,7 +129,7 @@ public class CMSOContainerFilters implements ContainerRequestFilter, ContainerRe
                 Observation.report(LogMessages.EXPECTED_EXCEPTION, e.getMessage());
                 throw e;
             } else {
-            	Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
+                Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             }
         }
 

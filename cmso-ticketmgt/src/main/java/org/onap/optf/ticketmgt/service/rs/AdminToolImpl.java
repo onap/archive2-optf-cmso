@@ -31,28 +31,26 @@
 
 package org.onap.optf.ticketmgt.service.rs;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.springframework.stereotype.Controller;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 @Controller
 public class AdminToolImpl implements AdminTool {
     private static EELFLogger log = EELFManager.getInstance().getLogger(AdminToolImpl.class);
 
-    
-    @Context 
+
+    @Context
     UriInfo uri;
-    
-    @Context 
+
+    @Context
     HttpServletRequest request;
-    
+
     @Override
     public Response exec(String apiVersion, String id) {
         log.info("AdminTool.exec entered " + uri.getPath());

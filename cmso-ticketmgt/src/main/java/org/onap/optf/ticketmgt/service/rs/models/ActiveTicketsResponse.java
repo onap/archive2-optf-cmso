@@ -31,73 +31,73 @@
 
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-@ApiModel(value = "Ticket Management Response", description = "Response to active ticket query for the requested elements.")
+@ApiModel(value = "Ticket Management Response",
+                description = "Response to active ticket query for the requested elements.")
 public class ActiveTicketsResponse implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(ActiveTicketsResponse.class);
 
-    public enum ActiveTicketResponseStatus
-    {
-    	IN_PROGESS,
-    	COMPLETED,
+    public enum ActiveTicketResponseStatus {
+        IN_PROGESS, COMPLETED,
     }
+
     @ApiModelProperty(value = "Unique Id of the request")
     private String requestId;
 
-    @ApiModelProperty(value = "List of TicketData for the requested elements. A single ticket may apply to more than 1 passed elementId.")
+    @ApiModelProperty(
+                    value = "List of TicketData for the requested elements. A single ticket may apply to more than 1 passed elementId.")
     private List<TicketData> elements = new ArrayList<>();
-    
-    @ApiModelProperty(value = "Status of ticket request. IN_PROGRESS will indicate asynchronous processing is required.")
+
+    @ApiModelProperty(
+                    value = "Status of ticket request. IN_PROGRESS will indicate asynchronous processing is required.")
     private ActiveTicketResponseStatus status;
- 
+
     @ApiModelProperty(value = "If request is asynchronous (IN_PROGRESS), suggested interval to the next poll.")
     private Integer pollingSeconds;
-    
+
     public String getRequestId() {
-		return requestId;
-	}
+        return requestId;
+    }
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
-	public List<TicketData> getElements() {
-		return elements;
-	}
+    public List<TicketData> getElements() {
+        return elements;
+    }
 
-	public void setElements(List<TicketData> elements) {
-		this.elements = elements;
-	}
+    public void setElements(List<TicketData> elements) {
+        this.elements = elements;
+    }
 
-	public ActiveTicketResponseStatus getStatus() {
-		return status;
-	}
+    public ActiveTicketResponseStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus(ActiveTicketResponseStatus status) {
-		this.status = status;
-	}
+    public void setStatus(ActiveTicketResponseStatus status) {
+        this.status = status;
+    }
 
-	public Integer getPollingSeconds() {
-		return pollingSeconds;
-	}
+    public Integer getPollingSeconds() {
+        return pollingSeconds;
+    }
 
-	public void setPollingSeconds(Integer pollingSeconds) {
-		this.pollingSeconds = pollingSeconds;
-	}
+    public void setPollingSeconds(Integer pollingSeconds) {
+        this.pollingSeconds = pollingSeconds;
+    }
 
-	public String toString() {
+    public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(this);

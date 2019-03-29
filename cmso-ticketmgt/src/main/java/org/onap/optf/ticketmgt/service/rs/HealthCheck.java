@@ -31,6 +31,11 @@
 
 package org.onap.optf.ticketmgt.service.rs;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -39,16 +44,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.onap.optf.ticketmgt.service.rs.models.HealthCheckMessage;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @Api("Administration")
 @Path("/{apiVersion}")
@@ -62,8 +60,8 @@ public interface HealthCheck {
     @RequestMapping(value = "/{apiVersion}/health", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     @ApiOperation(value = "", notes = "Returns health status of server.", response = HealthCheckMessage.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 400, message = "Not healthy", response = HealthCheckMessage.class)})
-    public Response healthCheck(
-    		@ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
-            @ApiParam(value = "Check Interfaces") @QueryParam("checkInterfaces") @DefaultValue(value = "true") Boolean checkInterfaces);
+                    @ApiResponse(code = 400, message = "Not healthy", response = HealthCheckMessage.class)})
+    public Response healthCheck(@ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
+                    @ApiParam(value = "Check Interfaces") @QueryParam("checkInterfaces") @DefaultValue(
+                                    value = "true") Boolean checkInterfaces);
 }

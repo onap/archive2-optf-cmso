@@ -29,81 +29,97 @@
 */
 package org.onap.observations;
 
-import javax.ws.rs.core.Response.Status;
-
-import org.apache.log4j.Level;
-
 import com.att.eelf.i18n.EELFResolvableErrorEnum;
 import com.att.eelf.i18n.EELFResourceManager;
+import javax.ws.rs.core.Response.Status;
+import org.apache.log4j.Level;
 
 
-public class ObservationObject implements ObservationInterface
-{
-	
-	//*************************************************************************************************
-	// Interface class that matches the ObservationInteface  pattern
-	// This will be used in case we decide to provide external overrides and we need to instantiate
-	// For now, we'll just use the Enum itself.
-	//
-	// 
-	private Enum<?> value = null;
-	private Level level = null;;
-	private String message = null;
-	private Status status = null;
-	private String domain = null;
-	private Boolean metric = false;
-	private Boolean audit = false;
-	public ObservationObject(ObservationInterface o)
-	{
-		this.value = o.getValue();
-		this.level = o.getLevel();
-		this.message = o.getMessage();
-		this.status = o.getStatus();
-		this.domain = o.getDomain();
-		this.metric = o.getMetric();
-		this.audit = o.getAudit();
-		
-	}
-	public Enum<?> getValue() {return value;}
-	@Override
-	public String getMessage() {return message;}
-	@Override
-	public Status getStatus() {return status;}
-	@Override
-	public String getDomain() {return domain;}
+public class ObservationObject implements ObservationInterface {
 
-	@Override
-	public Level getLevel() {
-		return level;
-	}
-	@Override
-	public String name() {
-		return value.name();
-	}
-	@Override
-	public Boolean getAudit() {
-		return audit;
-	}
-	@Override
-	public Boolean getMetric() {
-		return metric;
-	}
+    // *************************************************************************************************
+    // Interface class that matches the ObservationInteface pattern
+    // This will be used in case we decide to provide external overrides and we need to instantiate
+    // For now, we'll just use the Enum itself.
+    //
+    //
+    private Enum<?> value = null;
+    private Level level = null;;
+    private String message = null;
+    private Status status = null;
+    private String domain = null;
+    private Boolean metric = false;
+    private Boolean audit = false;
 
-	public String getMessage(String ...arguments) {
-		return EELFResourceManager.format((EELFResolvableErrorEnum)value,  arguments);
-	}
-	public void setValue(Enum<?> value) {
-		this.value = value;
-	}
-	public void setLevel(Level level) {
-		this.level = level;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public ObservationObject(ObservationInterface o) {
+        this.value   = o.getValue();
+        this.level   = o.getLevel();
+        this.message = o.getMessage();
+        this.status  = o.getStatus();
+        this.domain  = o.getDomain();
+        this.metric  = o.getMetric();
+        this.audit   = o.getAudit();
+
+    }
+
+    public Enum<?> getValue() {
+        return value;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public String getDomain() {
+        return domain;
+    }
+
+    @Override
+    public Level getLevel() {
+        return level;
+    }
+
+    @Override
+    public String name() {
+        return value.name();
+    }
+
+    @Override
+    public Boolean getAudit() {
+        return audit;
+    }
+
+    @Override
+    public Boolean getMetric() {
+        return metric;
+    }
+
+    public String getMessage(String... arguments) {
+        return EELFResourceManager.format((EELFResolvableErrorEnum) value, arguments);
+    }
+
+    public void setValue(Enum<?> value) {
+        this.value = value;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
 
 }

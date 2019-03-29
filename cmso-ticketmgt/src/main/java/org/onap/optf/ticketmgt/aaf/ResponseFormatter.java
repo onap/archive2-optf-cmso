@@ -20,19 +20,15 @@
 package org.onap.optf.ticketmgt.aaf;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
-
 import org.onap.optf.cmso.common.exceptions.CMSException;
 
 class ResponseFormatter {
 
-    private static final String ACCEPT_HEADER = "accept";
 
-    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CMSException error) throws IOException {
-        String accept = request.getHeader(ACCEPT_HEADER) == null ? MediaType.APPLICATION_JSON : request.getHeader(ACCEPT_HEADER);
+    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CMSException error)
+                    throws IOException {
         response.setStatus(error.getStatus().getStatusCode());
         response.getWriter().write(error.getRequestError().toString());
         response.getWriter().flush();

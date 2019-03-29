@@ -31,7 +31,6 @@
 package org.onap.optf.ticketmgt;
 
 import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
@@ -43,24 +42,21 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile(SpringProfiles.PROPRIETARY__AUTHENTICATION)
 
-public class AuthProvider
-  implements AuthenticationProvider {
- 
-	@Autowired
-	Environment env;
-	
+public class AuthProvider implements AuthenticationProvider {
+
+    @Autowired
+    Environment env;
+
     @Override
     public Authentication authenticate(Authentication authentication) {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
-        //TODO check credentials until we enable AAF 
-        return new UsernamePasswordAuthenticationToken(
-          name, password, new ArrayList<>());
+        // TODO check credentials until we enable AAF
+        return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
     }
- 
+
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication.equals(
-          UsernamePasswordAuthenticationToken.class);
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

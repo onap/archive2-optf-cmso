@@ -29,20 +29,24 @@
 */
 package org.onap.observations;
 
+import com.att.eelf.i18n.EELFResolvableErrorEnum;
 import javax.ws.rs.core.Response.Status;
-
 import org.apache.log4j.Level;
 
-import com.att.eelf.i18n.EELFResolvableErrorEnum;
+public interface ObservationInterface extends EELFResolvableErrorEnum {
+    public Enum<?> getValue();
 
-public interface ObservationInterface extends EELFResolvableErrorEnum
-{
-	public Enum<?> getValue();
-	public Level getLevel();
-	public String getMessage();
-	public Status getStatus();
-	public String getDomain();
-	public String name();
-	public Boolean getAudit();
-	public Boolean getMetric();
+    public Level getLevel();
+
+    public String getMessage();
+
+    public Status getStatus();
+
+    public String getDomain();
+
+    public String name();
+
+    public Boolean getAudit();
+
+    public Boolean getMetric();
 }

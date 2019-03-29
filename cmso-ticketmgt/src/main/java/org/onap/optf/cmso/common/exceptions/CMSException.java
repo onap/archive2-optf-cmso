@@ -31,15 +31,12 @@
 
 package org.onap.optf.cmso.common.exceptions;
 
+import com.att.eelf.i18n.EELFResourceManager;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.core.Response.Status;
-
 import org.onap.observations.ObservationInterface;
 import org.onap.optf.cmso.common.CMSRequestError;
-
-import com.att.eelf.i18n.EELFResourceManager;
 
 public class CMSException extends Exception {
     private static final long serialVersionUID = 1L;
@@ -51,7 +48,7 @@ public class CMSException extends Exception {
 
     public CMSException(Status status, ObservationInterface messageCode, String... args) {
         super(EELFResourceManager.format(messageCode, args));
-        this.status = status;
+        this.status      = status;
         this.messageCode = messageCode;
         for (String arg : args)
             variables.add(arg);

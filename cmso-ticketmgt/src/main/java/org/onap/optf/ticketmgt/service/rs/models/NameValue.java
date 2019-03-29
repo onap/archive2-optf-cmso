@@ -31,19 +31,15 @@
 
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 
-@ApiModel(value = "Name Value Data",
-        description = "Instance of a name/value")
+@ApiModel(value = "Name Value Data", description = "Instance of a name/value")
 public class NameValue implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(NameValue.class);
@@ -53,29 +49,29 @@ public class NameValue implements Serializable {
 
     @ApiModelProperty(value = "Value.")
     private Object value;
-    
-    
+
+
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
 
-	public void setValue(Object value) {
-		this.value = value;
-	}
+    public void setValue(Object value) {
+        this.value = value;
+    }
 
 
-	public String toString() {
+    public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(this);

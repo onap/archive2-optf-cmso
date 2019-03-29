@@ -22,8 +22,9 @@ package org.onap.optf.ticketmgt.aaf;
 import org.springframework.core.Ordered;
 
 public enum FilterPriority {
-    AAF_AUTHENTICATION(Ordered.HIGHEST_PRECEDENCE),
-    AAF_AUTHORIZATION(Ordered.HIGHEST_PRECEDENCE + 1); //higher number = lower priority
+    AAF_AUTHENTICATION(Ordered.HIGHEST_PRECEDENCE), AAF_AUTHORIZATION(Ordered.HIGHEST_PRECEDENCE + 1); // higher number
+                                                                                                       // = lower
+                                                                                                       // priority
 
     private final int priority;
 
@@ -31,5 +32,7 @@ public enum FilterPriority {
         priority = p;
     }
 
-    public int getPriority() { return priority; }
+    public int getPriority() {
+        return priority;
+    }
 }

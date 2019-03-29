@@ -31,5 +31,5 @@
 package org.onap.optf.ticketmgt.common;
 
 public enum Availability {
-full, partial, unavailable
+    full, partial, unavailable
 }
