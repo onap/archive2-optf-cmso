@@ -19,11 +19,10 @@
  */
 package org.onap.optf.ticketmgt;
 
-public class SpringProfiles 
-{
+public class SpringProfiles {
 
-    public static final String AAF_AUTHENTICATION  = "aaf-auth";
-    public static final String PROPRIETARY__AUTHENTICATION  = "proprietary-auth";
+    public static final String AAF_AUTHENTICATION = "aaf-auth";
+    public static final String PROPRIETARY__AUTHENTICATION = "proprietary-auth";
 
-    private SpringProfiles(){}
+    private SpringProfiles() {}
 }

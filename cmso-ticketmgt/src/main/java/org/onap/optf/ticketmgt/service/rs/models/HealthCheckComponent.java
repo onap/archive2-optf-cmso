@@ -31,14 +31,12 @@
 
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
+import java.io.Serializable;
 
 @ApiModel
 public class HealthCheckComponent implements Serializable {

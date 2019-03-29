@@ -30,21 +30,18 @@
  ******************************************************************************/
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.onap.optf.ticketmgt.common.Availability;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import org.onap.optf.ticketmgt.common.Availability;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @ApiModel(value = "Ticket Data", description = "Change Management Ticket Information.")
 public class TicketData implements Serializable {
@@ -55,71 +52,72 @@ public class TicketData implements Serializable {
     private String id;
 
     @ApiModelProperty(value = "Scheduled start time of change.")
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
     private Date startTime;
 
     @ApiModelProperty(value = "Scheduled end time of change.")
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
     private Date endTime;
 
     @ApiModelProperty(value = "Availability of element(s) during change window")
     private Availability availability;
 
-    @ApiModelProperty(value = "List elementIds  of elements being changed. At least one maps to elementId in the request")
+    @ApiModelProperty(
+                    value = "List elementIds  of elements being changed. At least one maps to elementId in the request")
     private List<String> elementIds = new ArrayList<>();
-    
+
     @ApiModelProperty(value = "Details of the change.")
     private String changeDetails;
- 
+
     public String getId() {
-		return id;
-	}
+        return id;
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public Date getStartTime() {
+        return startTime;
+    }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
 
-	public Date getEndTime() {
-		return endTime;
-	}
+    public Date getEndTime() {
+        return endTime;
+    }
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
-	public Availability getAvailability() {
-		return availability;
-	}
+    public Availability getAvailability() {
+        return availability;
+    }
 
-	public void setAvailability(Availability availability) {
-		this.availability = availability;
-	}
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
+    }
 
-	public List<String> getElementIds() {
-		return elementIds;
-	}
+    public List<String> getElementIds() {
+        return elementIds;
+    }
 
-	public void setElementIds(List<String> elementIds) {
-		this.elementIds = elementIds;
-	}
+    public void setElementIds(List<String> elementIds) {
+        this.elementIds = elementIds;
+    }
 
-	public String getChangeDetails() {
-		return changeDetails;
-	}
+    public String getChangeDetails() {
+        return changeDetails;
+    }
 
-	public void setChangeDetails(String changeDetails) {
-		this.changeDetails = changeDetails;
-	}
+    public void setChangeDetails(String changeDetails) {
+        this.changeDetails = changeDetails;
+    }
 
-	public String toString() {
+    public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(this);

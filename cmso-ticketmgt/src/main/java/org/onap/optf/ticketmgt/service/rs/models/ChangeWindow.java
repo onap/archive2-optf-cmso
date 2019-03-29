@@ -31,31 +31,27 @@
 
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
-@ApiModel(value = "Change Window",
-        description = "Time window for which tickets are to returned")
+@ApiModel(value = "Change Window", description = "Time window for which tickets are to returned")
 public class ChangeWindow implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(ChangeWindow.class);
 
     @ApiModelProperty(value = "Earliest time for which changes may begin.")
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
     private Date startTime;
 
     @ApiModelProperty(value = "Latest time by which all changes must be completed.")
-    @DateTimeFormat(pattern="yyyy-MM-dd'T'hh:mm:ss'Z'")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
     private Date endTime;
 
     public Date getStartTime() {

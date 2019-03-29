@@ -31,11 +31,12 @@
 
 package org.onap.optf.ticketmgt;
 
+import com.att.eelf.configuration.Configuration;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.net.InetAddress;
 import java.util.TimeZone;
-
 import javax.annotation.PostConstruct;
-
 import org.onap.optf.ticketmgt.common.LogMessages;
 import org.slf4j.MDC;
 import org.springframework.boot.SpringApplication;
@@ -51,15 +52,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import com.att.eelf.configuration.Configuration;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.onap.optf.ticketmgt"})
 @EnableAsync
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class Application extends SpringBootServletInitializer {
 
     private static EELFLogger log = EELFManager.getInstance().getLogger(Application.class);
@@ -99,6 +96,6 @@ public class Application extends SpringBootServletInitializer {
         return tomcat;
     }
 
-    
+
 
 }

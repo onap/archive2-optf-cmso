@@ -31,19 +31,17 @@
 
 package org.onap.optf.ticketmgt.service.rs;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
 import org.onap.optf.ticketmgt.service.rs.models.HealthCheckComponent;
 import org.onap.optf.ticketmgt.service.rs.models.HealthCheckMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 @Controller
 public class HealthCheckImpl implements HealthCheck {
@@ -53,11 +51,11 @@ public class HealthCheckImpl implements HealthCheck {
     @Autowired
     Environment env;
 
-    
-    @Context 
+
+    @Context
     UriInfo uri;
-    
-    @Context 
+
+    @Context
     HttpServletRequest request;
 
     @Override
@@ -90,7 +88,7 @@ public class HealthCheckImpl implements HealthCheck {
         String url = env.getProperty("spring.datasource.url");
         hcc.setUrl(url);
         try {
-            //List<ApprovalType> approvalTypes = approvalTypeDAO.findByDomain("HealthCheck");
+            // List<ApprovalType> approvalTypes = approvalTypeDAO.findByDomain("HealthCheck");
             hcc.setHealthy(true);
             hcc.setStatus("OK");
         } catch (Exception e) {

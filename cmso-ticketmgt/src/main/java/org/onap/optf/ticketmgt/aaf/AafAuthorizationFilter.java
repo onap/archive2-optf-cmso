@@ -20,12 +20,10 @@
 package org.onap.optf.ticketmgt.aaf;
 
 import java.io.IOException;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.exceptions.CMSException;
 import org.onap.optf.ticketmgt.SpringProfiles;
@@ -43,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile(SpringProfiles.AAF_AUTHENTICATION)
 @PropertySource("file:${server.local.startpath}/aaf/permissions.properties")
-public class AafAuthorizationFilter extends  OrderedRequestContextFilter {
+public class AafAuthorizationFilter extends OrderedRequestContextFilter {
 
     @Value("${permission.type}")
     String type;
@@ -54,22 +52,22 @@ public class AafAuthorizationFilter extends  OrderedRequestContextFilter {
     public AafAuthorizationFilter() {
         this.setOrder(FilterPriority.AAF_AUTHORIZATION.getPriority());
 
-    	
+
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                    throws IOException, ServletException {
         String permission = String.format("%s|%s|%s", type, instance, request.getMethod().toLowerCase());
-        if(request.getRequestURI().matches("^.*/util/echo$")){
+        if (request.getRequestURI().matches("^.*/util/echo$")) {
             filterChain.doFilter(request, response);
         }
-        if(!request.isUserInRole(permission)){
-        	Observation.report(LogMessages.UNAUTHORIZED);
-            ResponseFormatter.errorResponse(request, response, 
-            		new CMSException(LogMessages.UNAUTHORIZED.getStatus(), 
-            		LogMessages.UNAUTHORIZED, ""));
-        }else{
-            filterChain.doFilter(request,response);
+        if (!request.isUserInRole(permission)) {
+            Observation.report(LogMessages.UNAUTHORIZED);
+            ResponseFormatter.errorResponse(request, response,
+                            new CMSException(LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
+        } else {
+            filterChain.doFilter(request, response);
         }
     }
 }

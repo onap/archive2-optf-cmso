@@ -31,19 +31,18 @@
 
 package org.onap.optf.ticketmgt.service.rs.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-@ApiModel(value = "Ticket Management Request", description = "Request to retrieve active tickets for the provided elements.")
+@ApiModel(value = "Ticket Management Request",
+                description = "Request to retrieve active tickets for the provided elements.")
 public class ActiveTicketsRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private static EELFLogger log = EELFManager.getInstance().getLogger(ActiveTicketsRequest.class);
@@ -52,57 +51,56 @@ public class ActiveTicketsRequest implements Serializable {
     private String requestId;
 
     @ApiModelProperty(
-            value = "Implementation specific name value pairs provided to be passed to Ticket Management query .")
+                    value = "Implementation specific name value pairs provided to be passed to Ticket Management query .")
     private List<NameValue> commonData;
 
-    @ApiModelProperty(
-            value = "Lists of desired change windows for which TicketData will be returned.")
+    @ApiModelProperty(value = "Lists of desired change windows for which TicketData will be returned.")
     private List<ChangeWindow> changeWindows = new ArrayList<>();
 
     @ApiModelProperty(value = "List of the elements for which TicketData will be returned.")
     private List<ElementCriteria> elements = new ArrayList<>();
 
     public String getRequestId() {
-		return requestId;
-	}
+        return requestId;
+    }
 
 
-	public void setRequestId(String requestId) {
-		this.requestId = requestId;
-	}
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
+    }
 
 
-	public List<NameValue> getCommonData() {
-		return commonData;
-	}
+    public List<NameValue> getCommonData() {
+        return commonData;
+    }
 
 
-	public void setCommonData(List<NameValue> commonData) {
-		this.commonData = commonData;
-	}
+    public void setCommonData(List<NameValue> commonData) {
+        this.commonData = commonData;
+    }
 
 
-	public List<ChangeWindow> getChangeWindows() {
-		return changeWindows;
-	}
+    public List<ChangeWindow> getChangeWindows() {
+        return changeWindows;
+    }
 
 
-	public void setChangeWindows(List<ChangeWindow> changeWindows) {
-		this.changeWindows = changeWindows;
-	}
+    public void setChangeWindows(List<ChangeWindow> changeWindows) {
+        this.changeWindows = changeWindows;
+    }
 
 
-	public List<ElementCriteria> getElements() {
-		return elements;
-	}
+    public List<ElementCriteria> getElements() {
+        return elements;
+    }
 
 
-	public void setElements(List<ElementCriteria> elements) {
-		this.elements = elements;
-	}
+    public void setElements(List<ElementCriteria> elements) {
+        this.elements = elements;
+    }
 
 
-	public String toString() {
+    public String toString() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return mapper.writeValueAsString(this);

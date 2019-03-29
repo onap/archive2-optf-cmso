@@ -30,12 +30,11 @@
  ******************************************************************************/
 package org.onap.optf.ticketmgt.service.rs.models;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "Element Critera", description = "Element criteria for retrieving active tickets.")
 public class ElementCriteria implements Serializable {
@@ -47,20 +46,20 @@ public class ElementCriteria implements Serializable {
     @ApiModelProperty(value = "Implementation specific element data.")
     public List<NameValue> elementData = new ArrayList<>();
 
-	public String getElementId() {
-		return elementId;
-	}
+    public String getElementId() {
+        return elementId;
+    }
 
-	public void setElementId(String elementId) {
-		this.elementId = elementId;
-	}
+    public void setElementId(String elementId) {
+        this.elementId = elementId;
+    }
 
-	public List<NameValue> getElementData() {
-		return elementData;
-	}
+    public List<NameValue> getElementData() {
+        return elementData;
+    }
 
-	public void setElementData(List<NameValue> elementData) {
-		this.elementData = elementData;
-	}
+    public void setElementData(List<NameValue> elementData) {
+        this.elementData = elementData;
+    }
 
 }

@@ -1,6 +1,6 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.common;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +40,6 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.DatatypeConverter;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 public class BasicAuthenticatorFilter implements ClientRequestFilter {
     private static EELFLogger log = EELFManager.getInstance().getLogger(BasicAuthenticatorFilter.class);
@@ -47,7 +47,7 @@ public class BasicAuthenticatorFilter implements ClientRequestFilter {
     private final String password;
 
     public BasicAuthenticatorFilter(String user, String password) {
-        this.user = user;
+        this.user     = user;
         this.password = password;
         log.info("user: " + user + " pass:" + password);
     }
@@ -67,7 +67,7 @@ public class BasicAuthenticatorFilter implements ClientRequestFilter {
             throw new IllegalStateException("Cannot encode with UTF-8", ex);
         }
     }
-    
+
     public static String getUser(HttpServletRequest request) {
         String user = "";
         String header = request.getHeader("Authorization");

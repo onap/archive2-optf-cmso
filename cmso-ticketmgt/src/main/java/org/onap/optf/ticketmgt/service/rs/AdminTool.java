@@ -31,6 +31,11 @@
 
 package org.onap.optf.ticketmgt.service.rs;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -38,16 +43,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 
 @Api("Administration")
@@ -61,11 +59,10 @@ public interface AdminTool {
     @Produces({MediaType.TEXT_PLAIN})
     @RequestMapping(value = "/{apiVersion}/admin/{id}", method = RequestMethod.GET, produces = MediaType.TEXT_PLAIN)
     @ApiOperation(value = "", notes = "Returns encrypted value of id.", response = String.class)
-    @ApiResponses(
-            value = {@ApiResponse(code = 200, message = "OK"), 
-            		 @ApiResponse(code = 400, message = "Request failed")})
-    public Response exec(
-    		@ApiParam(value = "v1|v2")  @PathVariable @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
-            @ApiParam(value = "Identifier") @PathVariable @PathParam("id") String id);
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
+                    @ApiResponse(code = 400, message = "Request failed")})
+    public Response exec(@ApiParam(
+                    value = "v1|v2") @PathVariable @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
+                    @ApiParam(value = "Identifier") @PathVariable @PathParam("id") String id);
 
 }

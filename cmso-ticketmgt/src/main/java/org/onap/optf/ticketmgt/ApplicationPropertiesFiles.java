@@ -36,9 +36,6 @@ import org.springframework.context.annotation.PropertySources;
 
 
 @Configuration
-@PropertySources({
-	@PropertySource("file:etc/config/ticketmgt.properties"),
-})
-public class ApplicationPropertiesFiles 
-{
+@PropertySources({@PropertySource("file:etc/config/ticketmgt.properties"),})
+public class ApplicationPropertiesFiles {
 }
