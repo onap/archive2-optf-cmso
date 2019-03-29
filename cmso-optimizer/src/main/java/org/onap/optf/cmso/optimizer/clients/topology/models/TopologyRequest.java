@@ -35,6 +35,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import org.onap.optf.cmso.optimizer.clients.common.models.ElementCriteria;
 import org.onap.optf.cmso.optimizer.service.rs.models.NameValue;
 
 @ApiModel(value = "Topology Request",

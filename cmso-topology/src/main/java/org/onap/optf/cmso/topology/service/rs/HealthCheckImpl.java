@@ -71,6 +71,7 @@ public class HealthCheckImpl implements HealthCheck {
         return response;
     }
 
+    @SuppressWarnings("unused")
     private void addToHealthCheckMessage(HealthCheckMessage hc, HealthCheckComponent hcc) {
         if (!hcc.getHealthy()) {
             hc.setHealthy(false);
@@ -85,6 +86,7 @@ public class HealthCheckImpl implements HealthCheck {
      *
      * @return the health check component
      */
+    @SuppressWarnings("unused")
     private HealthCheckComponent healthCheckDb() {
         HealthCheckComponent hcc = new HealthCheckComponent();
         hcc.setName("Database");
