@@ -48,6 +48,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Controller
 public class TopologyInterfaceImpl implements TopologyInterface {
+    @SuppressWarnings("unused")
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
@@ -73,8 +74,7 @@ public class TopologyInterfaceImpl implements TopologyInterface {
             atr.setStatus(TopologyRequestStatus.COMPLETED);
             List<ElementCriteria> elements = topologyRequest.getElements();
             // At a minimum, return the requested elements
-            for  (ElementCriteria criteria : elements)
-            {
+            for  (ElementCriteria criteria : elements) {
                 ElementInfo element = new ElementInfo();
                 element.setElementId(criteria.getElementId());
                 ElementLocation loc = new ElementLocation();

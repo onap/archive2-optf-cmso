@@ -28,8 +28,6 @@ package org.onap.optf.cmso.topology.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -40,7 +38,6 @@ import org.onap.observations.Mdc;
 import org.onap.observations.MessageHeaders;
 import org.onap.observations.MessageHeaders.HeadersEnum;
 import org.onap.observations.Observation;
-import org.onap.optf.cmso.topology.Application;
 import org.onap.optf.cmso.topology.common.LogMessages;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
@@ -49,7 +46,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFilter {
 
-    private static EELFLogger log = EELFManager.getInstance().getLogger(Application.class);
     private static String appId = "cmso";
 
     @Override

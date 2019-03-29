@@ -66,6 +66,29 @@ public class ChangeWindow implements Serializable {
     }
 
     /**
+     * Overlaps test instance.
+     *
+     * @param test the test
+     * @return true, if successful
+     */
+    public boolean overlaps(ChangeWindow test) {
+        int start = startTime.compareTo(test.getStartTime());
+        int end = endTime.compareTo(test.getEndTime());
+        int startend = startTime.compareTo(test.getEndTime());
+        int endstart = endTime.compareTo(test.getStartTime());
+        // at least one of the ends match up
+        if (start == 0 || end == 0 || startend == 0 || endstart == 0) {
+            return true;
+        }
+        // end is before start or start is before end, cannot overlap
+        if (endstart == -1 || startend == 1) {
+            return false;
+        }
+        return true;
+
+    }
+
+    /**
      * To string.
      *
      * @return the string
