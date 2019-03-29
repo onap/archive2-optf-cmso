@@ -36,6 +36,9 @@ import java.io.Serializable;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/**
+ * The Class ChangeWindow.
+ */
 @ApiModel(value = "Change Window", description = "Time window for which tickets are to returned")
 public class ChangeWindow implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -49,20 +52,81 @@ public class ChangeWindow implements Serializable {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'hh:mm:ss'Z'")
     private Date endTime;
 
+    /**
+     * Gets the start time.
+     *
+     * @return the start time
+     */
     public Date getStartTime() {
         return startTime;
     }
 
+    /**
+     * Sets the start time.
+     *
+     * @param startTime the new start time
+     */
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
+    /**
+     * Gets the end time.
+     *
+     * @return the end time
+     */
     public Date getEndTime() {
         return endTime;
     }
 
+    /**
+     * Sets the end time.
+     *
+     * @param endTime the new end time
+     */
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    /**
+     * Overlaps test instance.b
+     *
+     * @param test the test window
+     * @return true, if successful
+     */
+    public boolean overlaps(ChangeWindow test) {
+        int start = startTime.compareTo(test.getStartTime());
+        int end = endTime.compareTo(test.getEndTime());
+        int startend = startTime.compareTo(test.getEndTime());
+        int endstart = endTime.compareTo(test.getStartTime());
+        // at least one of the ends match up
+        if (start == 0 || end == 0 || startend == 0 || endstart == 0) {
+            return true;
+        }
+        // end is before start or start is before end, cannot overlap
+        if (endstart == -1 || startend == 1) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Absorb if overlapping window.
+     *
+     * @param test the test window
+     * @return true, if successful
+     */
+    public boolean absorbIfOverlapping(ChangeWindow test) {
+        if (overlaps(test)) {
+            if (test.getStartTime().before(getStartTime())) {
+                setStartTime(test.getStartTime());
+            }
+            if (test.getEndTime().after(getEndTime())) {
+                setEndTime(test.getEndTime());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**

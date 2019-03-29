@@ -180,8 +180,7 @@ public class CmsoOptimizerClient {
                         debug.debug("Successfully scheduled optimization: " + schedule.getScheduleId());
                         // Scheduled with optimizer
                         break;
-                    case 400: // Bad request
-                    {
+                    case 400: {
                         schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                         schedule.setOptimizerStatus("HTTP Status: " + response.getStatus());
                         String message = response.readEntity(String.class);
@@ -287,8 +286,7 @@ public class CmsoOptimizerClient {
                     debug.debug("Successfully retrieved optimization: " + schedule.getScheduleId());
                     optimizerHandler.handleOptimizerResponse(optimizerResponse, schedule);
                     break;
-                default: // Bad request
-                {
+                default: {
                     schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                     schedule.setOptimizerStatus("HTTP Status: " + response.getStatus());
                     String message = response.readEntity(String.class);
@@ -336,8 +334,7 @@ public class CmsoOptimizerClient {
         return null;
     }
 
-    private List<OptimizerElementInfo> marshallElements(SchedulingData info)
-    {
+    private List<OptimizerElementInfo> marshallElements(SchedulingData info) {
         List<OptimizerElementInfo> list = new ArrayList<>();
         List<ElementInfo> elementList = info.getElements();
         for (ElementInfo element : elementList) {
@@ -345,7 +342,7 @@ public class CmsoOptimizerClient {
             optElement.setElementData(element.getElementData());
             optElement.setElementId(element.getElementId());
             optElement.setGroupId(element.getGroupId());
-            list.add(optElement );
+            list.add(optElement);
         }
         return list;
     }
@@ -375,6 +372,7 @@ public class CmsoOptimizerClient {
 
     /**
      * Health check.
+     *
      * @return
      */
     public HealthCheckComponent healthCheck() {

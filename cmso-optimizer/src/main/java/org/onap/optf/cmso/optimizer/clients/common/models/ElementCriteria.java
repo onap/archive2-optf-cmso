@@ -25,7 +25,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.optimizer.clients.topology.models;
+package org.onap.optf.cmso.optimizer.clients.common.models;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

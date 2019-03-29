@@ -64,6 +64,8 @@
     <modules>
         <module>cmso-database</module>
         <module>cmso-service</module>
+        <module>cmso-optimizer</module>
+        <module>cmso-topology</module>
         <module>cmso-ticketmgt</module>
         <module>cmso-robot</module>
     </modules>

@@ -17,8 +17,11 @@
  *
  */
 
-package org.onap.optf.cmso.optimizer.availability.policies;
+package org.onap.optf.cmso.optimizer.availability.timewindows;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,12 +32,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.onap.optf.cmso.optimizer.availability.policies.model.Policy;
+import org.onap.optf.cmso.optimizer.availability.policies.PolicyManager;
 import org.onap.optf.cmso.optimizer.availability.policies.model.TimeLimitAndVerticalTopology;
+import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 import org.springframework.core.env.Environment;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PolicyManagerTest {
+public class RecurringWindowsTest {
+
 
     @InjectMocks
     private PolicyManager policyManager;
@@ -49,21 +54,26 @@ public class PolicyManagerTest {
     }
 
     @Test
-    public void getPolicyByName() {
-        String policyName = "Weekday_00_06";
+    public void getAvailabilityWindowsForPolicies() {
+        getAvailabilityWindowsForPolicy("Weekday_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 2);
+        getAvailabilityWindowsForPolicy("EveryDay_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 4);
+        getAvailabilityWindowsForPolicy("Weekend_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 3);
 
-        String result = "CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,";
-        List<Policy> policies = policyManager.getSupportedPolicies();
-        StringBuilder sb = new StringBuilder();
-        for (Policy pol : policies) {
-            sb.append(pol.getPolicyName()).append(",");
-        }
-        System.out.println("        String result = \"" + sb.toString() + "\";");
-        Assert.assertTrue(result.equals(sb.toString()));
-        Policy policy = policyManager.getPolicyForName(policyName);
-        Assert.assertTrue(policy != null);
+    }
+
+    private void getAvailabilityWindowsForPolicy(String policyName, String startStr, String endStr, int size) {
         TimeLimitAndVerticalTopology top = policyManager.getTimeLimitAndVerticalTopologyByName(policyName);
         Assert.assertTrue(top != null);
+        List<TimeLimitAndVerticalTopology> topList = new ArrayList<>();
+        topList.add(top);
+        ChangeWindow changeWindow = new ChangeWindow();
+        Instant start = Instant.parse(startStr);
+        Instant end = Instant.parse(endStr);
+        changeWindow.setStartTime(Date.from(start));
+        changeWindow.setEndTime(Date.from(end));
+        List<ChangeWindow> windows = RecurringWindows.getAvailabilityWindowsForPolicies(topList, changeWindow);
+        Assert.assertTrue(windows != null);
+        Assert.assertTrue(windows.size() == size);
 
     }
 }
