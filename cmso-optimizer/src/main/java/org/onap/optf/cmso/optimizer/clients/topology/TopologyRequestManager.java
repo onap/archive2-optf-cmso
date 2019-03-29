@@ -21,11 +21,7 @@ package org.onap.optf.cmso.optimizer.clients.topology;
 
 import java.util.Optional;
 import java.util.UUID;
-import javax.ws.rs.core.Response.Status;
-import org.onap.observations.Observation;
-import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
-import org.onap.optf.cmso.optimizer.common.LogMessages;
 import org.onap.optf.cmso.optimizer.model.Request;
 import org.onap.optf.cmso.optimizer.model.Topology;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
@@ -34,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class TopologyRequestManager.
+ */
 @Component
 public class TopologyRequestManager {
 
@@ -49,52 +48,37 @@ public class TopologyRequestManager {
     @Autowired
     TopologyClient topologyClient;
 
-    public TopologyResponse createTopologyRequest(UUID uuid)
-    {
-        try
-        {
-            Request request = null;
-            Optional<Request> requestOptional = requestDao.findById(uuid);
-            if (requestOptional.isPresent())
-            {
-                request = requestOptional.get();
-            }
-            if (request == null)
-            {
-                throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.EXPECTED_DATA_NOT_FOUND,
-                                uuid.toString(), "Request table");
-            }
-            Topology topology  = null;
-            Optional<Topology> topologyOpt  = topologyDao.findById(uuid);
-            if (topologyOpt.isPresent())
-            {
-                topology = topologyOpt.get();
-
-            }
-            if (topology == null)
-            {
-                topology = new Topology();
-                topology.setUuid(uuid);
-                topology.setTopologyRetries(0);
-            }
-            TopologyResponse topologyResponse = topologyClient.makeRequest(request, topology);
-            switch(topologyResponse.getStatus())
-            {
-                case COMPLETED:
-                    break;
-                case FAILED:
-                    break;
-                case IN_PROGRESS:
-                    break;
-            }
-            return topologyResponse;
+    /**
+     * Creates the topology request.
+     *
+     * @param requestRow the request row
+     * @return the topology response
+     */
+    public TopologyResponse createTopologyRequest(Request requestRow) {
+        Topology topology = getExistingTopology(requestRow.getUuid());
+        if (topology == null) {
+            topology = new Topology();
+            topology.setUuid(requestRow.getUuid());
+            topology.setTopologyRetries(0);
         }
-        catch (Exception e)
-        {
-            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-        }
-        return null;
+        TopologyResponse topologyResponse = topologyClient.makeRequest(requestRow, topology);
+        topologyDao.save(topology);
+        return topologyResponse;
 
     }
 
+
+    /**
+     * Gets the existing topology.
+     *
+     * @param uuid the uuid
+     * @return the existing topology
+     */
+    public Topology getExistingTopology(UUID uuid) {
+        Optional<Topology> topologyOpt = topologyDao.findById(uuid);
+        if (topologyOpt.isPresent()) {
+            return topologyOpt.get();
+        }
+        return null;
+    }
 }

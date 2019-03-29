@@ -26,8 +26,6 @@
 
 package org.onap.optf.cmso.common;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -35,7 +33,6 @@ import java.util.List;
 
 public class CmsoRequestError implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static EELFLogger log = EELFManager.getInstance().getLogger(CmsoRequestError.class);
     @JsonProperty
     RequestError requestError;
 

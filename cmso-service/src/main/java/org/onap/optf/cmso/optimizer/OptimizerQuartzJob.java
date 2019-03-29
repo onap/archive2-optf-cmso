@@ -66,10 +66,9 @@ public class OptimizerQuartzJob extends QuartzJobBean {
     private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizerQuartzJob.class);
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
     PropertiesManagement pm;
@@ -88,20 +87,20 @@ public class OptimizerQuartzJob extends QuartzJobBean {
         // return;
 
         try {
-            // This job will look at the schedules waiting to go to Optimizer or waiting on response from optimizer
+            // This job will look at the schedules waiting to go to Optimizer or waiting on response from
+            // optimizer
             // (PendingSchedule, PendingOptimizer),
             // schedule the request and update the status to PendingSchedule
             // and update the state to OptimizationInProgress
-            List<Schedule> schedules = scheduleDAO.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
-                    CMSStatusEnum.PendingSchedule.toString());
+            List<Schedule> schedules = scheduleDao.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
+                            CMSStatusEnum.PendingSchedule.toString());
             for (Schedule s : schedules) {
                 scheduleOptimization(s);
             }
-            List<Schedule> inProgressSchedules = scheduleDAO.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
-                    CMSStatusEnum.OptimizationInProgress.toString());
-            for (Schedule s : inProgressSchedules)
-            {
-              scheduleOptimization(s);
+            List<Schedule> inProgressSchedules = scheduleDao.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
+                            CMSStatusEnum.OptimizationInProgress.toString());
+            for (Schedule s : inProgressSchedules) {
+                scheduleOptimization(s);
             }
 
         } catch (Exception e) {
@@ -136,7 +135,7 @@ public class OptimizerQuartzJob extends QuartzJobBean {
                 default: {
 
                     throw new SchedulerException(
-                            "Invalid return from dispach service: " + url + " : " + response.toString());
+                                    "Invalid return from dispach service: " + url + " : " + response.toString());
                 }
             }
         } catch (Exception e) {
@@ -149,18 +148,17 @@ public class OptimizerQuartzJob extends QuartzJobBean {
     }
 
     /**
-     * According to the documentation I read, Quartz would queue a job without
-     * waiting for the completion of the job with @DisallowConcurrentExecution to
-     * complete so that there would be a backlog of triggers to process
+     * According to the documentation I read, Quartz would queue a job without waiting for the
+     * completion of the job with @DisallowConcurrentExecution to complete so that there would be a
+     * backlog of triggers to process
      *
-     * This was designed to spin though these stale triggers. When this didn't work,
-     * I discovered that the behavior is that Quartz will wait for the appropriate
-     * interval after @DisallowConcurrentExecution jobs complete.
+     * This was designed to spin though these stale triggers. When this didn't work, I discovered that
+     * the behavior is that Quartz will wait for the appropriate interval
+     * after @DisallowConcurrentExecution jobs complete.
      *
      * I tested by adding a sleep for an interval > the trigger interval
      *
-     * QUartz appears to do what makes sense. Leaving this here in case issues
-     * arise...
+     * QUartz appears to do what makes sense. Leaving this here in case issues arise...
      *
      */
     @SuppressWarnings("unused")
