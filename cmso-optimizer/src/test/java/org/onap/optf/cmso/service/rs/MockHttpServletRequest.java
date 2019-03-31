@@ -21,7 +21,6 @@ package org.onap.optf.cmso.service.rs;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class MockHttpServletRequest {
