@@ -37,6 +37,9 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Level;
 import org.onap.observations.ObservationInterface;
 
+/**
+ * The Enum LogMessages.
+ */
 public enum LogMessages implements ObservationInterface {
 
     OPTIMIZE_SCHEDULE("Optimize schedule {0} : {1}: {2} : {3}", Status.OK, Level.INFO),
@@ -60,7 +63,8 @@ public enum LogMessages implements ObservationInterface {
     OUTGOING_MESSAGE_RETURNED("Outgoing message returned method={0} path={1} status={2}", Status.OK, Level.INFO, true,
                     false),
 
-    UNEXPECTED_RESPONSE("Unexpected response from URL {0} : HTTP Status={1}", Status.INTERNAL_SERVER_ERROR , Level.ERROR),
+    UNEXPECTED_RESPONSE("Unexpected response from URL {0} : HTTP Status={1}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
     INVALID_CHANGE_WINDOW("Change window end time {0} must be after start time {1}", Status.OK, Level.INFO),
     EXPECTED_EXCEPTION("Expected exception encountered during processing. {0}", Status.OK, Level.INFO),
     UNABLE_TO_UPDATE_TICKET("Unable to update change ticket in TM: Schedule ID: {0} : changeid: {1} :  Reason: {2}",
@@ -73,6 +77,14 @@ public enum LogMessages implements ObservationInterface {
     OPTIMIZER_REQUEST("OPtimizer request {0} for {1} Command: {1}", Status.OK, Level.INFO),
     TICKETS_REQUEST("Tickets request {0} for {1} URL: {1}", Status.OK, Level.INFO),
     UNSUPPORTED_PERIODIC_TIME("Unsupported periodic time from policy: {0}", Status.INTERNAL_SERVER_ERROR, Level.ERROR),
+    EXCEEDED_RETRY_LIMIT("Outbound request for {0} exceeded retry limit {1}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
+    FAILED_TO_CREATE_TOPOLOGY_REQUEST("Failed to create request reqeust for id={0}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
+    FAILED_TO_CREATE_TICKET_REQUEST("Failed to create ticket request for id={0}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
+    FAILED_TO_CREATE_OPTIMIZER_REQUEST("Failed to create optimizer request for id={0}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
 
     ;
     private final String defaultId;
@@ -147,40 +159,85 @@ public enum LogMessages implements ObservationInterface {
     }
 
 
+    /**
+     * Gets the level.
+     *
+     * @return the level
+     */
     // interface methods
     @Override
     public Level getLevel() {
         return level;
     }
 
+    /**
+     * Gets the message.
+     *
+     * @return the message
+     */
     @Override
     public String getMessage() {
         return defaultMessage;
     }
 
+    /**
+     * Gets the status.
+     *
+     * @return the status
+     */
     @Override
     public Status getStatus() {
         return status;
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     @Override
     public Enum<?> getValue() {
         return this;
     }
 
+    /**
+     * Gets the domain.
+     *
+     * @return the domain
+     */
     @Override
     public String getDomain() {
         return this.getClass().getSimpleName();
     }
 
+    /**
+     * Gets the audit.
+     *
+     * @return the audit
+     */
     @Override
     public Boolean getAudit() {
         return audit;
     }
 
+    /**
+     * Gets the metric.
+     *
+     * @return the metric
+     */
     @Override
     public Boolean getMetric() {
         return metric;
+    }
+
+    /**
+     * Format.
+     *
+     * @param args the args
+     * @return the string
+     */
+    public String format(String... args) {
+        return EELFResourceManager.format(this, args);
     }
 
     /**
