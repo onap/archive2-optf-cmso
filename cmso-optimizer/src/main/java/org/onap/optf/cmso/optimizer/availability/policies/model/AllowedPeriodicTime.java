@@ -36,28 +36,35 @@ import java.util.List;
  */
 public class AllowedPeriodicTime {
 
-    public enum Day
-    {
-        weekday("RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"),
-        weekend("RRULE:FREQ=WEEKLY;BYDAY=SA,SU"),
-        ;
+    public enum Day {
+        weekday("RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"), weekend("RRULE:FREQ=WEEKLY;BYDAY=SA,SU"),;
         private String rrule;
-        private Day(String rrule) {this.rrule = rrule;}
-        public String getRrule() {return rrule;}
+
+        private Day(String rrule) {
+            this.rrule = rrule;
+        }
+
+        public String getRrule() {
+            return rrule;
+        }
 
     }
 
     private Day day;
     private List<TimeRange> timeRange;
+
     public Day getDay() {
         return day;
     }
+
     public void setDay(Day day) {
         this.day = day;
     }
+
     public List<TimeRange> getTimeRange() {
         return timeRange;
     }
+
     public void setTimeRange(List<TimeRange> timeRange) {
         this.timeRange = timeRange;
     }

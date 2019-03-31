@@ -51,8 +51,7 @@ import java.util.List;
 }
  */
 
-public class TimeLimitAndVerticalTopology
-{
+public class TimeLimitAndVerticalTopology {
 
     public enum ConflictScope {
         timeLimitAndVerticalTopology,
@@ -72,42 +71,55 @@ public class TimeLimitAndVerticalTopology
     public String getServiceType() {
         return serviceType;
     }
+
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
     }
+
     public String getIdentity() {
         return identity;
     }
+
     public void setIdentity(String identity) {
         this.identity = identity;
     }
+
     public PolicyScope getPolicyScope() {
         return policyScope;
     }
+
     public void setPolicyScope(PolicyScope policyScope) {
         this.policyScope = policyScope;
     }
+
     public TimeSchedule getTimeSchedule() {
         return timeSchedule;
     }
+
     public void setTimeSchedule(TimeSchedule timeSchedule) {
         this.timeSchedule = timeSchedule;
     }
+
     public List<String> getNodeType() {
         return nodeType;
     }
+
     public void setNodeType(List<String> nodeType) {
         this.nodeType = nodeType;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public String getConflictScope() {
         return conflictScope;
     }
+
     public void setConflictScope(String conflictScope) {
         this.conflictScope = conflictScope;
     }
