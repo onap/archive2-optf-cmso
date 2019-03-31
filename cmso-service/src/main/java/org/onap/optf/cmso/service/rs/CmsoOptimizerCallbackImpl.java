@@ -69,8 +69,6 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implements CmsoOptimizerCallback {
     private static EELFLogger log = EELFManager.getInstance().getLogger(CmsoOptimizerCallbackImpl.class);
-    private static EELFLogger metrics = EELFManager.getInstance().getMetricsLogger();
-    private static EELFLogger audit = EELFManager.getInstance().getAuditLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
 

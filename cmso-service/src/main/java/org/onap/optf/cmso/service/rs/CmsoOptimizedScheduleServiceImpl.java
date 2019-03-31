@@ -43,6 +43,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 @Controller
 public class CmsoOptimizedScheduleServiceImpl extends CommonServiceImpl implements CmsoOptimizedScheduleService {
+    @SuppressWarnings("unused")
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
