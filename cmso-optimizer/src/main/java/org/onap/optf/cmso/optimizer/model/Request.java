@@ -54,6 +54,9 @@ public class Request implements Serializable {
 
     private String status;
 
+    @Lob
+    private String message;
+
     public Request() {}
 
     public UUID getUuid() {
@@ -102,6 +105,14 @@ public class Request implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }
