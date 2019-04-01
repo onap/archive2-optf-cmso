@@ -111,6 +111,20 @@ public class ChangeWindow implements Serializable {
     }
 
     /**
+     * Test if this window contains the passed window.
+     *
+     * @param test the test
+     * @return true, if this change window contains the passed change window
+     */
+    public boolean contains(ChangeWindow test) {
+        if (!test.getStartTime().before(getStartTime()) &&
+            !test.getEndTime().after(getEndTime())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Absorb if overlapping window.
      *
      * @param test the test window

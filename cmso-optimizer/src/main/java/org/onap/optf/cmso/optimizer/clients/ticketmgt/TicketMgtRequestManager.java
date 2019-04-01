@@ -20,11 +20,13 @@
 package org.onap.optf.cmso.optimizer.clients.ticketmgt;
 
 import java.util.Optional;
+import java.util.UUID;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.clients.ticketmgt.models.ActiveTicketsResponse;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
 import org.onap.optf.cmso.optimizer.model.Request;
 import org.onap.optf.cmso.optimizer.model.Ticket;
+import org.onap.optf.cmso.optimizer.model.Topology;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
 import org.onap.optf.cmso.optimizer.model.dao.TicketDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +55,12 @@ public class TicketMgtRequestManager {
     TicketMgtClient ticketmgtClient;
 
     /**
-     * Creates the topology request.
+     * Creates the tickets request.
      *
      * @param requestRow the uuid
      * @return the active tickets response
      */
     public ActiveTicketsResponse createTicketsRequest(Request requestRow) {
-        try {
             Ticket row = null;
             Optional<Ticket> rowOpt = ticketDao.findById(requestRow.getUuid());
             if (rowOpt.isPresent()) {
@@ -72,22 +73,21 @@ public class TicketMgtRequestManager {
                 row.setTicketsRetries(0);
             }
             ActiveTicketsResponse apiResponse = ticketmgtClient.makeRequest(requestRow, row);
-            switch (apiResponse.getStatus()) {
-                case COMPLETED:
-                    break;
-                case FAILED:
-                    break;
-                case IN_PROGRESS:
-                    break;
-                default:
-                    break;
-            }
+            ticketDao.save(row);
             return apiResponse;
-        } catch (Exception e) {
-            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            }
+    /**
+     * Gets the existing tickets.
+     *
+     * @param uuid the uuid
+     * @return the existing tickets
+     */
+    public Ticket getExistingTickets(UUID uuid) {
+        Optional<Ticket> opt = ticketDao.findById(uuid);
+        if (opt.isPresent()) {
+            return opt.get();
         }
         return null;
-
     }
 
 }
