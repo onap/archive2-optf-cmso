@@ -48,7 +48,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 
 /**
- * @author jf9860
+ * Health check.
+ *
  *
  */
 @Controller
