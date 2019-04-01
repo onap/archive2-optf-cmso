@@ -63,7 +63,6 @@
     
     <modules>
         <module>cmso-database</module>
-        <module>cmso-service</module>
         <module>cmso-ticketmgt</module>
         <module>cmso-robot</module>
     </modules>
