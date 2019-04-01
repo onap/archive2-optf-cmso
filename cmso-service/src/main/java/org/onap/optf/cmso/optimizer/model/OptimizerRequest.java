@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.onap.optf.cmso.service.rs.models.v2.ChangeWindow;
-import org.onap.optf.cmso.service.rs.models.v2.ElementInfo;
 import org.onap.optf.cmso.service.rs.models.v2.NameValue;
 import org.onap.optf.cmso.service.rs.models.v2.PolicyInfo;
 
