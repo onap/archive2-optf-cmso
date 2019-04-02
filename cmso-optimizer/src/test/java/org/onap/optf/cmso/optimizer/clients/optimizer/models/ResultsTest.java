@@ -31,7 +31,7 @@ public class ResultsTest extends PropertyUtils {
     public void yamlTests() {
         OptimizerResponseUtility util = new OptimizerResponseUtility();
         File resultsFile = new File("src/test/data/resultsTest001.yaml");
-        Results results = util.parseOptimizerResult(resultsFile);
+        OptimizerResults results = util.parseOptimizerResult(resultsFile);
         Assert.assertTrue(results != null);
 
     }

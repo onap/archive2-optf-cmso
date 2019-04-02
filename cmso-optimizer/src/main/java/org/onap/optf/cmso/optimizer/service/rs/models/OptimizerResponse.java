@@ -42,7 +42,16 @@ public class OptimizerResponse implements Serializable {
     private static EELFLogger log = EELFManager.getInstance().getLogger(OptimizerResponse.class);
 
     public enum OptimizeScheduleStatus {
-        CREATED, PENDING_TOPOLOGY, PENDING_TICKETS, PENDING_OPTIMIZER, COMPLETED, FAILED, DELETED,
+        CREATED,
+        PENDING_TOPOLOGY,
+        TOPOLOGY_IN_PROGRESS,
+        PENDING_TICKETS,
+        TICKETS_IN_PROGRESS,
+        PENDING_OPTIMIZER,
+        OPTIMIZER_IN_PROGRESS,
+        COMPLETED,
+        FAILED,
+        DELETED,
     }
 
     @ApiModelProperty(value = "Unique Id of the request")

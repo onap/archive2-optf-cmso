@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -117,8 +118,26 @@ public class ChangeWindow implements Serializable {
      * @return true, if this change window contains the passed change window
      */
     public boolean contains(ChangeWindow test) {
-        if (!test.getStartTime().before(getStartTime()) &&
-            !test.getEndTime().after(getEndTime())) {
+        if (!test.getStartTime().before(getStartTime()) && !test.getEndTime().after(getEndTime())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Passed slot time (test) is within this change window adjusted for the time zone of the element.
+     * This is used to interpret global relative availability (maintenance) windows as opposed to
+     * absolute UTC times provided in tickets which should already be adjusted for time zone.
+     *
+     * @param test the test
+     * @param timeZoneOffset the time zone offset
+     * @return true, if successful
+     */
+    public boolean containsInTimeZone(ChangeWindow test, Long timeZoneOffset) {
+        Instant startInstant = startTime.toInstant().plusMillis(timeZoneOffset);
+        Instant endInstant = endTime.toInstant().plusMillis(timeZoneOffset);
+        if (!test.getStartTime().toInstant().isBefore(startInstant)
+                        && !test.getEndTime().toInstant().isAfter(endInstant)) {
             return true;
         }
         return false;
@@ -158,5 +177,6 @@ public class ChangeWindow implements Serializable {
         }
         return "";
     }
+
 
 }
