@@ -211,5 +211,17 @@ public class RecurringWindows {
         return instant.plus(date.toEpochMilli(), ChronoUnit.MILLIS);
     }
 
+    public static DateTimeIterator getRecurringListForChangeWindow(ChangeWindow window, Long durationInSeconds)
+                    throws ParseException {
+
+        String rdata = "RRULE:FREQ=MINUTELY;INTERVAL=" + durationInSeconds/60;
+        DateTime start = new DateTime(window.getStartTime().toInstant().toEpochMilli());
+        DateTimeIterator recur =
+                        DateTimeIteratorFactory.createDateTimeIterator(rdata, start, DateTimeZone.UTC, true);
+        return recur;
+    }
+
+
+
 
 }
