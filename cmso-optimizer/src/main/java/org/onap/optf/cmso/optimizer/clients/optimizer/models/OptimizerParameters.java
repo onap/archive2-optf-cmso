@@ -45,10 +45,10 @@ attributeConcurrencyLimit = [];
  */
 public class OptimizerParameters {
     private Long numElements;
-    private Long maxTime;
     private Long numLoaders;
+    private List<Long> elementSlotCapacity = new ArrayList<>();
+    private Long maxTime;
     private List<List<Boolean>> noConflict = new ArrayList<>();
-    private List<Long> slotCapacity = new ArrayList<>();
     private List<List<Long>> loaderCapacity = new ArrayList<>();
 
     private Long numAttributes;
@@ -88,12 +88,12 @@ public class OptimizerParameters {
         this.noConflict = noConflict;
     }
 
-    public List<Long> getSlotCapacity() {
-        return slotCapacity;
+    public List<Long> getElementSlotCapacity() {
+        return elementSlotCapacity;
     }
 
-    public void setSlotCapacity(List<Long> slotCapacity) {
-        this.slotCapacity = slotCapacity;
+    public void setElementSlotCapacity(List<Long> slotCapacity) {
+        this.elementSlotCapacity = slotCapacity;
     }
 
     public List<List<Long>> getLoaderCapacity() {
@@ -144,12 +144,31 @@ public class OptimizerParameters {
         appendAttribute(sb, "maxTime", maxTime.toString());
         appendAttribute(sb, "numLoaders", numLoaders.toString());
         appendAttribute(sb, "numAttributes", numAttributes.toString());
+
         appendAttribute(sb, "noConflict", "[|\n" + formatBooleanRows(noConflict) + "|]");
-        appendAttribute(sb, "slotCapacity", "[" + formatLongList(slotCapacity) + "]");
+        appendAttribute(sb, "elementSlotCapacity", "[" + formatLongList(elementSlotCapacity) + "]");
         appendAttribute(sb, "loaderCapacity", "[|\n" + formatLongRows(loaderCapacity) + "|]");
-        appendAttribute(sb, "attributesRange", "[" + formatLongList(attributesRange) + "]");
-        appendAttribute(sb, "attributes", "[|\n" + formatLongRows(attributes) + "|]");
-        appendAttribute(sb, "attributeConcurrencyLimit", "[|\n" + formatLongRows(attributeConcurrencyLimit) + "|]");
+
+
+        if (attributesRange.size() > 0) {
+            appendAttribute(sb, "attributesRange", "[" + formatLongList(attributesRange) + "]");
+        }
+        else {
+            appendAttribute(sb, "attributesRange", "[]");
+        }
+        if (attributes.size() > 0) {
+            appendAttribute(sb, "attributes", "[|\n" + formatLongRows(attributes) + "|]");
+        }
+        else {
+            appendAttribute(sb, "attributes", "array2d(1..numElements, 1..numAttributes, [])");
+        }
+        if (attributeConcurrencyLimit.size() > 0) {
+            appendAttribute(sb, "attributeConcurrencyLimit", "[|\n" + formatLongRows(attributeConcurrencyLimit) + "|]");
+        }
+        else
+        {
+            appendAttribute(sb, "attributeConcurrencyLimit", "array2d(1..numAttributes, 1..maxTime, [])");
+        }
         return sb.toString();
     }
 
