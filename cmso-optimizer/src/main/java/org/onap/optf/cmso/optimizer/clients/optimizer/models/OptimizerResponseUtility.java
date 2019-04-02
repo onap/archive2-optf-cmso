@@ -32,8 +32,9 @@ import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 public class OptimizerResponseUtility extends PropertyUtils {
-    public Results parseOptimizerResult(File resultsFile) {
-        Results results = null;
+
+    public OptimizerResults parseOptimizerResult(File resultsFile) {
+        OptimizerResults results = null;
         try (InputStream input = new FileInputStream(resultsFile)) {
             Constructor constructor = new Constructor(OptimizerOutResults.class);
             constructor.setPropertyUtils(this);
@@ -46,8 +47,8 @@ public class OptimizerResponseUtility extends PropertyUtils {
         return results;
     }
 
-    private Results marshall(OptimizerOutResults optimizerOut) {
-        Results results = new Results();
+    private OptimizerResults marshall(OptimizerOutResults optimizerOut) {
+        OptimizerResults results = new OptimizerResults();
         results.setElapsedMillis(optimizerOut.getElapsedMillis());
         List<OptimizerSchedule> schedules = new ArrayList<>();
         results.setSchedules(schedules);

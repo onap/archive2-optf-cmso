@@ -23,7 +23,7 @@ import java.util.List;
 /*
 
  */
-public class Results {
+public class OptimizerResults {
     private Long elapsedMillis;
     private List<OptimizerSchedule> schedules;
 

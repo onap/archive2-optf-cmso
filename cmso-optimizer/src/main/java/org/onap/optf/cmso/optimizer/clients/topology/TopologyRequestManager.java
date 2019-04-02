@@ -19,6 +19,10 @@
 
 package org.onap.optf.cmso.optimizer.clients.topology;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
@@ -78,6 +82,17 @@ public class TopologyRequestManager {
         Optional<Topology> topologyOpt = topologyDao.findById(uuid);
         if (topologyOpt.isPresent()) {
             return topologyOpt.get();
+        }
+        return null;
+    }
+
+
+    public TopologyResponse getTopologyResponse(UUID uuid) throws JsonParseException, JsonMappingException, IOException {
+        Topology row = getExistingTopology(uuid);
+        if (row != null)
+        {
+            String responseString = row.getTopology();
+            return new ObjectMapper().readValue(responseString, TopologyResponse.class);
         }
         return null;
     }
