@@ -180,6 +180,10 @@ public class CmsoOptimizerClient {
                         debug.debug("Successfully scheduled optimization: " + schedule.getScheduleId());
                         // Scheduled with optimizer
                         break;
+                    case 200:
+                        debug.debug("Successfully completed optimization: " + schedule.getScheduleId());
+                        // Scheduled with optimizer
+                        break;
                     case 400: {
                         schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                         schedule.setOptimizerStatus("HTTP Status: " + response.getStatus());
