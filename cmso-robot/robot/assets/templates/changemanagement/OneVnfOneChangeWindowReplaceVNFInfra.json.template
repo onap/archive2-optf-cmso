@@ -13,7 +13,7 @@
 		"normalDurationInSeconds" : 100,
 		"additionalDurationInSeconds" : 10,
 		"concurrencyLimit" : 10,
-		"policyId" : "dummy-policy-id",
+		"policyId" : "AllDayEveryDay",
 		"vnfDetails" : [{
 				"groupId" : "group",
 				"node" : [

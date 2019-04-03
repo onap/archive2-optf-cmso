@@ -9,8 +9,8 @@
 		}
 	],
 	"schedulingInfo" : {
-		"normalDurationInSeconds" : 100,
-		"additionalDurationInSeconds" : 10,
+		"normalDurationInSeconds" : 3000,
+		"additionalDurationInSeconds" : 600,
 		"vnfDetails" : [{
 				"groupId" : "group",
 				"node" : [
