@@ -181,8 +181,12 @@ public class CmsoOptimizerClient {
                         // Scheduled with optimizer
                         break;
                     case 200:
-                        debug.debug("Successfully completed optimization: " + schedule.getScheduleId());
-                        // Scheduled with optimizer
+                        String optimizerResponseString = response.readEntity(String.class);
+                        ObjectMapper om = new ObjectMapper();
+                        OptimizerResponse optimizerResponse =
+                                        om.readValue(optimizerResponseString, OptimizerResponse.class);
+                        debug.debug("Successfully retrieved optimization: " + schedule.getScheduleId());
+                        optimizerHandler.handleOptimizerResponse(optimizerResponse, schedule);
                         break;
                     case 400: {
                         schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
