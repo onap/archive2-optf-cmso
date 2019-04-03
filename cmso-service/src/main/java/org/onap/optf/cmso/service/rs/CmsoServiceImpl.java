@@ -206,11 +206,16 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         osm.setUserId(sm.getUserId());
         List<NameValue> dd = new ArrayList<>();
         List<Map<String, String>> smdd = sm.getDomainData();
+        String callbackData = null;
         for (Map<String, String> map : smdd) {
             for (String name : map.keySet()) {
                 if (!name.equals(CmDomainDataEnum.CallbackData.toString())) {
                     NameValue nv = new NameValue(name, map.get(name));
                     dd.add(nv);
+                }
+                else
+                {
+                    callbackData= map.get(name);
                 }
             }
         }
@@ -250,7 +255,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             for (String node : vdm.getNode()) {
                 ElementInfo element = new ElementInfo();
                 element.setElementId(node);
-                element.setRequest(getRequestFromCallbackData(node, dd));
+                element.setRequest(getRequestFromCallbackData(node, callbackData));
                 element.setGroupId(vdm.getGroupId());
                 elements.add(element);
             }
@@ -260,22 +265,17 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         return osm;
     }
 
-    private Object getRequestFromCallbackData(String node, List<NameValue> dd)
+    private Object getRequestFromCallbackData(String node, String value)
                     throws CMSException, JsonParseException, JsonMappingException, IOException {
-        for (NameValue nv : dd) {
-            if (nv.getName().equals(CmDomainDataEnum.CallbackData.toString())) {
-                String value = nv.getValue().toString();
-                ObjectMapper om = new ObjectMapper();
-                JsonNode json = om.readValue(value, JsonNode.class);
-                JsonNode details = json.get("requestDetails");
-                int ii = 0;
-                for (ii = 0; ii < details.size(); ii++) {
-                    JsonNode request = details.get(ii);
-                    String id = request.get("vnfName").asText();
-                    if (id.equals(node)) {
-                        return request;
-                    }
-                }
+        ObjectMapper om = new ObjectMapper();
+        JsonNode json = om.readValue(value, JsonNode.class);
+        JsonNode details = json.get("requestDetails");
+        int ii = 0;
+        for (ii = 0; ii < details.size(); ii++) {
+            JsonNode request = details.get(ii);
+            String id = request.get("vnfName").asText();
+            if (id.equals(node)) {
+                return request;
             }
         }
         throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "CallbackData", "");
