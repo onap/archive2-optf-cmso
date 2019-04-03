@@ -57,7 +57,6 @@ import org.onap.optf.cmso.optimizer.model.Topology;
 import org.onap.optf.cmso.optimizer.model.dao.OptimizerDao;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
-import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerResponse.OptimizeScheduleStatus;
 import org.onap.optf.cmso.optimizer.service.rs.models.PolicyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
