@@ -20,7 +20,6 @@
 package org.onap.optf.cmso.optimizer.clients.optimizer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.onap.observations.Observation;
@@ -121,7 +120,7 @@ public class OptimizerRequestManager {
             OptimizerResults results = apiResponse.getOptimizerResults();
             OptimizerResponse response = new OptimizerResponse();
             response.setRequestId(requestRow.getUuid().toString());
-
+            response.setStatus(OptimizeScheduleStatus.COMPLETED);
             String optString = requestRow.getRequest();
 
             OptimizerRequest optimizerResquest = new ObjectMapper().readValue(optString, OptimizerRequest.class);
@@ -174,11 +173,6 @@ public class OptimizerRequestManager {
         return null;
     }
 
-
-    public List<OptimizerScheduleInfo> getScheduleInfo(Response responseRow) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
 
 

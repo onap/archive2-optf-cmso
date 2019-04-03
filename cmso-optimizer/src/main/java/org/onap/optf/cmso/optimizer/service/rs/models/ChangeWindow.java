@@ -34,7 +34,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.TimeZone;
 import org.springframework.format.annotation.DateTimeFormat;
 
 /**
@@ -133,14 +135,23 @@ public class ChangeWindow implements Serializable {
      * @param timeZoneOffset the time zone offset
      * @return true, if successful
      */
-    public boolean containsInTimeZone(ChangeWindow test, Long timeZoneOffset) {
-        Instant startInstant = startTime.toInstant().plusMillis(timeZoneOffset);
-        Instant endInstant = endTime.toInstant().plusMillis(timeZoneOffset);
-        if (!test.getStartTime().toInstant().isBefore(startInstant)
-                        && !test.getEndTime().toInstant().isAfter(endInstant)) {
+    public boolean containsInTimeZone(ChangeWindow test, Integer startTimeZoneOffset, Integer endTimeZoneOffset) {
+        Instant startInstant = startTime.toInstant();
+        Instant endInstant = endTime.toInstant();
+        Instant testStart = test.getStartTime().toInstant().plusMillis(startTimeZoneOffset);;
+        Instant testEnd = test.getEndTime().toInstant().plusMillis(startTimeZoneOffset);;
+        if (!testStart.isBefore(startInstant)
+                        && !testEnd.isAfter(endInstant)) {
             return true;
         }
         return false;
+    }
+
+    public boolean containsInTimeZone(ChangeWindow test, String timeZone) {
+        TimeZone tz = TimeZone.getTimeZone(timeZone);
+        Integer startTimeZoneOffset = tz.getOffset(startTime.toInstant().truncatedTo(ChronoUnit.DAYS).toEpochMilli());
+        Integer endTimeZoneOffset = tz.getOffset(endTime.toInstant().truncatedTo(ChronoUnit.DAYS).toEpochMilli());
+        return containsInTimeZone(test, startTimeZoneOffset, endTimeZoneOffset);
     }
 
     /**

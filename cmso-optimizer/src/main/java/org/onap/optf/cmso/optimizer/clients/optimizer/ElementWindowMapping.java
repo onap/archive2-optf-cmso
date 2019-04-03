@@ -32,6 +32,7 @@ import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerSchedule;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyElementInfo;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
+import org.onap.optf.cmso.optimizer.service.rs.models.ElementInfo;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerScheduleInfo;
 import org.onap.optf.cmso.optimizer.service.rs.models.ScheduledElement;
@@ -75,22 +76,22 @@ public class ElementWindowMapping {
         return recur;
     }
 
-    public void initializeForProcessResult()
-    {
+    public void initializeForProcessResult() {
        // we need nodeInfo to be an array to speed up the result processing.
        // but we need it sorted by elementId as when we created it....
        nodeArray = nodeInfo.values().stream().collect(Collectors.toList());
        nodeInfo.clear();
 
     }
+
     public OptimizerScheduleInfo processResult(OptimizerSchedule result) throws ParseException {
         // When considering the memory vs performance
         // 5 minute duration for a month long change window is 8928 slots
         // The assumption is that there were be fewer allocated slots
         // than potential slots.
         List<ElementSlot> elements = result.getElementSlotLoader();
-        Map<Integer, List<ElementSlot>> mapSlotToElement = elements.stream().
-                        collect(Collectors.groupingBy(ElementSlot::getSlot));
+        Map<Integer, List<ElementSlot>> mapSlotToElement =
+                        elements.stream().collect(Collectors.groupingBy(ElementSlot::getSlot));
         DateTimeIterator iter = getRecurringIterator();
         // TODO - supporting only 1 change window at the moment.....
         Long endWindow = optimizerRequest.getChangeWindows().get(0).getEndTime().getTime();
@@ -109,18 +110,15 @@ public class ElementWindowMapping {
         // All assigned ElementSlots now have corresponding UTC time
         //
         OptimizerScheduleInfo info = new OptimizerScheduleInfo();
-        for (ElementSlot slot : elements)
-        {
+        for (ElementSlot slot : elements) {
             updateInfo(slot, info);
         }
         return info;
     }
 
-    private void updateInfo(ElementSlot slot, OptimizerScheduleInfo info)
-    {
+    private void updateInfo(ElementSlot slot, OptimizerScheduleInfo info) {
         TopologyElementInfo element = nodeArray.get(slot.getElementIndex()-1);
-        if (slot.getSlot() > 0)
-        {
+        if (slot.getSlot() > 0) {
             ScheduledElement scheduled = new ScheduledElement();
             Integer durationInSeconds = optimizerRequest.getNormalDuration();
             if (optimizerRequest.getAdditionalDuration() != null) {
@@ -131,10 +129,9 @@ public class ElementWindowMapping {
             scheduled.setStartTime(new Date(slot.getTime()));
             scheduled.setEndTime(new Date(slot.getTime() + (durationInSeconds*1000)));
             scheduled.setScheduleType(ScheduleType.INDIVIDUAL);
+            scheduled.setGroupId(getGroupId(scheduled.getElementId()));
             info.getScheduledElements().add(scheduled);
-        }
-        else
-        {
+        } else {
             UnScheduledElement unscheduled = new UnScheduledElement();
             unscheduled.setElementId(element.getElementId());
             unscheduled.setGroupId("unknown");
@@ -144,5 +141,18 @@ public class ElementWindowMapping {
         }
     }
 
+    private String getGroupId(String elementId) {
+        ElementInfo info = getElementInfo(elementId);
+        if (info != null) {
+            return info.getGroupId();
+        }
+        return "";
+    }
+
+    private ElementInfo getElementInfo(String elementId) {
+        List<ElementInfo> elements = optimizerRequest.getElements();
+        ElementInfo info = elements.stream().filter(x -> x.getElementId().equals(elementId)).findAny().orElse(null);
+        return info;
+    }
 
 }
