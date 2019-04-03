@@ -78,8 +78,7 @@ public class TopologyInterfaceImpl implements TopologyInterface {
                 ElementInfo element = new ElementInfo();
                 element.setElementId(criteria.getElementId());
                 ElementLocation loc = new ElementLocation();
-                loc.setLat(new Float(-74.024));
-                loc.setLon(new Float(40.177));
+                loc.setTimezone("US/Eastern");
                 element.setElementLocation(loc);
                 atr.getElements().add(element);
             }
