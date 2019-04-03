@@ -85,6 +85,8 @@ public enum LogMessages implements ObservationInterface {
                     Level.ERROR),
     FAILED_TO_CREATE_OPTIMIZER_REQUEST("Failed to create optimizer request for id={0}", Status.INTERNAL_SERVER_ERROR,
                     Level.ERROR),
+    OPTIMIZER_REQUEST_TIMEOUT("Optimizer engine request timed out id={0} timelimit={1}", Status.INTERNAL_SERVER_ERROR,
+                    Level.ERROR),
 
     ;
     private final String defaultId;

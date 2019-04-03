@@ -26,13 +26,17 @@ import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.optimizer.clients.optimizer.OptimizerRequestManager;
+import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerEngineResponse;
 import org.onap.optf.cmso.optimizer.clients.ticketmgt.TicketMgtRequestManager;
 import org.onap.optf.cmso.optimizer.clients.ticketmgt.models.ActiveTicketsResponse;
 import org.onap.optf.cmso.optimizer.clients.topology.TopologyRequestManager;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
 import org.onap.optf.cmso.optimizer.model.Request;
+import org.onap.optf.cmso.optimizer.model.Response;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
+import org.onap.optf.cmso.optimizer.model.dao.ResponseDao;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 import org.onap.optf.cmso.optimizer.service.rs.models.ElementInfo;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
@@ -51,10 +55,16 @@ public class OptimizerManager {
     RequestDao requestDao;
 
     @Autowired
+    ResponseDao responseDao;
+
+    @Autowired
     TopologyRequestManager topologyRequestManager;
 
     @Autowired
     TicketMgtRequestManager ticketMgtRequestManager;
+
+    @Autowired
+    OptimizerRequestManager optimizerRequestManager;
 
     /**
      * Validate optimizer request.
@@ -147,13 +157,22 @@ public class OptimizerManager {
         } catch (JsonProcessingException e) {
             throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_REQUEST, e.getMessage());
         }
-        requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
+        requestRow.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY.toString());
         requestDao.save(requestRow);
         initiateDataGathering(requestRow);
         requestDao.save(requestRow);
         OptimizeScheduleStatus status = OptimizeScheduleStatus.valueOf(requestRow.getStatus());
-        optimizerResponse.setStatus(status);
-        optimizerResponse.setErrorMessage("");
+        if (status == OptimizeScheduleStatus.COMPLETED)
+        {
+            // COmpletely synchronous optimization
+            optimizerResponse = getCompletedOptimizerResponse(uuid);
+        }
+        else
+        {
+            // One or more steps are asynchronous
+            optimizerResponse.setStatus(status);
+            optimizerResponse.setErrorMessage("");
+        }
         return optimizerResponse;
     }
 
@@ -174,8 +193,8 @@ public class OptimizerManager {
                     return;
                 case IN_PROGRESS:
                     requestRow.setRequestStart(System.currentTimeMillis());
-                    requestRow.setStatus(OptimizeScheduleStatus.PENDING_TOPOLOGY.toString());
-                    break;
+                    requestRow.setStatus(OptimizeScheduleStatus.TOPOLOGY_IN_PROGRESS.toString());
+                   return;
                 default:
                     break;
             }
@@ -192,17 +211,17 @@ public class OptimizerManager {
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.PENDING_OPTIMIZER.toString());
                     initiateOptimizer(requestRow);
-                    break;
+                    return;
                 case FAILED:
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setRequestEnd(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
                     requestRow.setMessage(apiResponse.getErrorMessage());
-                    break;
+                    return;
                 case IN_PROGRESS:
                     requestRow.setRequestStart(System.currentTimeMillis());
-                    requestRow.setStatus(OptimizeScheduleStatus.PENDING_TICKETS.toString());
-                    break;
+                    requestRow.setStatus(OptimizeScheduleStatus.TICKETS_IN_PROGRESS.toString());
+                    return;
                 default:
                     break;
             }
@@ -212,9 +231,54 @@ public class OptimizerManager {
     }
 
 
-    private void initiateOptimizer(Request requestRow) {
-        // TODO Auto-generated method stub
+    private void initiateOptimizer(Request requestRow) throws CmsoException {
+        OptimizerEngineResponse apiResponse = optimizerRequestManager.createOptimizerRequest(requestRow);
+        if (apiResponse != null) {
+            switch (apiResponse.getStatus()) {
+                case COMPLETED:
+                    requestRow.setRequestEnd(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.COMPLETED.toString());
+                    return;
+                case FAILED:
+                    requestRow.setRequestStart(System.currentTimeMillis());
+                    requestRow.setRequestEnd(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
+                    requestRow.setMessage(apiResponse.getErrorMessage());
+                    return;
+                case IN_PROGRESS:
+                case IN_QUEUE:
+                    requestRow.setRequestStart(System.currentTimeMillis());
+                    requestRow.setStatus(OptimizeScheduleStatus.OPTIMIZER_IN_PROGRESS.toString());
+                    return;
+                default:
+                    break;
+            }
+        }
+        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.FAILED_TO_CREATE_TICKET_REQUEST,
+                        requestRow.getUuid().toString());
+    }
 
+    public OptimizerResponse getCompletedOptimizerResponse(UUID uuid)
+    {
+        OptimizerResponse response = new OptimizerResponse();
+        response.setRequestId(uuid.toString());
+        response.setStatus(OptimizeScheduleStatus.COMPLETED);
+        Response responseRow  = getResponseRow(uuid);
+        if (responseRow != null)
+        {
+            response.setSchedules(optimizerRequestManager.getScheduleInfo(responseRow));
+        }
+        return response;
+    }
+
+    public Response getResponseRow(UUID uuid)
+    {
+        Optional<Response> opt = responseDao.findById(uuid);
+        if (opt.isPresent())
+        {
+            return opt.get();
+        }
+        return null;
     }
 
     @SuppressWarnings("unused")
@@ -225,7 +289,7 @@ public class OptimizerManager {
             return requestOptional.get();
         }
         throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.EXPECTED_DATA_NOT_FOUND,
-                        requestRow.toString(), "Request table");
+                       uuid.toString(), "Request table");
     }
 
 
