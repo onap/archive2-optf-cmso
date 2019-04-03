@@ -233,6 +233,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         List<PolicyInfo> policies = new ArrayList<>();
         PolicyInfo policyInfo = new PolicyInfo();
         policyInfo.setPolicyName(sinfo.getPolicyId());
+        policies.add(policyInfo);
         sd.setPolicies(policies);
 
         List<VnfDetailsMessage> details = sinfo.getVnfDetails();
