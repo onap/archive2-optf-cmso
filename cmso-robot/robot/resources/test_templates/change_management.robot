@@ -46,14 +46,15 @@ Change Management Rejection Template
 
 Change Management Failure Template
    [Documentation]    Sends a post request expecting a failure. expected_status_code should be whatever code is expected for this call
-   [Arguments]    ${request_file}    ${expected_status_code}    ${template_folder}
+   [Arguments]    ${request_file}    ${expected_status_code}    ${template_folder}   ${variables}=[]
    ${uuid}=   Generate UUID
    ${resp}=   Create Schedule   ${uuid}   ${request_file}    ${template_folder}
    Should Be Equal as Strings    ${resp.status_code}    ${expected_status_code}
    Return from Keyword If   '${resp.status_code}' == '202'
    #List of possible reasons that the request should fail - we should look for exact message.....
    @{status_list}=    Create List    Scheduler.INVALID_ATTRIBUTE   Scheduler.MISSING_REQUIRED_ATTRIBUTE    Scheduler.NODE_LIST_CONTAINS_EMTPY_NODE    Scheduler.INVALID_CHANGE_WINDOW   
-   Validate Json Error    ${resp.json()}    ${status_list}
+   @{listVars}=   Evaluate   ${variables}
+   Validate Json Error    ${resp.json()}    ${status_list}   ${listVars}
    
 Change Management Immediate Template
    [Arguments]    ${request_file}    ${expected_status_code}    ${template_folder}

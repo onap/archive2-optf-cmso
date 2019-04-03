@@ -17,7 +17,7 @@
 		"vnfDetails" : [{
 				"groupId" : "",
 				"node" : [
-					"dummy{node}"
+					"${node1}"
 				],
 				"changeWindow" : [{
 						"startTime" : "${end_time1}",

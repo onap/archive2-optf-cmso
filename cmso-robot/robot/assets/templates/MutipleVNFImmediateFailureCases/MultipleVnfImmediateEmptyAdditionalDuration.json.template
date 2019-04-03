@@ -13,9 +13,9 @@
 		"vnfDetails" : [{
 				"groupId" : "",
 				"node" : [
-					"VNFName1${testid}",
-					"VNFName2${testid}",
-					"VNFName3${testid}"
+					"${node1}",
+					"${node2}",
+					"${node3}"
 				]
 			}
 		]
