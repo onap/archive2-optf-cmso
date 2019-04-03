@@ -60,7 +60,7 @@ import org.slf4j.MDC;
 import com.att.eelf.utils.Stopwatch;
 
 /**
- * ECOMP EELF logging MDC fields not defined in the MDC Configuration (i.e.
+ * EELF logging MDC fields not defined in the MDC Configuration (i.e.
  * MDC_ALERT_SEVERITY)
  **/
 public class Mdc {
@@ -116,7 +116,7 @@ public class Mdc {
             MDC.put(MDC_SERVER_FQDN, e.getMessage());
         }
         MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
-        MDC.put(MDC_SERVICE_NAME, "ecomp-cmso");
+        MDC.put(MDC_SERVICE_NAME, "cmso");
         // MDC.put(MDC_STATUS_CODE, "");
         setPartherTargetFromUri(request.getRequestURL().toString());
         // Override partner hostname with username
@@ -217,7 +217,7 @@ public class Mdc {
             MDC.put(MDC_SERVER_FQDN, e.getMessage());
         }
         MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
-        MDC.put(MDC_SERVICE_NAME, "ecomp-cmso");
+        MDC.put(MDC_SERVICE_NAME, "cmso");
         // MDC.put(MDC_STATUS_CODE, "");
         // MDC.put(MDC_TARGET_ENTITY, "");
         // MDC.put(MDC_TARGET_SERVICE_NAME, "");
@@ -255,7 +255,7 @@ public class Mdc {
         // InetAddress.getLocalHost().getHostAddress()); } catch (Exception e){
         // MDC.put(MDC_SERVER_FQDN, e.getMessage());}
         // MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
-        // MDC.put(MDC_SERVICE_NAME, "ecomp-cmso");
+        // MDC.put(MDC_SERVICE_NAME, "cmso");
         // MDC.put(MDC_STATUS_CODE, "");
         // MDC.put(MDC_TARGET_ENTITY, "");
         // MDC.put(MDC_TARGET_SERVICE_NAME, "");
@@ -302,7 +302,7 @@ public class Mdc {
         // InetAddress.getLocalHost().getHostAddress()); } catch (Exception e){
         // MDC.put(MDC_SERVER_FQDN, e.getMessage());}
         // MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
-        // MDC.put(MDC_SERVICE_NAME, "ecomp-cmso");
+        // MDC.put(MDC_SERVICE_NAME, "cmso");
         // MDC.put(MDC_STATUS_CODE, "");
         setPartherTargetFromUri(url);
         // MDC.put(MDC_TARGET_ENTITY, "");
@@ -347,7 +347,7 @@ public class Mdc {
         // InetAddress.getLocalHost().getHostAddress()); } catch (Exception e){
         // MDC.put(MDC_SERVER_FQDN, e.getMessage());}
         // MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
-        // MDC.put(MDC_SERVICE_NAME, "ecomp-cmso");
+        // MDC.put(MDC_SERVICE_NAME, "cmso");
         MDC.put(MDC_STATUS_CODE, "COMPLETE");
         if (response.getStatus() == 500)
             MDC.put(MDC_STATUS_CODE, "ERROR");

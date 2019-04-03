@@ -69,7 +69,7 @@ public class HealthCheckImpl implements HealthCheck {
     CmsoOptimizerClient optimizerClient;
 
     @Autowired
-    ApprovalTypeDAO approvalTypeDAO;
+    ApprovalTypeDAO approvalTypeDao;
 
     @Autowired
     Environment env;
@@ -127,7 +127,7 @@ public class HealthCheckImpl implements HealthCheck {
         String url = env.getProperty("spring.datasource.url");
         hcc.setUrl(url);
         try {
-            approvalTypeDAO.findByDomain("HealthCheck");
+            approvalTypeDao.findByDomain("HealthCheck");
             hcc.setHealthy(true);
             hcc.setStatus("OK");
         } catch (Exception e) {

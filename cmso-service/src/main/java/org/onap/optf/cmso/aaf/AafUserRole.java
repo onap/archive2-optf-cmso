@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class AafUserRole {
     private String url = "";
-    private String pathParts[] = {};
+    private String[] pathParts = {};
     private String perm = "";
     private String method = "";
     private List<AafPerm> aafPerms = new ArrayList<>();

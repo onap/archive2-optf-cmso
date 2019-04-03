@@ -247,8 +247,9 @@ public class ChangeManagementDetail {
      * @return the start time
      */
     public String getStartTime() {
-        if (startTimeMillis != null)
+        if (startTimeMillis != null) {
             return ISODateTimeFormat.dateTimeNoMillis().print(startTimeMillis);
+        }
         return null;
     }
 
@@ -265,8 +266,9 @@ public class ChangeManagementDetail {
      * @return the finish time
      */
     public String getFinishTime() {
-        if (finishTimeMillis != null)
+        if (finishTimeMillis != null) {
             return ISODateTimeFormat.dateTimeNoMillis().print(finishTimeMillis);
+        }
         return null;
     }
 

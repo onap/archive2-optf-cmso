@@ -17,22 +17,21 @@
 
 package org.onap.optf.cmso;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-
 /**
  * This class makes it possible to use @Autowired references in QuartzJobBeans.
- *
  * Also enables @Autowire of the SchedulerFactoryBean the add Triggers
  * for @Autowired QuartzJobBeans for ChangeManagement events. Making a big
  * investment in SpringBoot Quartz. It had better work ;-)
  *
  */
+
 public final class AutowiringSpringBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
     private static EELFLogger log = EELFManager.getInstance().getLogger(AutowiringSpringBeanJobFactory.class);
 

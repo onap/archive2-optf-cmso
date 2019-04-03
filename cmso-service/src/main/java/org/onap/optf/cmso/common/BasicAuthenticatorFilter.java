@@ -17,6 +17,8 @@
 
 package org.onap.optf.cmso.common;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,20 +26,33 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.bind.DatatypeConverter;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
+/**
+ * The Class BasicAuthenticatorFilter.
+ */
 public class BasicAuthenticatorFilter implements ClientRequestFilter {
     private static EELFLogger log = EELFManager.getInstance().getLogger(BasicAuthenticatorFilter.class);
     private final String user;
     private final String password;
 
+    /**
+     * Instantiates a new basic authenticator filter.
+     *
+     * @param user the user
+     * @param password the password
+     */
     public BasicAuthenticatorFilter(String user, String password) {
         this.user = user;
         this.password = password;
         log.info("user: " + user + " pass:" + password);
     }
 
+    /**
+     * Filter.
+     *
+     * @param requestContext the request context
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
@@ -54,6 +69,12 @@ public class BasicAuthenticatorFilter implements ClientRequestFilter {
         }
     }
 
+    /**
+     * Gets the user.
+     *
+     * @param request the request
+     * @return the user
+     */
     public static String getUser(HttpServletRequest request) {
         String user = "";
         String header = request.getHeader("Authorization");

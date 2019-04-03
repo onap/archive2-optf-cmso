@@ -148,7 +148,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                 if (sch != null) {
                     schedules.add(sch);
                     if (includeDetails) {
-                        List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesID(sch.getUuid());
+                        List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(sch.getUuid());
                         sch.setGroups(groups);
                         for (ChangeManagementGroup g : groups) {
                             List<ChangeManagementSchedule> cmSchedules =
@@ -212,10 +212,8 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                 if (!name.equals(CmDomainDataEnum.CallbackData.toString())) {
                     NameValue nv = new NameValue(name, map.get(name));
                     dd.add(nv);
-                }
-                else
-                {
-                    callbackData= map.get(name);
+                } else {
+                    callbackData = map.get(name);
                 }
             }
         }
@@ -288,7 +286,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         Response response = null;
         Observation.report(LogMessages.DELETE_SCHEDULE_REQUEST, "Received", request.getRemoteAddr(), scheduleId, "");
         try {
-            Schedule schedule = scheduleDao.findByDomainScheduleID(DomainsEnum.ChangeManagement.toString(), scheduleId);
+            Schedule schedule = scheduleDao.findByDomainScheduleId(DomainsEnum.ChangeManagement.toString(), scheduleId);
             if (schedule == null) {
                 throw new CMSNotFoundException(DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
@@ -315,7 +313,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         Observation.report(LogMessages.GET_SCHEDULE_REQUEST_INFO, "Received", request.getRemoteAddr(), scheduleId, "");
         Schedule schedule = null;
         try {
-            schedule = scheduleDao.findByDomainScheduleID(DomainsEnum.ChangeManagement.toString(), scheduleId);
+            schedule = scheduleDao.findByDomainScheduleId(DomainsEnum.ChangeManagement.toString(), scheduleId);
             if (schedule == null) {
                 throw new CMSException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
                                 DomainsEnum.ChangeManagement.toString(), scheduleId);
@@ -342,7 +340,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                         approval.toString());
         try {
             String domain = DomainsEnum.ChangeManagement.toString();
-            Schedule sch = scheduleDao.findByDomainScheduleID(domain, scheduleId);
+            Schedule sch = scheduleDao.findByDomainScheduleId(domain, scheduleId);
             if (sch == null) {
                 throw new CMSNotFoundException(domain, scheduleId);
             }

@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.eventq;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.util.Date;
 import java.util.List;
 import org.onap.optf.cmso.common.CMSStatusEnum;
@@ -47,8 +49,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * This job will look for ChangeManagementSchedule approved jobs that are due
@@ -64,7 +64,7 @@ public class CMSQueueJob {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
     SchedulerFactoryBean qsScheduler;
@@ -75,15 +75,21 @@ public class CMSQueueJob {
     @Autowired
     DispatchedEventList dispatchedEventList;
 
+    /**
+     * Queue imminent jobs.
+     *
+     * @return true, if successful
+     */
     public boolean queueImminentJobs() {
         Integer interval = env.getProperty("cmso.cm.polling.job.interval.ms", Integer.class, 10000);
         Integer lookahead = env.getProperty("cmso.cm.polling.job.lookahead.intervals", Integer.class, 5);
         long now = System.currentTimeMillis();
         Long endTime = now + (interval * lookahead);
         List<ChangeManagementSchedule> schedules =
-                cmScheduleDAO.findByStatusAndEndTime(CMSStatusEnum.Scheduled.toString(), endTime);
-        if (schedules.size() == 0)
+                cmScheduleDao.findByStatusAndEndTime(CMSStatusEnum.Scheduled.toString(), endTime);
+        if (schedules.size() == 0) {
             return false;
+        }
         for (ChangeManagementSchedule schedule : schedules) {
             try {
                 if (!dispatchedEventList.isAlreadyDispatched(schedule.getUuid())) {
@@ -106,6 +112,12 @@ public class CMSQueueJob {
         return false;
     }
 
+    /**
+     * Schedule cm job.
+     *
+     * @param schedule the schedule
+     * @throws Exception the scheduler exception
+     */
     public void scheduleCmJob(ChangeManagementSchedule schedule) throws org.quartz.SchedulerException {
         //
         Integer dispatherLeadTime = env.getProperty("cmso.cm.dispatcher.lead.time.ms", Integer.class, 5000);
@@ -113,8 +125,9 @@ public class CMSQueueJob {
         Long startTime = schedule.getStartTimeMillis();
 
         /// If startTIme is null, it is an immediate start
-        if (startTime != null)
+        if (startTime != null) {
             dispatchTime = startTime - dispatherLeadTime;
+        }
 
         JobDetail jobDetail = JobBuilder.newJob(CmJob.class).build();
         jobDetail.getJobDataMap().put("key", schedule.getUuid().toString());
@@ -122,18 +135,25 @@ public class CMSQueueJob {
         TriggerBuilder<Trigger> tb = TriggerBuilder.newTrigger().forJob(jobDetail);
 
         long now = System.currentTimeMillis();
-        if (now > dispatchTime)
+        if (now > dispatchTime) {
             tb.startNow();
-        else
+        }
+        else {
             tb.startAt(new Date(dispatchTime));
+        }
         Trigger trigger = tb.build();
         qsScheduler.getScheduler().scheduleJob(jobDetail, trigger);
 
     }
 
+    /**
+     * Update schedule status.
+     *
+     * @param cmSchedule the cm schedule
+     */
     @Transactional
     public void updateScheduleStatus(ChangeManagementSchedule cmSchedule) {
-        cmScheduleDAO.save(cmSchedule);
+        cmScheduleDao.save(cmSchedule);
 
     }
 

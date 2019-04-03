@@ -38,7 +38,7 @@ import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.service.rs.models.CmDomainDataEnum;
 
 /**
- * Collection of commann static helper methods for CHangeManagement
+ * Collection of commann static helper methods for CHangeManagement.
  *
  * @author jf9860
  *
@@ -49,24 +49,40 @@ public class CmHelpers {
         return getDomainData(schedule.getDomainData(), key);
     }
 
+    /**
+     * Gets the domain data.
+     *
+     * @param domainData the domain data
+     * @param key the key
+     * @return the domain data
+     */
     public static String getDomainData(List<DomainData> domainData, CmDomainDataEnum key) {
         for (DomainData map : domainData) {
-            if (map.getName().equals(key.toString()))
+            if (map.getName().equals(key.toString())) {
                 return map.getValue();
+            }
         }
         return null;
     }
 
-  public static String getEventData(Schedule schedule, CmDomainDataEnum key) {
-      return getDomainData(schedule.getDomainData(), key);
-  }
+    public static String getEventData(Schedule schedule, CmDomainDataEnum key) {
+        return getDomainData(schedule.getDomainData(), key);
+    }
 
-  public static String getElementData(List<ElementData> eventData, CmDomainDataEnum key) {
-      for (ElementData map : eventData) {
-          if (map.getName().equals(key.toString()))
-              return map.getValue();
-      }
-      return null;
-  }
+    /**
+     * Gets the element data.
+     *
+     * @param eventData the event data
+     * @param key the key
+     * @return the element data
+     */
+    public static String getElementData(List<ElementData> eventData, CmDomainDataEnum key) {
+        for (ElementData map : eventData) {
+            if (map.getName().equals(key.toString())) {
+                return map.getValue();
+            }
+        }
+        return null;
+    }
 
 }

@@ -32,6 +32,7 @@
 package org.onap.optf.cmso.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
+
 import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -53,30 +54,29 @@ public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFil
 
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext) throws IOException {
-		// On the way back
-		Mdc.metricEnd(responseContext);
-		Mdc.setCaller(17);
-		Observation.report(LogMessages.OUTGOING_MESSAGE_RETURNED,
-				requestContext.getMethod(),
-				requestContext.getUri().getPath().toString(),
-				responseContext.getStatusInfo().toString());
+        // On the way back
+        Mdc.metricEnd(responseContext);
+        Mdc.setCaller(17);
+        Observation.report(LogMessages.OUTGOING_MESSAGE_RETURNED, requestContext.getMethod(),
+                        requestContext.getUri().getPath().toString(), responseContext.getStatusInfo().toString());
     }
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-		// On the way out
-		Mdc.metricStart(requestContext);
-		Mdc.setCaller(17);
-		Observation.report(LogMessages.OUTGOING_MESSAGE,
-				requestContext.getMethod(),
-				requestContext.getUri().getPath().toString());
+        // On the way out
+        Mdc.metricStart(requestContext);
+        Mdc.setCaller(17);
+        Observation.report(LogMessages.OUTGOING_MESSAGE, requestContext.getMethod(),
+                        requestContext.getUri().getPath().toString());
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
 
         String transactionId = (String) headers.getFirst(MessageHeaders.HeadersEnum.TransactionID.toString());
         String mdcId = MDC.get(MDC_KEY_REQUEST_ID);
-        if (transactionId == null || transactionId.equals(""))
-            if (mdcId != null)
+        if (transactionId == null || transactionId.equals("")) {
+            if (mdcId != null) {
                 headers.add(HeadersEnum.TransactionID.toString(), mdcId);
+            }
+        }
         headers.add(HeadersEnum.FromAppID.toString(), appId);
     }
 

@@ -49,7 +49,7 @@ public interface ChangeManagementChangeWindowDAO
     void delete(ChangeManagementChangeWindow toDelete);
 
     @Query(value = "SELECT d FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupUuid = ?1")
-    List<ChangeManagementChangeWindow> findByGroupsUUID(UUID id);
+    List<ChangeManagementChangeWindow> findByGroupsUuid(UUID id);
 
     @Modifying
     @Query(value = "DELETE FROM ChangeManagementChangeWindow d WHERE d.changeManagementGroupUuid = ?1")

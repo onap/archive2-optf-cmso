@@ -58,21 +58,21 @@ public class BaseSchedulerServiceImpl {
     private static EELFLogger log = EELFManager.getInstance().getLogger(BaseSchedulerServiceImpl.class);
 
     @Autowired
-    protected ScheduleDAO scheduleDAO;
+    protected ScheduleDAO scheduleDao;
 
     @Autowired
-    DomainDataDAO domainDataDAO;
+    DomainDataDAO domainDataDao;
 
     @Autowired
-    ApprovalTypeDAO approvalTypeDAO;
+    ApprovalTypeDAO approvalTypeDao;
 
     @Autowired
-    ScheduleApprovalDAO scheduleApprovalDAO;
+    ScheduleApprovalDAO scheduleApprovalDao;
 
     protected Schedule validateAndAddScheduleRequest(OptimizedScheduleMessage scheduleMessage,
                     List<DomainData> domainData) throws CMSException {
         messageValidations(scheduleMessage);
-        Schedule sch = scheduleDAO.findByDomainScheduleID(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
+        Schedule sch = scheduleDao.findByDomainScheduleId(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
 
         if (sch != null) {
             throw new CMSAlreadyExistsException(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
@@ -91,13 +91,13 @@ public class BaseSchedulerServiceImpl {
         sch.setOptimizerAttemptsToSchedule(0);
         sch.setScheduleInfo(scheduleMessage.getSchedulingData().toString());
         sch.setStatus(CMSStatusEnum.PendingSchedule.toString());
-        scheduleDAO.save(sch);
+        scheduleDao.save(sch);
         for (DomainData dd : domainData) {
             dd.setUuid(UUID.randomUUID());
             sch.addDomainData(dd);
-            domainDataDAO.save(dd);
+            domainDataDao.save(dd);
         }
-        scheduleDAO.save(sch);
+        scheduleDao.save(sch);
         return sch;
     }
 
@@ -111,7 +111,7 @@ public class BaseSchedulerServiceImpl {
     }
 
     protected void deleteScheduleRequest(String domain, String scheduleId) throws CMSException {
-        Schedule sch = scheduleDAO.findByDomainScheduleID(domain, scheduleId);
+        Schedule sch = scheduleDao.findByDomainScheduleId(domain, scheduleId);
         if (sch == null) {
             throw new CMSNotFoundException(domain, scheduleId);
         }
@@ -127,14 +127,14 @@ public class BaseSchedulerServiceImpl {
             default:
                 sch.setStatus(CMSStatusEnum.Deleted.toString());
         }
-        scheduleDAO.save(sch);
+        scheduleDao.save(sch);
     }
 
     protected Schedule processApproval(Schedule sch, String domain, ApprovalMessage approvalMessage)
                     throws CMSException {
         String scheduleId = sch.getScheduleId();
         ApprovalType approvalType =
-                        approvalTypeDAO.findByDomainAndType(domain, approvalMessage.getApprovalType().toString());
+                        approvalTypeDao.findByDomainAndType(domain, approvalMessage.getApprovalType().toString());
         if (approvalType == null) {
             throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "approvalType",
                             approvalMessage.getApprovalType().toString());
@@ -169,7 +169,7 @@ public class BaseSchedulerServiceImpl {
         sa.setStatus(approvalMessage.getApprovalStatus().toString());
         sa.setSchedule(sch);
         sch.addScheduleApproval(sa);
-        scheduleDAO.save(sch);
+        scheduleDao.save(sch);
         if (sa.getStatus().equals(ApprovalStatusEnum.Rejected.toString())) {
             sch.setStatus(CMSStatusEnum.Rejected.toString());
         } else {
@@ -177,7 +177,7 @@ public class BaseSchedulerServiceImpl {
                 sch.setStatus(CMSStatusEnum.Accepted.toString());
             }
         }
-        scheduleDAO.save(sch);
+        scheduleDao.save(sch);
         return sch;
     }
 
@@ -188,7 +188,7 @@ public class BaseSchedulerServiceImpl {
         // for
         // logging
 
-        List<ApprovalType> approvalTypes = approvalTypeDAO.findByDomain(schedule.getDomain());
+        List<ApprovalType> approvalTypes = approvalTypeDao.findByDomain(schedule.getDomain());
         for (ApprovalType at : approvalTypes) {
             UUID type = at.getUuid();
             Integer count = at.getApprovalCount();

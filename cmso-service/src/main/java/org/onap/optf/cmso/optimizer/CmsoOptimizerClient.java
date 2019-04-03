@@ -72,7 +72,7 @@ public class CmsoOptimizerClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
     Environment env;
@@ -92,7 +92,7 @@ public class CmsoOptimizerClient {
         Map<String, String> mdcSave = Mdc.save();
         try {
             // Ensure that only one cmso is requsting this call to optimizer
-            Schedule schedule = scheduleDAO.lockOne(uuid);
+            Schedule schedule = scheduleDao.lockOne(uuid);
             if (schedule.getStatus().equals(CMSStatusEnum.PendingSchedule.toString())) {
                 scheduleNewOptimization(schedule);
             }
@@ -205,13 +205,13 @@ public class CmsoOptimizerClient {
                         break;
                     case 500:
                     default: {
-                        String message = response.readEntity(String.class);
                         // SHould probably track the number of retries.
                         schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                         int tries = schedule.getOptimizerAttemptsToSchedule();
                         tries++;
                         schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
                         schedule.setOptimizerAttemptsToSchedule(tries);
+                        String message = response.readEntity(String.class);
                         schedule.setOptimizerMessage(message);
                         updateScheduleStatus(schedule);
                         /// Got processing error response
@@ -255,8 +255,6 @@ public class CmsoOptimizerClient {
     public void pollOptimizer(Schedule schedule) {
         try {
             String optimizerurl = env.getProperty("cmso.optimizer.status.url");
-            String username = env.getProperty("mechid.user");
-            String password = pm.getProperty("mechid.pass", "");
             Long timeout = env.getProperty("cmso.optimizer.request.timeout.secs", Long.class);
             if (timeout == null) {
                 timeout = 3600L;
@@ -276,6 +274,8 @@ public class CmsoOptimizerClient {
             // If the request is successfully scheduled in optimizer, status will be
             // updated to OptimizationInProgress.
             Client client = ClientBuilder.newClient();
+            String username = env.getProperty("mechid.user");
+            String password = pm.getProperty("mechid.pass", "");
             client.register(new BasicAuthenticatorFilter(username, password));
             client.register(new CmsoClientFilters());
             WebTarget optimizerTarget = client.target(optimizerurl);
@@ -337,7 +337,7 @@ public class CmsoOptimizerClient {
             schedule.setOptimizerStatus("Failed to parse optimizer request");
             schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
             schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
-            scheduleDAO.save(schedule);
+            scheduleDao.save(schedule);
         }
         return null;
     }
@@ -375,7 +375,7 @@ public class CmsoOptimizerClient {
      */
     @Transactional
     public void updateScheduleStatus(Schedule schedule) {
-        scheduleDAO.save(schedule);
+        scheduleDao.save(schedule);
     }
 
     /**
