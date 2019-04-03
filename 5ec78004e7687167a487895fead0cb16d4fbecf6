@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f93f13c_dd36b88d",
+        "filename": "cmso-optimizer/etc/config/optimizer.properties",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2019-04-03T01:40:02Z",
+      "side": 1,
+      "message": "Assuming that this will be UNIX folders",
+      "revId": "5ec78004e7687167a487895fead0cb16d4fbecf6",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
