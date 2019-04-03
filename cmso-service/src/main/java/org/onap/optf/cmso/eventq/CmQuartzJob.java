@@ -31,6 +31,8 @@
 
 package org.onap.optf.cmso.eventq;
 
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
@@ -41,8 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 /**
  * This quartz job runs periodically to query the ChangeManagementSChedule table
@@ -55,7 +55,7 @@ public class CmQuartzJob extends QuartzJobBean {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSQueueJob qJob;
+    CMSQueueJob qqJob;
 
     // This is not called directly. Using @Autowired to ensure that startup
     // Runs before the fist invocation of executeInternal
@@ -63,7 +63,7 @@ public class CmQuartzJob extends QuartzJobBean {
     CmQuartzJobStartup startup;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Override
     @Transactional
@@ -87,7 +87,7 @@ public class CmQuartzJob extends QuartzJobBean {
             boolean moreToSchedule = true;
             while (moreToSchedule) {
                 try {
-                    moreToSchedule = qJob.queueImminentJobs();
+                    moreToSchedule = qqJob.queueImminentJobs();
                 } catch (Exception e) {
                     debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
                     moreToSchedule = false;

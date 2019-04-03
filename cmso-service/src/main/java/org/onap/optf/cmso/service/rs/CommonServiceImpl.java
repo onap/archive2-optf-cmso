@@ -1,5 +1,5 @@
-/*
- * Copyright © 2017-2019 AT&T Intellectual Property. Modifications Copyright © 2018 IBM.
+/*oaoo
+ * Copyright © 2017-2019 AT&T Intellectaoual Property. Modifications Copyright © 2018 IBM.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -81,25 +81,25 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     Environment env;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDAO;
+    ChangeManagementChangeWindowDAO cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDAO;
+    ChangeManagementDetailDAO cmDetailsDao;
 
     @Autowired
-    ScheduleQueryDAO scheduleQueryDAO;
+    ScheduleQueryDAO scheduleQueryDao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
-    ElementDataDAO elementDataDAO;
+    ElementDataDAO elementDataDao;
 
     @Autowired
     TmClient tmClient;
@@ -225,14 +225,14 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
             cmg.setNormalDurationInSecs(schedulingInfo.getNormalDurationInSeconds());
             cmg.setAdditionalDurationInSecs(schedulingInfo.getAdditionalDurationInSeconds());
             cmg.setConcurrencyLimit(schedulingInfo.getConcurrencyLimit());
-            cmGroupDAO.save(cmg);
+            cmGroupDao.save(cmg);
             for (ChangeWindow cw : schedulingInfo.getChangeWindows()) {
                 ChangeManagementChangeWindow cmcw = new ChangeManagementChangeWindow();
                 cmcw.setUuid(UUID.randomUUID());
                 cmcw.setChangeManagementGroupUuid(cmg.getUuid());
                 cmcw.setStartTimeMillis(cw.getStartTime().getTime());
                 cmcw.setFinishTimeMillis(cw.getEndTime().getTime());
-                cmChangeWindowDAO.save(cmcw);
+                cmChangeWindowDao.save(cmcw);
             }
 
             for (ElementInfo element : groups.get(groupId)) {
@@ -242,7 +242,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                 cms.setVnfName(element.getElementId());
                 cms.setStatus(CMSStatusEnum.PendingSchedule.toString());
                 cms.setRequest(element.getRequest().toString());
-                cmScheduleDAO.save(cms);
+                cmScheduleDao.save(cms);
                 // Save elementData
                 saveElementData(cms, element);
             }
@@ -259,7 +259,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                 ed.setName(nv.getName());
                 // TODO Save as JSON
                 ed.setValue(nv.getValue().toString());
-                elementDataDAO.save(ed);
+                elementDataDao.save(ed);
             }
         }
 
@@ -279,7 +279,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
             cmg.setFinishTimeMillis(System.currentTimeMillis() + ((duration * 1000) + (backout * 1000)));
             cmg.setNormalDurationInSecs(duration);
             cmg.setAdditionalDurationInSecs(backout);
-            cmGroupDAO.save(cmg);
+            cmGroupDao.save(cmg);
             for (ElementInfo element : groups.get(groupId)) {
                 ChangeManagementSchedule cms = new ChangeManagementSchedule();
                 cms.setUuid(UUID.randomUUID());
@@ -287,18 +287,18 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                 cms.setVnfName(element.getElementId());
                 cms.setRequest(element.getRequest().toString());
                 cms.setStatus(CMSStatusEnum.PendingApproval.toString());
-                cmScheduleDAO.save(cms);
+                cmScheduleDao.save(cms);
             }
             schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
-            scheduleDAO.save(schedule);
+            scheduleDao.save(schedule);
         }
     }
 
     protected void deleteChangeManagement(Schedule schedule) throws CMSException {
-        List<ChangeManagementGroup> cmgs = cmGroupDAO.findBySchedulesID(schedule.getUuid());
+        List<ChangeManagementGroup> cmgs = cmGroupDao.findBySchedulesId(schedule.getUuid());
 
         for (ChangeManagementGroup cmg : cmgs) {
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(cmg.getUuid());
+            List<ChangeManagementSchedule> schedules = cmScheduleDao.findByChangeManagementGroupId(cmg.getUuid());
             for (ChangeManagementSchedule s : schedules) {
                 CMSStatusEnum currentState = CMSStatusEnum.Completed.fromString(s.getStatus());
                 switch (currentState) {
@@ -314,7 +314,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                     default:
                         s.setStatus(CMSStatusEnum.Deleted.toString());
                 }
-                cmScheduleDAO.save(s);
+                cmScheduleDao.save(s);
             }
         }
 
@@ -342,7 +342,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
 
     protected void processApproveScheduleRequest(Schedule sch, ApprovalMessage approval, List<DomainData> domainData)
                     throws CMSException {
-        sch = scheduleDAO.lockOne(sch.getUuid());
+        sch = scheduleDao.lockOne(sch.getUuid());
         String domain = DomainsEnum.ChangeManagement.toString();
         processApproval(sch, domain, approval);
         if (sch.getStatus().equals(CMSStatusEnum.Accepted.toString())) {
@@ -358,10 +358,10 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
 
         Integer maxvnfsperticket = env.getProperty("tm.vnfs.per.ticket", Integer.class, 1);
 
-        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(sch.getUuid());
+        List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(sch.getUuid());
         for (ChangeManagementGroup group : groups) {
 
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
+            List<ChangeManagementSchedule> schedules = cmScheduleDao.findByChangeManagementGroupId(group.getUuid());
             List<List<ChangeManagementSchedule>> ticketList = new ArrayList<List<ChangeManagementSchedule>>();
             List<ChangeManagementSchedule> current = null;
             for (ChangeManagementSchedule cms : schedules) {
@@ -401,20 +401,20 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
             else {
                 cms.setStatus(CMSStatusEnum.Scheduled.toString());
             }
-            cmScheduleDAO.save(cms);
+            cmScheduleDao.save(cms);
         }
         schedule.setStatus(CMSStatusEnum.Scheduled.toString());
-        scheduleDAO.save(schedule);
+        scheduleDao.save(schedule);
     }
 
     private void updateChangeManagementSchedules(Schedule sch, CMSStatusEnum approvalrejected) {
         debug.debug("Entered updateChangeManagementSchedules");
-        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(sch.getUuid());
+        List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(sch.getUuid());
         for (ChangeManagementGroup group : groups) {
-            List<ChangeManagementSchedule> schedules = cmScheduleDAO.findByChangeManagementGroupId(group.getUuid());
+            List<ChangeManagementSchedule> schedules = cmScheduleDao.findByChangeManagementGroupId(group.getUuid());
             for (ChangeManagementSchedule schedule : schedules) {
                 schedule.setStatus(approvalrejected.toString());
-                cmScheduleDAO.save(schedule);
+                cmScheduleDao.save(schedule);
             }
         }
         debug.debug("Exited updateChangeManagementSchedules");

@@ -47,9 +47,9 @@ public interface ChangeManagementGroupDAO extends PagingAndSortingRepository<Cha
     void delete(ChangeManagementGroup toDelete);
 
     @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesUuid = ?1")
-    List<ChangeManagementGroup> findBySchedulesID(UUID id);
+    List<ChangeManagementGroup> findBySchedulesId(UUID id);
 
     @Query(value = "SELECT d FROM ChangeManagementGroup d WHERE d.schedulesUuid = ?1 AND d.groupId = ?2")
-    ChangeManagementGroup findOneBySchedulesIDGroupID(UUID id, String groupId);
+    ChangeManagementGroup findOneBySchedulesIdGroupId(UUID id, String groupId);
 
 }

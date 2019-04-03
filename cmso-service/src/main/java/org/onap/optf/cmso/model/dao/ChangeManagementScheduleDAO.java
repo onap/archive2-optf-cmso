@@ -66,14 +66,18 @@ public interface ChangeManagementScheduleDAO extends PagingAndSortingRepository<
             + " AND g.groupId = ?2"
             + " AND d.changeManagementGroupUuid = g.uuid"
             + " AND d.vnfName = ?3")
-    ChangeManagementSchedule findOneByScheduleUUIDGroupIdAndVnfName(UUID id, String groupId, String vnfName);
+    ChangeManagementSchedule findOneByScheduleUuidGroupIdAndVnfName(UUID id, String groupId, String vnfName);
 
 
-    @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE (d.status = ?1 AND d.startTimeMillis <= ?2) or d.status = 'Scheduled Immediate' order by d.startTimeMillis")
+    @Query(value = "SELECT d FROM ChangeManagementSchedule d"
+                    + " WHERE (d.status = ?1 AND d.startTimeMillis <= ?2)"
+                    + " or d.status = 'Scheduled Immediate' order by d.startTimeMillis")
     List<ChangeManagementSchedule> findByStatusAndEndTime(String status, Long date);
 
     @Modifying
-    @Query(value = "Update ChangeManagementSchedule d set d.status = 'Scheduled', d.dispatcherInstance = '' WHERE d.status = 'Queued for Dispatch' AND d.dispatcherInstance = ?1")
+    @Query(value = "Update ChangeManagementSchedule d set d.status = 'Scheduled',"
+                    + " d.dispatcherInstance = ''"
+                    + " WHERE d.status = 'Queued for Dispatch' AND d.dispatcherInstance = ?1")
     public int requeueQueuedForDispatch(String dispatcherInstance);
 
     @Query(value = "SELECT d FROM ChangeManagementSchedule d WHERE d.status = 'Triggered'")

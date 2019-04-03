@@ -111,7 +111,7 @@ public class TmStatusClient {
             }
             Map<GroupAuditStatus, List<ChangeManagementGroup>> groupStatus =
                             new HashMap<GroupAuditStatus, List<ChangeManagementGroup>>();
-            List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesID(uuid);
+            List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(uuid);
 
             // Close tickets for completed VNFs
             for (ChangeManagementGroup group : groups) {

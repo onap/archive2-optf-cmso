@@ -67,9 +67,9 @@ public class DispatcherServiceImpl implements DispacherService {
     @Override
     @Transactional
     public Response dispatchSchedule(String id, UriInfo uri, HttpServletRequest request) {
-        debug.debug("dispatchSchedule entered  {}" , id);
+        debug.debug("dispatchSchedule entered  {}", id);
         try {
-        	UUID uuid = UUID.fromString(id);
+            UUID uuid = UUID.fromString(id);
             dispatchJob.execute(uuid);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
@@ -84,7 +84,7 @@ public class DispatcherServiceImpl implements DispacherService {
     public Response dispatchOptimizer(String id, UriInfo uri, HttpServletRequest request) {
         debug.debug("dispatchOptimizer entered {}", id);
         try {
-        	UUID uuid = UUID.fromString(id);
+            UUID uuid = UUID.fromString(id);
             optimizerClient.scheduleOptimization(uuid);
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());

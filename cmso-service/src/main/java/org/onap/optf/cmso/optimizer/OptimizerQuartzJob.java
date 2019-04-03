@@ -60,6 +60,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class OptimizerQuartzJob.
+ */
 @Component
 @DisallowConcurrentExecution
 public class OptimizerQuartzJob extends QuartzJobBean {
@@ -111,8 +114,13 @@ public class OptimizerQuartzJob extends QuartzJobBean {
 
     }
 
-    public void scheduleOptimization(Schedule s) {
-        UUID id = s.getUuid();
+    /**
+     * Schedule optimization.
+     *
+     * @param sch the s
+     */
+    public void scheduleOptimization(Schedule sch) {
+        UUID id = sch.getUuid();
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("cmso.dispatch.url", "http://localhost:8089");
@@ -151,13 +159,10 @@ public class OptimizerQuartzJob extends QuartzJobBean {
      * According to the documentation I read, Quartz would queue a job without waiting for the
      * completion of the job with @DisallowConcurrentExecution to complete so that there would be a
      * backlog of triggers to process
-     *
      * This was designed to spin though these stale triggers. When this didn't work, I discovered that
      * the behavior is that Quartz will wait for the appropriate interval
      * after @DisallowConcurrentExecution jobs complete.
-     *
      * I tested by adding a sleep for an interval > the trigger interval
-     *
      * QUartz appears to do what makes sense. Leaving this here in case issues arise...
      *
      */

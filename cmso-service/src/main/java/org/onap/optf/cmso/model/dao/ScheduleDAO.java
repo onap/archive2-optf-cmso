@@ -50,10 +50,10 @@ public interface ScheduleDAO extends PagingAndSortingRepository<Schedule, UUID> 
     void delete(Schedule toDelete);
 
     @Query(value = "SELECT s FROM Schedule s WHERE s.domain = ?1 AND s.scheduleId= ?2 ")
-    Schedule findByDomainScheduleID(String domain, String scheduleId);
+    Schedule findByDomainScheduleId(String domain, String scheduleId);
 
     @Query(value = "SELECT s FROM Schedule s WHERE s.domain = ?1 AND s.status = ?2 ")
-    List<Schedule> findByDomainStatus(String domain, String Status);
+    List<Schedule> findByDomainStatus(String domain, String status);
 
     @Query(value = "SELECT s FROM Schedule s WHERE s.optimizerTransactionId= ?1")
     Schedule findOneByTransactionId(String transactionId);

@@ -63,19 +63,19 @@ public class CmsoOptimizerHandler {
     Environment env;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDAO;
+    ChangeManagementChangeWindowDAO cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDAO;
+    ChangeManagementDetailDAO cmDetailsDao;
 
     /**
      * Handle optimizer response.
@@ -97,7 +97,7 @@ public class CmsoOptimizerHandler {
                 // The dispatch logic ensures that we only every dispatch once.
                 case OptimizationInProgress:
                     processResponse(response, schedule);
-                    scheduleDAO.save(schedule);
+                    scheduleDao.save(schedule);
                     break;
                 default:
                     throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.OPTIMIZER_CALLBACK_STATE_ERROR,
@@ -128,7 +128,7 @@ public class CmsoOptimizerHandler {
                 default:
                     break;
             }
-            scheduleDAO.save(schedule);
+            scheduleDao.save(schedule);
         } catch (CMSException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
@@ -163,7 +163,7 @@ public class CmsoOptimizerHandler {
             return;
         }
 
-        List<ChangeManagementGroup> groups = cmGroupDAO.findBySchedulesID(schedule.getUuid());
+        List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(schedule.getUuid());
         Map<String, ChangeManagementGroup> updatedGroups = new HashMap<>();
 
         for (ScheduledElement element : osi.getScheduledElements()) {
@@ -171,27 +171,27 @@ public class CmsoOptimizerHandler {
             String groupId = element.getGroupId();
             String vnfName = element.getElementId();
             ChangeManagementSchedule cms =
-                            cmScheduleDAO.findOneByScheduleUUIDGroupIdAndVnfName(schedule.getUuid(), groupId, vnfName);
+                            cmScheduleDao.findOneByScheduleUuidGroupIdAndVnfName(schedule.getUuid(), groupId, vnfName);
             cms.setStartTimeMillis(element.getStartTime().getTime());
             cms.setFinishTimeMillis(element.getEndTime().getTime());
             cms.setStatus(CMSStatusEnum.PendingApproval.toString());
-            cmScheduleDAO.save(cms);
+            cmScheduleDao.save(cms);
         }
         if (osi.getUnScheduledElements() != null) {
             for (UnScheduledElement element : osi.getUnScheduledElements()) {
                 String groupId = element.getGroupId();
                 String vnfName = element.getElementId();
-                ChangeManagementSchedule cms = cmScheduleDAO.findOneByScheduleUUIDGroupIdAndVnfName(schedule.getUuid(),
+                ChangeManagementSchedule cms = cmScheduleDao.findOneByScheduleUuidGroupIdAndVnfName(schedule.getUuid(),
                                 groupId, vnfName);
                 cms.setStatus(CMSStatusEnum.NotScheduled.toString());
-                cmScheduleDAO.save(cms);
+                cmScheduleDao.save(cms);
 
             }
         }
 
         // Save any changes to the groups
         for (ChangeManagementGroup cmg : updatedGroups.values()) {
-            cmGroupDAO.save(cmg);
+            cmGroupDao.save(cmg);
         }
         schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
     }

@@ -80,16 +80,16 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
 
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDAO;
+    ChangeManagementChangeWindowDAO cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDAO;
+    ChangeManagementDetailDAO cmDetailsDaoO;
 
     /**
      * Sniro callback.
@@ -120,7 +120,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
             // the response.
             // If this lock times out, the schedule will remain in 'Optimization In
             // Progress' and never complete.
-            Schedule schedule = scheduleDAO.lockOneByTransactionId(transactionId);
+            Schedule schedule = scheduleDao.lockOneByTransactionId(transactionId);
 
             if (schedule == null) {
                 throw new CMSNotFoundException(DomainsEnum.ChangeManagement.toString(),
@@ -136,7 +136,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                 // The dispatch logic ensures that we only every dispatch once.
                 case OptimizationInProgress:
                     processSniroResponse(sniroResponse, schedule);
-                    scheduleDAO.save(schedule);
+                    scheduleDao.save(schedule);
                     response = Response.ok().build();
                     break;
                 default:
@@ -149,7 +149,6 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.serverError().entity(e.getMessage()).build();
-        } finally {
         }
         return response;
     }
@@ -170,7 +169,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                     String groupId = sniroSchedule.getGroupId();
                     DateTime finishTime = convertDate(sniroSchedule.getFinishTime(), "finishTime");
                     DateTime startTime = convertDate(sniroSchedule.getStartTime(), "startTime");
-                    ChangeManagementGroup group = cmGroupDAO.findOneBySchedulesIDGroupID(schedule.getUuid(), groupId);
+                    ChangeManagementGroup group = cmGroupDao.findOneBySchedulesIdGroupId(schedule.getUuid(), groupId);
                     if (group == null) {
                         throw new CMSException(Status.PRECONDITION_FAILED,
                                 LogMessages.CHANGE_MANAGEMENT_GROUP_NOT_FOUND, schedule.getScheduleId(), groupId);
@@ -180,7 +179,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                     DateTime latestInstanceStartTime =
                                     convertDate(sniroSchedule.getLatestInstanceStartTime(), "latestInstanceStartTime");
                     group.setLastInstanceStartTimeMillis(latestInstanceStartTime.getMillis());
-                    cmGroupDAO.save(group);
+                    cmGroupDao.save(group);
                     long totalDuration =
                             (group.getAdditionalDurationInSecs() + group.getNormalDurationInSecs()) * 1000L;
                     Map<String, Map<String, Long>> startAndFinishTimeMap = new HashMap<String, Map<String, Long>>();
@@ -224,7 +223,6 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         Long nextStartTime = null;
         Long nextFinishTime = null;
         for (int nodeNumber = 0; nodeNumber < nodeList.size(); nodeNumber++) {
-            String node = nodeList.get(nodeNumber);
             if (nodeNumber % concurrencyLimit == 0) {
                 if (nodeNumber == 0) {
                     nextStartTime = startTime;
@@ -242,6 +240,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
             Map<String, Long> map = new HashMap<String, Long>();
             map.put("startTime", nextStartTime);
             map.put("finishTime", nextFinishTime);
+            String node = nodeList.get(nodeNumber);
             startAndFinishTimeMap.put(node, map);
         }
 
@@ -250,7 +249,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     private void processNode(Schedule schedule, ChangeManagementGroup group, String node,
             Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
         Map<String, Long> map = startAndFinishTimeMap.get(node);
-        ChangeManagementSchedule detail = cmScheduleDAO.findOneByGroupUuidAndVnfName(group.getUuid(), node);
+        ChangeManagementSchedule detail = cmScheduleDao.findOneByGroupUuidAndVnfName(group.getUuid(), node);
         if (detail == null) {
             throw new CMSException(Status.NOT_FOUND, LogMessages.UNABLE_TO_LOCATE_SCHEDULE_DETAIL,
                     schedule.getScheduleId(), group.getGroupId(), node);
@@ -259,7 +258,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         detail.setFinishTimeMillis(map.get("finishTime"));
         detail.setVnfId("");
         detail.setStatus(CMSStatusEnum.PendingApproval.toString());
-        cmScheduleDAO.save(detail);
+        cmScheduleDao.save(detail);
     }
 
     /**
