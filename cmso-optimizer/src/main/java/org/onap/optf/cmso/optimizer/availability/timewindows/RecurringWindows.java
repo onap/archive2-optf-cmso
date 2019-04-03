@@ -148,8 +148,8 @@ public class RecurringWindows {
         Instant cwStartInstant = changeWindow.getStartTime().toInstant();
         Instant cwEndInstant = changeWindow.getEndTime().toInstant();
 
-        List<DateTime> startList = getRecurringList(range.getStart_time(), cwStartInstant, rdata, cwEndInstant);
-        List<DateTime> endList = getRecurringList(range.getEnd_time(), cwStartInstant, rdata, cwEndInstant);
+        List<DateTime> startList = getRecurringList(range.getStart_time(), cwStartInstant, rdata, cwEndInstant, -1);
+        List<DateTime> endList = getRecurringList(range.getEnd_time(), cwStartInstant, rdata, cwEndInstant, startList.size());
         // Pair them up to make change windows
         // Everything should be UTC time
         for (int i = 0; i < startList.size(); i++) {
@@ -170,7 +170,7 @@ public class RecurringWindows {
 
 
     private static List<DateTime> getRecurringList(String rangeTime, Instant cwStartInstant, StringBuilder rdata,
-                    Instant cwEndInstant) throws ParseException {
+                    Instant cwEndInstant, int endingSize) throws ParseException {
 
         Instant startInstant = getInstanceFromTime(rangeTime, cwStartInstant);
         DateTime start = new DateTime(startInstant.toEpochMilli());
@@ -180,8 +180,15 @@ public class RecurringWindows {
         while (recur.hasNext()) {
             DateTime next = recur.next();
             // System.out.println(next.toString());
+            if (endingSize == -1) {
             if (next.isAfter(cwEndInstant.toEpochMilli())) {
                 break;
+                }
+            }
+            else {
+                if  (list.size() == endingSize) {
+                    break;
+                }
             }
             list.add(next);
         }

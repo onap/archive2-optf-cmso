@@ -52,7 +52,7 @@ public class PolicyManagerTest {
     public void getPolicyByName() {
         String policyName = "Weekday_00_06";
 
-        String result = "CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,";
+        String result = "CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,";
         List<Policy> policies = policyManager.getSupportedPolicies();
         StringBuilder sb = new StringBuilder();
         for (Policy pol : policies) {

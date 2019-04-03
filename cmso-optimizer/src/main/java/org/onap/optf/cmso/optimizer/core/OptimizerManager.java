@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
+import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.optimizer.clients.optimizer.OptimizerRequestManager;
 import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerEngineResponse;
@@ -260,13 +261,20 @@ public class OptimizerManager {
 
     public OptimizerResponse getCompletedOptimizerResponse(UUID uuid)
     {
-        OptimizerResponse response = new OptimizerResponse();
-        response.setRequestId(uuid.toString());
-        response.setStatus(OptimizeScheduleStatus.COMPLETED);
+        OptimizerResponse response = null;
         Response responseRow  = getResponseRow(uuid);
-        if (responseRow != null)
+        try
         {
-            response.setSchedules(optimizerRequestManager.getScheduleInfo(responseRow));
+            String responseStr = responseRow.getRepsonse();
+            response = new ObjectMapper().readValue(responseStr, OptimizerResponse.class);
+        }
+        catch (Exception e)
+        {
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            response = new OptimizerResponse();
+            response.setRequestId(uuid.toString());
+            response.setStatus(OptimizeScheduleStatus.FAILED);
+            response.setErrorMessage(LogMessages.UNEXPECTED_EXCEPTION.format(e.getMessage()));
         }
         return response;
     }

@@ -36,7 +36,6 @@ import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyElementInfo;
 import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
-import org.springframework.expression.spel.ast.OpInc;
 
 public class ElementAvailability extends ElementWindowMapping{
 
@@ -50,8 +49,7 @@ public class ElementAvailability extends ElementWindowMapping{
     private Map<String, List<TicketData>> nodeUnAvailability = new TreeMap<>();
 
     public ElementAvailability(List<TimeLimitAndVerticalTopology> policies, OptimizerRequest optimizerRequest,
-                    TopologyResponse topologyResponse, ActiveTicketsResponse ticketResponse) throws ParseException
-    {
+                    TopologyResponse topologyResponse, ActiveTicketsResponse ticketResponse) throws ParseException {
         super(optimizerRequest, topologyResponse);
         this.policies         = policies;
         this.ticketResponse   = ticketResponse;
@@ -61,9 +59,9 @@ public class ElementAvailability extends ElementWindowMapping{
         this.parameters = parameters;
         for (ChangeWindow changeWindow : optimizerRequest.getChangeWindows()) {
             if  (policies.size() > 0) {
-                globalRelativeAvailability.add(RecurringWindows.getAvailabilityWindowsForPolicies(policies, changeWindow));
-            }
-            else {
+                globalRelativeAvailability
+                                .add(RecurringWindows.getAvailabilityWindowsForPolicies(policies, changeWindow));
+            } else {
                 List<ChangeWindow> wholeWindow = new ArrayList<>();
                 wholeWindow.add(changeWindow);
                 globalRelativeAvailability.add(wholeWindow);
@@ -109,10 +107,18 @@ public class ElementAvailability extends ElementWindowMapping{
         for (String elementId : nodeInfo.keySet()) {
 
             TopologyElementInfo info = nodeInfo.get(elementId);
-            Long timeZoneOffset = getTimeZoneOffset(info);
+            // Library for lat/lon to timzezone is MIT license.
+            // We must provided
+            String timeZone = "GMT";
+            if (info.getElementLocation() != null && info.getElementLocation().getTimezone() != null
+                            && !info.getElementLocation().getTimezone().equals("")) {
+                timeZone = info.getElementLocation().getTimezone();
+            }
             DateTimeIterator recur = getRecurringIterator();
             List<Boolean> element = new ArrayList<>();
-            while (recur.hasNext()) {
+            // calculate number time slots
+            long numberOfTimeSlots = calculateNumberOfSlotsInWindow(window, duration);
+            while (recur.hasNext() && element.size() < numberOfTimeSlots) {
                 DateTime next = recur.next();
                 if (next.isAfter(window.getEndTime().getTime())) {
                     break;
@@ -120,7 +126,7 @@ public class ElementAvailability extends ElementWindowMapping{
                 ChangeWindow slot = new ChangeWindow();
                 slot.setStartTime(next.toDate());
                 slot.setEndTime(next.plus(duration).toDate());
-                if (slotIsAvailable(slot, timeZoneOffset, nodeUnAvailability.get(elementId))) {
+                if (slotIsAvailable(slot, timeZone, nodeUnAvailability.get(elementId))) {
                     element.add(true);
                 } else {
                     element.add(false);
@@ -131,8 +137,15 @@ public class ElementAvailability extends ElementWindowMapping{
 
     }
 
-    private boolean slotIsAvailable(ChangeWindow slot, Long timeZoneOffset, List<TicketData> tickets) {
-        if (isGloballyAvailable(slot, timeZoneOffset) && isNotRestricted(slot, tickets)) {
+    private long calculateNumberOfSlotsInWindow(ChangeWindow window, Long duration)
+    {
+        long windowSize = window.getEndTime().getTime() - window.getStartTime().getTime();
+        long numberOfSlots = windowSize /duration;
+        return numberOfSlots;
+    }
+
+    private boolean slotIsAvailable(ChangeWindow slot, String timeZone, List<TicketData> tickets) {
+        if (isGloballyAvailable(slot, timeZone) && isNotRestricted(slot, tickets)) {
             return true;
         }
         return false;
@@ -152,18 +165,27 @@ public class ElementAvailability extends ElementWindowMapping{
         return true;
     }
 
-    private boolean isGloballyAvailable(ChangeWindow slot, Long timeZoneOffset) {
+    //
+    // Globally availability are generally maintenance window definitions
+    // which are UTC times that are treated as relative to the local time zone.
+    // The slot is an absolute UTCT time as well.
+    // When we test to see if the slot is 'globally' available we must adjust it
+    // to the local time of the element to see it it matches the relative
+    // Consider
+    // slot UTC time is 06:00-07:00
+    // global availability (maintenance window) 00:00-06:00
+    // the slot for an element in US/Eastern
+    // time would be converted to 01:00-02:00
+    // and would fit in the local maintenance window
+    //
+    private boolean isGloballyAvailable(ChangeWindow slot, String timeZone) {
+        boolean available = false;
         for (ChangeWindow global : globalRelativeAvailability.get(0)) {
-            if (global.containsInTimeZone(slot, timeZoneOffset)) {
-                return true;
+            if (global.containsInTimeZone(slot, timeZone)) {
+                available = true;
             }
         }
-        return false;
-    }
-
-    private Long getTimeZoneOffset(TopologyElementInfo info) {
-        // TODO Auto-generated method stub
-        return 0L;
+        return available;
     }
 
     private void calculateNodeAvailability(TopologyElementInfo info) {
