@@ -32,7 +32,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -214,33 +213,26 @@ public class OptimizerClient {
             Path outputFileName = Paths.get(workingFolder.getAbsolutePath(), "results.yaml");
             String dzn = request.toMiniZinc();
             Files.write(inputFileName, dzn.getBytes());
-            Map<String, String> environment = new HashMap<>();
             ProcessBuilder processBuilder = buildCommand(inputFileName, outputFileName, timeLimit.toString());
             process = processBuilder.start();
-            //debug.debug("engine command=" + commandString);
+            // debug.debug("engine command=" + commandString);
             String stdout = IOUtils.toString(process.getInputStream(), "UTF-8");
             String stderr = IOUtils.toString(process.getErrorStream(), "UTF-8");
             debug.debug("stdout=" + stdout);
             debug.debug("stderr=" + stderr);
-            if (process.isAlive()) {
-                process.wait();
-            }
             OptimizerResponseUtility responseUtility = new OptimizerResponseUtility();
             OptimizerResults optimizerResults = responseUtility.parseOptimizerResult(outputFileName.toFile());
             apiResponse.setOptimizerResults(optimizerResults);
             apiResponse.setStatus(OptimizerEngineResponseStatus.COMPLETED);
 
-        } catch (InterruptedException e) {
-            apiResponse.setStatus(OptimizerEngineResponseStatus.FAILED);
-            apiResponse.setErrorMessage(
-                            LogMessages.OPTIMIZER_REQUEST_TIMEOUT.format(uuid.toString(), timeLimit.toString()));
-            Observation.report(LogMessages.OPTIMIZER_REQUEST_TIMEOUT, uuid.toString(), timeLimit.toString());
-            process.destroyForcibly();
         } catch (Exception e) {
             apiResponse.setStatus(OptimizerEngineResponseStatus.FAILED);
             apiResponse.setErrorMessage(LogMessages.UNEXPECTED_EXCEPTION.format(e.getMessage()));
             Observation.report(LogMessages.UNEXPECTED_RESPONSE, e, e.getMessage());
         } finally {
+            if (process.isAlive()) {
+                process.destroyForcibly();
+            }
             if (workingFolder.exists()) {
                 workingFolder.delete();
             }
@@ -251,7 +243,8 @@ public class OptimizerClient {
     private ProcessBuilder buildCommand(Path inputFileName, Path outputFileName, String timeLimit) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = new ArrayList<>();
-        String commandline = env.getProperty("cmso.minizinc.command.commandline", "/bin/bash -x scripts/minizinc/run.sh");
+        String commandline =
+                        env.getProperty("cmso.minizinc.command.commandline", "/bin/bash -x scripts/minizinc/run.sh");
         String minizinc = env.getProperty("cmso.minizinc.command.exe", "minizinc");
         String solver = env.getProperty("cmso.minizinc.command.solver", "OSICBC");
         String script = env.getProperty("cmso.minizinc.command.mzn", "scripts/minizinc/generic_attributes.mzn");
@@ -263,7 +256,7 @@ public class OptimizerClient {
         environment.put("MINIZINC_MZN", script);
         environment.put("MINIZINC_DZN", inputFileName.toString());
         for (String arg : commandline.split(" ")) {
-          command.add(arg);
+            command.add(arg);
         }
         processBuilder.command(command);
         return processBuilder;
