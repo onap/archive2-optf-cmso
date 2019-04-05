@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation    Tests for checking ECOMP Scheduler Logs
+Documentation    Tests for checking Scheduler Logs
 
 Library   UUID
 Library   SSHLibrary
@@ -11,8 +11,8 @@ Resource    ../scheduler_requests/create_schedule.robot
 Resource    ../scheduler_requests/approval_requests.robot
 Resource    ../json_templater.robot
 *** Variables ****
-${log_location}=    /opt/app/ecomp-scheduler/logs/
-${debug_log_location}=    /opt/app/ecomp-scheduler/debug-logs/
+${log_location}=    /opt/app/scheduler/logs/
+${debug_log_location}=    /opt/app/scheduler/debug-logs/
 ${date_time_regex}=    ((([0-9]{2,4}-?){3}.([0-9]{2}:?){3}.*))
 ${uuid_regex}=    [0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}
 
@@ -29,7 +29,7 @@ Check Audit Logs
     ${log_level}=    Convert to String    (INFO|WARN|ERROR|FATAL)
     ${log_msg}=    Convert to String    (Accepted|No Content|OK)
     ${status_codes}=    Convert to String    (204|202|200)
-    ${audit_regex}=    Convert to String    \\|UNKNOWN\\|.*\\|ecomp-scheduler\\|.*\\|COMPLETE\\|${status codes}\\|${log_msg}\\|${uuid_regex}\\|${log_level}\\|.*\\|[0-9]{1,}\\|${server}\\|.*
+    ${audit_regex}=    Convert to String    \\|UNKNOWN\\|.*\\|scheduler\\|.*\\|COMPLETE\\|${status codes}\\|${log_msg}\\|${uuid_regex}\\|${log_level}\\|.*\\|[0-9]{1,}\\|${server}\\|.*
     #THis regex string follows the current expected audit.log structure logging guidelines as of 1710 here https://wiki.web.att.com/pages/viewpage.action?pageId=545861390
     Open Connection    ${GLOBAL_SCHEDULER_HOST}    port=22
     Login    ${user-id}    ${user-pass}    #This may only work with dev server should investigate using Pageant with Robot
@@ -54,7 +54,7 @@ Check Debug Logs
     ${resp}=    Delete Change Management    auth   schedules/${uuid}
     Open Connection    ${GLOBAL_SCHEDULER_HOST}    port=22
     Login    ${user-id}    ${user-pass}
-    ${result}=    Grep Local File    -E '${date_time_regex}\\|${uuid}'    /opt/app/ecomp-scheduler/debug-logs/debug.log
+    ${result}=    Grep Local File    -E '${date_time_regex}\\|${uuid}'    /opt/app/scheduler/debug-logs/debug.log
     #THis regex string follows the current expected debug.log structure logging guidelines as of 1710 here https://wiki.web.att.com/pages/viewpage.action?pageId=545861390
     Close Connection
     Should not be Empty    ${result}
@@ -69,7 +69,7 @@ Check Metric Logs
     ${log_level}=    Convert to String    (INFO|WARN|ERROR|FATAL)
     ${log_msg}=    Convert to String    (Accepted|No Content|OK|[a-zA-Z]+)
     ${status_codes}=    Convert to String    (204|202|200)
-    ${regex}=    Convert To String    \\|UNKNOWN\\|.*\\|ecomp-scheduler\\|.*\\|http://([a-zA-Z]*\.){2,}(:[0-9]{1,5})?\\|(.*/?){1,}\\|COMPLETE\\|${status codes}\\|${log_msg}\\|${uuid_regex}\\|${log_level}\\|.*\\|[0-9]{1,}\\|${server}\\|.*
+    ${regex}=    Convert To String    \\|UNKNOWN\\|.*\\|scheduler\\|.*\\|http://([a-zA-Z]*\.){2,}(:[0-9]{1,5})?\\|(.*/?){1,}\\|COMPLETE\\|${status codes}\\|${log_msg}\\|${uuid_regex}\\|${log_level}\\|.*\\|[0-9]{1,}\\|${server}\\|.*
     #THis regex string follows the current expected metric.log structure logging guidelines as of 1710 here https://wiki.web.att.com/pages/viewpage.action?pageId=545861390
     Open Connection    ${GLOBAL_SCHEDULER_HOST}    port=22
     Login    ${user-id}    ${user-pass}
@@ -85,7 +85,7 @@ Check Error Logs
     
     Open Connection    ${GLOBAL_SCHEDULER_HOST}    port=22
     Login    ${user-id}    ${user-pass}
-    ${result}=    Grep Local File    '${date_time_regex}\\|${uuid_regex}\\|.*\\|ecomp-scheduler\\|.*\\|.*(WARN|ERROR|FATAL).*\\|.*\\|'    ${log_location}error.log
+    ${result}=    Grep Local File    '${date_time_regex}\\|${uuid_regex}\\|.*\\|scheduler\\|.*\\|.*(WARN|ERROR|FATAL).*\\|.*\\|'    ${log_location}error.log
     #THis regex string follows the current expected error.log structure logging guidelines as of 1710 here https://wiki.web.att.com/pages/viewpage.action?pageId=545861390
     #It is difficult to generate errors that would be logged in error.log. so this only tests that any error in the log matches the expected format
     @{grep_result}=    Split to Lines    ${result}

@@ -53,7 +53,7 @@ import org.onap.observations.MessageHeaders.HeadersEnum;
 import org.slf4j.MDC;
 
 /**
- * ECOMP EELF logging MDC fields not defined in the MDC Configuration (i.e. MDC_ALERT_SEVERITY)
+ * EELF logging MDC fields not defined in the MDC Configuration (i.e. MDC_ALERT_SEVERITY)
  **/
 public class Mdc {
 
