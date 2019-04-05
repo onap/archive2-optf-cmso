@@ -10,7 +10,7 @@ Resource    ../resources/scheduler_common.robot
 *** Test Cases ***
 Wait For Healthy CMSO
     [Tags]   ete
-    Wait Until Keyword Succeeds   240s   30s   CMSO Health Check
+    Wait Until Keyword Succeeds   ${CMSO_STARTUP_WAIT_TIME}   30s   CMSO Health Check
     
 *** Keywords ***
 CMSO Health Check

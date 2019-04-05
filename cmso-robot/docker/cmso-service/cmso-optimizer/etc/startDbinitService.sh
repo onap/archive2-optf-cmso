@@ -1,7 +1,7 @@
 #!/bin/sh
 apt update
 apt install netcat --assume-yes
-COUNTER=10
+COUNTER=30
 while [  $COUNTER -gt 0  ]; do
     nc -z ${DB_HOST} 3306
     if [ $? -eq 0 ]; then
