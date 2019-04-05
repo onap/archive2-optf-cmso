@@ -33,12 +33,12 @@
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.onap.optf.cmso</groupId>
+	<groupId>org.onap.optf.cmso.service</groupId>
 	<artifactId>cmso-service</artifactId>
 
 	<packaging>jar</packaging>
 
-	<name>cmso</name>
+	<name>cmso-service</name>
 
 	<properties>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>

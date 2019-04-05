@@ -11,39 +11,92 @@ services:
     ports:
       - "8806:3306"
 
-  db-init:
+  db-init-svc:
     image: onap/optf-cmso-dbinit
     volumes:
-      - "../etc:/share/etc:rw"
-      - "../logs:/share/logs:rw"
+      - "./cmso-service/etc:/share/etc:rw"
+      - "./cmso-service/logs:/share/logs:rw"
     depends_on:
       - mariadb
     environment: 
       - DB_HOST=mariadb
     entrypoint: "bash -x /share/etc/startDbinitService.sh"
 
+  db-init-opt:
+    image: onap/optf-cmso-dbinit
+    volumes:
+      - "./cmso-optimizer/etc:/share/etc:rw"
+      - "./cmso-optimizer/logs:/share/logs:rw"
+    depends_on:
+      - mariadb
+    environment: 
+      - DB_HOST=mariadb
+    entrypoint: "bash -x /share/etc/startDbinitService.sh"
+
+
   cmso-service:
     image: onap/optf-cmso-service
     volumes:
-      - "../etc:/share/etc:rw"
-      - "../logs:/share/logs:rw"
-      - "../debug-logs:/share/debug-logs:rw"
+      - "./cmso-service/etc:/share/etc:rw"
+      - "./cmso-service/logs:/share/logs:rw"
+      - "./cmso-service/debug-logs:/share/debug-logs:rw"
     depends_on:
-      - db-init
+      - db-init-svc
     entrypoint: "bash -x /share/etc/startJacocoService.sh"
     ports:
       - "8080:8080"
     environment: 
       - DB_HOST=mariadb
+      - OPTIMIZER_URL=http://cmso-optimizer:7997/optimizer/v1/optimize/schedule
+      - OPTIMIZER_HEALTH_URL=http://cmso-optimizer:7997/optimizer/v1/health?checkInterfaces=true
+
+  cmso-ticketmgt:
+    image: onap/optf-cmso-ticketmgt
+    volumes:
+      - "./cmso-ticketmgt/etc:/share/etc:rw"
+      - "./cmso-ticketmgt/logs:/share/logs:rw"
+      - "./cmso-ticketmgt/debug-logs:/share/debug-logs:rw"
+    entrypoint: "bash -x /share/etc/startJacocoService.sh"
+    ports:
+      - "7999:7999"
+
+  cmso-topology:
+    image: onap/optf-cmso-topology
+    volumes:
+      - "./cmso-topology/etc:/share/etc:rw"
+      - "./cmso-topology/logs:/share/logs:rw"
+      - "./cmso-topology/debug-logs:/share/debug-logs:rw"
+    entrypoint: "bash -x /share/etc/startJacocoService.sh"
+    ports:
+      - "7998:7998"
+
+  cmso-optimizer:
+    image: onap/optf-cmso-optimizer
+    volumes:
+      - "./cmso-optimizer/etc:/share/etc:rw"
+      - "./cmso-optimizer/logs:/share/logs:rw"
+      - "./cmso-optimizer/debug-logs:/share/debug-logs:rw"
+    depends_on:
+      - db-init-opt
+    entrypoint: "bash -x /share/etc/startJacocoService.sh"
+    ports:
+      - "7997:7997"
+    environment: 
+      - DB_HOST=mariadb
+      - TOPOLOGY_HOST=cmso-topology
+      - TICKETMGT_HOST=cmso-ticketmgt
+
 
   cmso-robot:
     image: onap/optf-cmso-robot
     volumes:
-      - "../logs:/share:rw"
+      - "./cmso-robot/logs:/share:rw"
     depends_on:
       - cmso-service
     environment:
       - GLOBAL_SCHEDULER_URL=http://cmso-service:8080
+      - GLOBAL_OPTIMIZER_URL=http://cmso-optimizer:7997
+      - CMSO_STARTUP_WAIT_TIME=600s
       - TAGS=-i ete
       - OUTPUT=-d /share
     working_dir: /opt/cmso-robot  

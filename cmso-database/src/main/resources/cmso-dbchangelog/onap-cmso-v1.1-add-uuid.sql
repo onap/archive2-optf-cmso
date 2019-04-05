@@ -84,11 +84,6 @@ update CHANGE_MANAGEMENT_CHANGE_WINDOWS set change_management_group_uuid =
 update SCHEDULE_APPROVALS set approval_types_uuid = 
 	(select distinct s.uuid from APPROVAL_TYPES s where approval_type_id = s.id);
 
--- ----------------------------------------------------
--- APPROVAL_TYPES Update all of the foreign key columns
--- ----------------------------------------------------
-update SCHEDULE_APPROVALS set approval_types_uuid = 
-	(select distinct s.uuid from SCHEDULE_APPROVALS t, APPROVAL_TYPES s where t.approval_type_id = s.id);
 
 SET SQL_SAFE_UPDATES = 1;
 

@@ -18,6 +18,7 @@ GLOBAL_CALLBACK_PASSWORD = "onap-user"
 GLOBAL_APPLICATION_ID= "schedulertest"
 GLOBAL_CALLBACK_URL="http://localhost:8900/scheduler/v1/loopbacktest/vid"
 
+CMSO_STARTUP_WAIT_TIME="600s"
 
 
 
