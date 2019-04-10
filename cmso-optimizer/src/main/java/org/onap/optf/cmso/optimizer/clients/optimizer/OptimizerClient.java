@@ -243,8 +243,6 @@ public class OptimizerClient {
     private ProcessBuilder buildCommand(Path inputFileName, Path outputFileName, String timeLimit) {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = new ArrayList<>();
-        String commandline =
-                        env.getProperty("cmso.minizinc.command.commandline", "/bin/bash -x scripts/minizinc/run.sh");
         String minizinc = env.getProperty("cmso.minizinc.command.exe", "minizinc");
         String solver = env.getProperty("cmso.minizinc.command.solver", "OSICBC");
         String script = env.getProperty("cmso.minizinc.command.mzn", "scripts/minizinc/generic_attributes.mzn");
@@ -255,6 +253,8 @@ public class OptimizerClient {
         environment.put("MINIZINC_OUTPUT", outputFileName.toString());
         environment.put("MINIZINC_MZN", script);
         environment.put("MINIZINC_DZN", inputFileName.toString());
+        String commandline =
+                        env.getProperty("cmso.minizinc.command.commandline", "/bin/bash -x scripts/minizinc/run.sh");
         for (String arg : commandline.split(" ")) {
             command.add(arg);
         }

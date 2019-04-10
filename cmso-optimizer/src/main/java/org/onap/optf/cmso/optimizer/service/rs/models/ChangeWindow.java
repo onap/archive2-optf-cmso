@@ -132,7 +132,8 @@ public class ChangeWindow implements Serializable {
      * absolute UTC times provided in tickets which should already be adjusted for time zone.
      *
      * @param test the test
-     * @param timeZoneOffset the time zone offset
+     * @param startTimeZoneOffset the starting time zone offset
+     * @param endTimeZoneOffset   the ending time zone offset
      * @return true, if successful
      */
     public boolean containsInTimeZone(ChangeWindow test, Integer startTimeZoneOffset, Integer endTimeZoneOffset) {
@@ -147,6 +148,13 @@ public class ChangeWindow implements Serializable {
         return false;
     }
 
+    /**
+     * Contains in time zone.
+     *
+     * @param test the test
+     * @param timeZone the time zone
+     * @return true, if successful
+     */
     public boolean containsInTimeZone(ChangeWindow test, String timeZone) {
         TimeZone tz = TimeZone.getTimeZone(timeZone);
         Integer startTimeZoneOffset = tz.getOffset(startTime.toInstant().truncatedTo(ChronoUnit.DAYS).toEpochMilli());

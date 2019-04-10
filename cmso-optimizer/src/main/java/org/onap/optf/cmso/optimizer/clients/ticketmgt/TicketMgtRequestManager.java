@@ -61,21 +61,22 @@ public class TicketMgtRequestManager {
      * @return the active tickets response
      */
     public ActiveTicketsResponse createTicketsRequest(Request requestRow) {
-            Ticket row = null;
-            Optional<Ticket> rowOpt = ticketDao.findById(requestRow.getUuid());
-            if (rowOpt.isPresent()) {
-                row = rowOpt.get();
+        Ticket row = null;
+        Optional<Ticket> rowOpt = ticketDao.findById(requestRow.getUuid());
+        if (rowOpt.isPresent()) {
+            row = rowOpt.get();
 
-            }
-            if (row == null) {
-                row = new Ticket();
-                row.setUuid(requestRow.getUuid());
-                row.setTicketsRetries(0);
-            }
-            ActiveTicketsResponse apiResponse = ticketmgtClient.makeRequest(requestRow, row);
-            ticketDao.save(row);
-            return apiResponse;
-            }
+        }
+        if (row == null) {
+            row = new Ticket();
+            row.setUuid(requestRow.getUuid());
+            row.setTicketsRetries(0);
+        }
+        ActiveTicketsResponse apiResponse = ticketmgtClient.makeRequest(requestRow, row);
+        ticketDao.save(row);
+        return apiResponse;
+    }
+
     /**
      * Gets the existing tickets.
      *

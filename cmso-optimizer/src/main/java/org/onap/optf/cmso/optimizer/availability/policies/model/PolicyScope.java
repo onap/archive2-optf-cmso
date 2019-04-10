@@ -34,6 +34,7 @@ public class PolicyScope {
     public enum ServiceType {
         networkOnDemand
     }
+
     public enum EntityType {
         vnf
     }

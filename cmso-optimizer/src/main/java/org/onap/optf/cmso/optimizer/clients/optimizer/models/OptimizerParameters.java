@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * The Class OptimizerParameters.
+ */
 /*
  * numElements = 5;
 maxTime = 5;
@@ -56,88 +59,193 @@ public class OptimizerParameters {
     private List<List<Long>> attributes = new ArrayList<>();
     private List<List<Long>> attributeConcurrencyLimit = new ArrayList<>();
 
+    /**
+     * Gets the num elements.
+     *
+     * @return the num elements
+     */
     public Long getNumElements() {
         return numElements;
     }
 
+    /**
+     * Sets the num elements.
+     *
+     * @param numElements the new num elements
+     */
     public void setNumElements(Long numElements) {
         this.numElements = numElements;
     }
 
+    /**
+     * Gets the max time.
+     *
+     * @return the max time
+     */
     public Long getMaxTime() {
         return maxTime;
     }
 
+    /**
+     * Sets the max time.
+     *
+     * @param maxTime the new max time
+     */
     public void setMaxTime(Long maxTime) {
         this.maxTime = maxTime;
     }
 
+    /**
+     * Gets the num loaders.
+     *
+     * @return the num loaders
+     */
     public Long getNumLoaders() {
         return numLoaders;
     }
 
+    /**
+     * Sets the num loaders.
+     *
+     * @param numLoaders the new num loaders
+     */
     public void setNumLoaders(Long numLoaders) {
         this.numLoaders = numLoaders;
     }
 
+    /**
+     * Gets the no conflict.
+     *
+     * @return the no conflict
+     */
     public List<List<Boolean>> getNoConflict() {
         return noConflict;
     }
 
+    /**
+     * Sets the no conflict.
+     *
+     * @param noConflict the new no conflict
+     */
     public void setNoConflict(List<List<Boolean>> noConflict) {
         this.noConflict = noConflict;
     }
 
+    /**
+     * Gets the element slot capacity.
+     *
+     * @return the element slot capacity
+     */
     public List<Long> getElementSlotCapacity() {
         return elementSlotCapacity;
     }
 
+    /**
+     * Sets the element slot capacity.
+     *
+     * @param slotCapacity the new element slot capacity
+     */
     public void setElementSlotCapacity(List<Long> slotCapacity) {
         this.elementSlotCapacity = slotCapacity;
     }
 
+    /**
+     * Gets the loader capacity.
+     *
+     * @return the loader capacity
+     */
     public List<List<Long>> getLoaderCapacity() {
         return loaderCapacity;
     }
 
+    /**
+     * Sets the loader capacity.
+     *
+     * @param loaderCapacity the new loader capacity
+     */
     public void setLoaderCapacity(List<List<Long>> loaderCapacity) {
         this.loaderCapacity = loaderCapacity;
     }
 
+    /**
+     * Gets the num attributes.
+     *
+     * @return the num attributes
+     */
     public Long getNumAttributes() {
         return numAttributes;
     }
 
+    /**
+     * Sets the num attributes.
+     *
+     * @param numAttributes the new num attributes
+     */
     public void setNumAttributes(Long numAttributes) {
         this.numAttributes = numAttributes;
     }
 
+    /**
+     * Gets the attributes range.
+     *
+     * @return the attributes range
+     */
     public List<Long> getAttributesRange() {
         return attributesRange;
     }
 
+    /**
+     * Sets the attributes range.
+     *
+     * @param attributesRange the new attributes range
+     */
     public void setAttributesRange(List<Long> attributesRange) {
         this.attributesRange = attributesRange;
     }
 
+    /**
+     * Gets the attributes.
+     *
+     * @return the attributes
+     */
     public List<List<Long>> getAttributes() {
         return attributes;
     }
 
+    /**
+     * Sets the attributes.
+     *
+     * @param attributes the new attributes
+     */
     public void setAttributes(List<List<Long>> attributes) {
         this.attributes = attributes;
     }
 
+    /**
+     * Gets the attribute concurrency limit.
+     *
+     * @return the attribute concurrency limit
+     */
     public List<List<Long>> getAttributeConcurrencyLimit() {
         return attributeConcurrencyLimit;
     }
 
+    /**
+     * Sets the attribute concurrency limit.
+     *
+     * @param attributeConcurrencyLimit the new attribute concurrency limit
+     */
     public void setAttributeConcurrencyLimit(List<List<Long>> attributeConcurrencyLimit) {
         this.attributeConcurrencyLimit = attributeConcurrencyLimit;
     }
 
 
 
+    /**
+     * To mini zinc.
+     *
+     * @return the string
+     */
     public String toMiniZinc() {
         StringBuilder sb = new StringBuilder();
         appendAttribute(sb, "numElements", numElements.toString());
@@ -152,21 +260,17 @@ public class OptimizerParameters {
 
         if (attributesRange.size() > 0) {
             appendAttribute(sb, "attributesRange", "[" + formatLongList(attributesRange) + "]");
-        }
-        else {
+        } else {
             appendAttribute(sb, "attributesRange", "[]");
         }
         if (attributes.size() > 0) {
             appendAttribute(sb, "attributes", "[|\n" + formatLongRows(attributes) + "|]");
-        }
-        else {
+        } else {
             appendAttribute(sb, "attributes", "array2d(1..numElements, 1..numAttributes, [])");
         }
         if (attributeConcurrencyLimit.size() > 0) {
             appendAttribute(sb, "attributeConcurrencyLimit", "[|\n" + formatLongRows(attributeConcurrencyLimit) + "|]");
-        }
-        else
-        {
+        } else {
             appendAttribute(sb, "attributeConcurrencyLimit", "array2d(1..numAttributes, 1..maxTime, [])");
         }
         return sb.toString();

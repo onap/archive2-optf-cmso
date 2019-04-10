@@ -31,8 +31,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
 
+/**
+ * The Class OptimizerResponseUtility.
+ */
 public class OptimizerResponseUtility extends PropertyUtils {
 
+    /**
+     * Parses the optimizer result.
+     *
+     * @param resultsFile the results file
+     * @return the optimizer results
+     */
     public OptimizerResults parseOptimizerResult(File resultsFile) {
         OptimizerResults results = null;
         try (InputStream input = new FileInputStream(resultsFile)) {
@@ -73,6 +82,13 @@ public class OptimizerResponseUtility extends PropertyUtils {
         return optimizerSchedule;
     }
 
+    /**
+     * Gets the property.
+     *
+     * @param type the type
+     * @param name the name
+     * @return the property
+     */
     @Override
     public Property getProperty(Class<? extends Object> type, String name) {
         name = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);

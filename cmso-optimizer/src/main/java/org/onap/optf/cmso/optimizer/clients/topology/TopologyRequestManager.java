@@ -87,10 +87,19 @@ public class TopologyRequestManager {
     }
 
 
-    public TopologyResponse getTopologyResponse(UUID uuid) throws JsonParseException, JsonMappingException, IOException {
+    /**
+     * Gets the topology response.
+     *
+     * @param uuid the uuid
+     * @return the topology response
+     * @throws JsonParseException the json parse exception
+     * @throws JsonMappingException the json mapping exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public TopologyResponse getTopologyResponse(UUID uuid)
+                    throws JsonParseException, JsonMappingException, IOException {
         Topology row = getExistingTopology(uuid);
-        if (row != null)
-        {
+        if (row != null) {
             String responseString = row.getTopology();
             return new ObjectMapper().readValue(responseString, TopologyResponse.class);
         }

@@ -105,19 +105,15 @@ public class OptimizerRequestManager {
     private void buildFinalResponse(Request requestRow, OptimizerEngineResponse apiResponse) {
         Optional<Response> opt = responseDao.findById(requestRow.getUuid());
         Response responseRow = null;
-        if (opt.isPresent())
-        {
+        if (opt.isPresent()) {
             responseRow = opt.get();
         }
-        if (responseRow == null)
-        {
+        if (responseRow == null) {
             responseRow = new Response();
             responseRow.setUuid(requestRow.getUuid());
         }
 
-        try
-        {
-            OptimizerResults results = apiResponse.getOptimizerResults();
+        try {
             OptimizerResponse response = new OptimizerResponse();
             response.setRequestId(requestRow.getUuid().toString());
             response.setStatus(OptimizeScheduleStatus.COMPLETED);
@@ -127,6 +123,7 @@ public class OptimizerRequestManager {
             TopologyResponse topologyResponse = topologyRequestManager.getTopologyResponse(requestRow.getUuid());
             ElementWindowMapping ewm = new ElementWindowMapping(optimizerResquest, topologyResponse);
             ewm.initializeForProcessResult();
+            OptimizerResults results = apiResponse.getOptimizerResults();
             for (OptimizerSchedule result : results.getSchedules()) {
                 OptimizerScheduleInfo info = ewm.processResult(result);
                 if (info != null) {
@@ -137,9 +134,7 @@ public class OptimizerRequestManager {
             requestRow.setStatus(OptimizeScheduleStatus.COMPLETED.toString());
             responseDao.save(responseRow);
             requestDao.save(requestRow);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             requestRow.setStatus(OptimizeScheduleStatus.FAILED.toString());
             requestRow.setMessage(e.getMessage());
@@ -172,7 +167,6 @@ public class OptimizerRequestManager {
         }
         return null;
     }
-
 
 
 

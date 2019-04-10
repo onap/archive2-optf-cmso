@@ -31,8 +31,8 @@ public class Results {
         return elapsedMillis;
     }
 
-    public void setElapsedMillis(Long elapsed_millis) {
-        this.elapsedMillis = elapsed_millis;
+    public void setElapsedMillis(Long elapsedMillis) {
+        this.elapsedMillis = elapsedMillis;
     }
 
     public List<OptimizerSchedule> getSchedules() {

@@ -51,7 +51,8 @@ public class ActiveTicketsRequest implements Serializable {
     private String requestId;
 
     @ApiModelProperty(
-                    value = "Implementation specific name value pairs provided to be passed to Ticket Management query .")
+                    value = "Implementation specific name value pairs provided"
+                                    + " to be passed to Ticket Management query .")
     private List<NameValue> commonData;
 
     @ApiModelProperty(value = "Lists of desired change windows for which TicketData will be returned.")

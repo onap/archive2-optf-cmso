@@ -127,8 +127,8 @@ public class RecurringWindows {
             List<TimeRange> ranges = available.getTimeRange();
             if (ranges.size() == 0) {
                 TimeRange range = new TimeRange();
-                range.setStart_time("00:00:00+00:00");
-                range.setStart_time("23:59:59+00:00");
+                range.setStartTime("00:00:00+00:00");
+                range.setEndTime("23:59:59+00:00");
                 ranges.add(range);
             }
             StringBuilder rdata = new StringBuilder();
@@ -148,8 +148,9 @@ public class RecurringWindows {
         Instant cwStartInstant = changeWindow.getStartTime().toInstant();
         Instant cwEndInstant = changeWindow.getEndTime().toInstant();
 
-        List<DateTime> startList = getRecurringList(range.getStart_time(), cwStartInstant, rdata, cwEndInstant, -1);
-        List<DateTime> endList = getRecurringList(range.getEnd_time(), cwStartInstant, rdata, cwEndInstant, startList.size());
+        List<DateTime> startList = getRecurringList(range.getStartTime(), cwStartInstant, rdata, cwEndInstant, -1);
+        List<DateTime> endList = getRecurringList(range.getEndTime(), cwStartInstant,
+                        rdata, cwEndInstant, startList.size());
         // Pair them up to make change windows
         // Everything should be UTC time
         for (int i = 0; i < startList.size(); i++) {
@@ -181,8 +182,8 @@ public class RecurringWindows {
             DateTime next = recur.next();
             // System.out.println(next.toString());
             if (endingSize == -1) {
-            if (next.isAfter(cwEndInstant.toEpochMilli())) {
-                break;
+                if (next.isAfter(cwEndInstant.toEpochMilli())) {
+                    break;
                 }
             }
             else {
@@ -218,10 +219,18 @@ public class RecurringWindows {
         return instant.plus(date.toEpochMilli(), ChronoUnit.MILLIS);
     }
 
+    /**
+     * Gets the recurring list for change window.
+     *
+     * @param window the window
+     * @param durationInSeconds the duration in seconds
+     * @return the recurring list for change window
+     * @throws ParseException the parse exception
+     */
     public static DateTimeIterator getRecurringListForChangeWindow(ChangeWindow window, Long durationInSeconds)
                     throws ParseException {
 
-        String rdata = "RRULE:FREQ=MINUTELY;INTERVAL=" + durationInSeconds/60;
+        String rdata = "RRULE:FREQ=MINUTELY;INTERVAL=" + durationInSeconds / 60;
         DateTime start = new DateTime(window.getStartTime().toInstant().toEpochMilli());
         DateTimeIterator recur =
                         DateTimeIteratorFactory.createDateTimeIterator(rdata, start, DateTimeZone.UTC, true);

@@ -76,8 +76,7 @@ public class OptimizerInterfaceImpl implements OptimizerInterface {
         try {
             optimizerManager.validate(request); // Throws CmsException if invalid message
             OptimizerResponse optimizerResponse = optimizerManager.processOptimizerRequest(request);
-            if (optimizerResponse != null)
-            {
+            if (optimizerResponse != null) {
                 response = Response.ok(optimizerResponse).build();
             } else {
                 // Request will be processed asynchronously

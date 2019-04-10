@@ -41,6 +41,9 @@ import org.onap.optf.cmso.optimizer.service.rs.models.UnScheduledElement;
 import org.onap.optf.cmso.optimizer.service.rs.models.UnScheduledElement.NotScheduledReason;
 
 // This class ensures that the node indices nodes and the time slots are the
+/**
+ * The Class ElementWindowMapping.
+ */
 // same when processing the optimizer engine response as when initiating.
 public class ElementWindowMapping {
 
@@ -50,6 +53,13 @@ public class ElementWindowMapping {
     protected Map<String, TopologyElementInfo> nodeInfo = new TreeMap<>();
     private List<TopologyElementInfo> nodeArray = null;
 
+    /**
+     * Instantiates a new element window mapping.
+     *
+     * @param optimizerRequest the optimizer request
+     * @param topologyResponse the topology response
+     * @throws ParseException the parse exception
+     */
     public ElementWindowMapping(OptimizerRequest optimizerRequest, TopologyResponse topologyResponse)
                     throws ParseException {
         this.optimizerRequest = optimizerRequest;
@@ -76,14 +86,24 @@ public class ElementWindowMapping {
         return recur;
     }
 
+    /**
+     * Initialize for process result.
+     */
     public void initializeForProcessResult() {
-       // we need nodeInfo to be an array to speed up the result processing.
-       // but we need it sorted by elementId as when we created it....
-       nodeArray = nodeInfo.values().stream().collect(Collectors.toList());
-       nodeInfo.clear();
+        // we need nodeInfo to be an array to speed up the result processing.
+        // but we need it sorted by elementId as when we created it....
+        nodeArray = nodeInfo.values().stream().collect(Collectors.toList());
+        nodeInfo.clear();
 
     }
 
+    /**
+     * Process result.
+     *
+     * @param result the result
+     * @return the optimizer schedule info
+     * @throws ParseException the parse exception
+     */
     public OptimizerScheduleInfo processResult(OptimizerSchedule result) throws ParseException {
         // When considering the memory vs performance
         // 5 minute duration for a month long change window is 8928 slots
@@ -98,8 +118,9 @@ public class ElementWindowMapping {
         Integer slotIndex = 1;
         while (iter.hasNext()) {
             DateTime dateTime = iter.next();
-            if (dateTime.isAfter(endWindow))
+            if (dateTime.isAfter(endWindow)) {
                 break;
+            }
             List<ElementSlot> list = mapSlotToElement.get(slotIndex);
             if (list != null) {
                 list.stream().forEach(x -> x.setTime(dateTime.getMillis()));
@@ -117,7 +138,7 @@ public class ElementWindowMapping {
     }
 
     private void updateInfo(ElementSlot slot, OptimizerScheduleInfo info) {
-        TopologyElementInfo element = nodeArray.get(slot.getElementIndex()-1);
+        TopologyElementInfo element = nodeArray.get(slot.getElementIndex() - 1);
         if (slot.getSlot() > 0) {
             ScheduledElement scheduled = new ScheduledElement();
             Integer durationInSeconds = optimizerRequest.getNormalDuration();
@@ -127,7 +148,7 @@ public class ElementWindowMapping {
             scheduled.setDurationSeconds(durationInSeconds.longValue());
             scheduled.setElementId(element.getElementId());
             scheduled.setStartTime(new Date(slot.getTime()));
-            scheduled.setEndTime(new Date(slot.getTime() + (durationInSeconds*1000)));
+            scheduled.setEndTime(new Date(slot.getTime() + (durationInSeconds * 1000)));
             scheduled.setScheduleType(ScheduleType.INDIVIDUAL);
             scheduled.setGroupId(getGroupId(scheduled.getElementId()));
             info.getScheduledElements().add(scheduled);

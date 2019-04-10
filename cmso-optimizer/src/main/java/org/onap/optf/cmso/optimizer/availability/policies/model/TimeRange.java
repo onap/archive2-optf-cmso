@@ -19,6 +19,9 @@
 
 package org.onap.optf.cmso.optimizer.availability.policies.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 /*
 
 {
@@ -28,23 +31,28 @@ package org.onap.optf.cmso.optimizer.availability.policies.model;
 
  */
 public class TimeRange {
-    private String start_time;
-    private String end_time;
+    private String startTime;
+    private String endTime;
 
-    public String getStart_time() {
-        return start_time;
+    @JsonGetter("start_time")
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setStart_time(String start_time) {
-        this.start_time = start_time;
+    @JsonSetter("start_time")
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public String getEnd_time() {
-        return end_time;
+    @JsonGetter("end_time")
+    public String getEndTime() {
+        return endTime;
     }
 
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+    @JsonSetter("end_time")
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
+
 
 }

@@ -56,6 +56,7 @@ public class TimeLimitAndVerticalTopology {
     public enum ConflictScope {
         timeLimitAndVerticalTopology,
     }
+
     public enum Type {
         vnf_pserver,
     }

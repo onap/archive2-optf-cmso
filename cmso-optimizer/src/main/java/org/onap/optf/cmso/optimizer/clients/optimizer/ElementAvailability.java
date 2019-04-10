@@ -37,7 +37,10 @@ import org.onap.optf.cmso.optimizer.clients.topology.models.TopologyResponse;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
 
-public class ElementAvailability extends ElementWindowMapping{
+/**
+ * The Class ElementAvailability.
+ */
+public class ElementAvailability extends ElementWindowMapping {
 
     private List<TimeLimitAndVerticalTopology> policies;
     private ActiveTicketsResponse ticketResponse;
@@ -48,6 +51,15 @@ public class ElementAvailability extends ElementWindowMapping{
 
     private Map<String, List<TicketData>> nodeUnAvailability = new TreeMap<>();
 
+    /**
+     * Instantiates a new element availability.
+     *
+     * @param policies the policies
+     * @param optimizerRequest the optimizer request
+     * @param topologyResponse the topology response
+     * @param ticketResponse the ticket response
+     * @throws ParseException the parse exception
+     */
     public ElementAvailability(List<TimeLimitAndVerticalTopology> policies, OptimizerRequest optimizerRequest,
                     TopologyResponse topologyResponse, ActiveTicketsResponse ticketResponse) throws ParseException {
         super(optimizerRequest, topologyResponse);
@@ -55,6 +67,12 @@ public class ElementAvailability extends ElementWindowMapping{
         this.ticketResponse   = ticketResponse;
     }
 
+    /**
+     * Populate.
+     *
+     * @param parameters the parameters
+     * @throws ParseException the parse exception
+     */
     public void populate(OptimizerParameters parameters) throws ParseException {
         this.parameters = parameters;
         for (ChangeWindow changeWindow : optimizerRequest.getChangeWindows()) {
@@ -78,7 +96,7 @@ public class ElementAvailability extends ElementWindowMapping{
         parameters.setNumLoaders(1L);
         Long loaderCapacity = parameters.getNumElements();
         List<Long> capacity =  new ArrayList<>();
-        for (Long slot =0L ; slot < parameters.getMaxTime() ; slot++) {
+        for (Long slot = 0L ; slot < parameters.getMaxTime() ; slot++) {
             capacity.add(loaderCapacity);
         }
         parameters.getLoaderCapacity().add(capacity);
@@ -90,7 +108,7 @@ public class ElementAvailability extends ElementWindowMapping{
             limit = parameters.getNumElements();
         }
 
-        for (Long slot =0L ; slot < parameters.getMaxTime() ; slot++) {
+        for (Long slot = 0L ; slot < parameters.getMaxTime() ; slot++) {
             capacity.add(limit);
         }
         parameters.setElementSlotCapacity(capacity);
@@ -137,10 +155,9 @@ public class ElementAvailability extends ElementWindowMapping{
 
     }
 
-    private long calculateNumberOfSlotsInWindow(ChangeWindow window, Long duration)
-    {
+    private long calculateNumberOfSlotsInWindow(ChangeWindow window, Long duration) {
         long windowSize = window.getEndTime().getTime() - window.getStartTime().getTime();
-        long numberOfSlots = windowSize /duration;
+        long numberOfSlots = windowSize / duration;
         return numberOfSlots;
     }
 

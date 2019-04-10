@@ -33,12 +33,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class PolicyManager.
+ */
 @Component
 public class PolicyManager {
 
     @Autowired
     Environment env;
 
+    /**
+     * Gets the time limit and vertical topology by name.
+     *
+     * @param name the name
+     * @return the time limit and vertical topology by name
+     */
     public TimeLimitAndVerticalTopology getTimeLimitAndVerticalTopologyByName(String name) {
         Policy policy = getPolicyForName(name);
         TimeLimitAndVerticalTopology returnPolicy = null;
@@ -54,6 +63,12 @@ public class PolicyManager {
     }
 
 
+    /**
+     * Gets the policy for name.
+     *
+     * @param name the name
+     * @return the policy for name
+     */
     public Policy getPolicyForName(String name) {
         Policy policy = null;
         try {
@@ -64,6 +79,12 @@ public class PolicyManager {
         return policy;
     }
 
+    /**
+     * Gets the local policy for name.
+     *
+     * @param name the name
+     * @return the local policy for name
+     */
     public Policy getLocalPolicyForName(String name) {
         String policyFolder = env.getProperty("cmso.local.policy.folder", "data/policies");
         Policy policy = null;
@@ -80,6 +101,11 @@ public class PolicyManager {
         return policy;
     }
 
+    /**
+     * Gets the supported policies.
+     *
+     * @return the supported policies
+     */
     public List<Policy> getSupportedPolicies() {
         List<Policy> policies = new ArrayList<>();
         try {
@@ -90,6 +116,11 @@ public class PolicyManager {
         return policies;
     }
 
+    /**
+     * Gets the local supported policies.
+     *
+     * @return the local supported policies
+     */
     public List<Policy> getLocalSupportedPolicies() {
         String policyFolder = env.getProperty("cmso.local.policy.folder", "data/policies");
         List<Policy> policies = new ArrayList<>();

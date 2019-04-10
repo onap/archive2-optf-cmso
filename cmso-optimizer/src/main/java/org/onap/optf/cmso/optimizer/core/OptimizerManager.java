@@ -163,13 +163,10 @@ public class OptimizerManager {
         initiateDataGathering(requestRow);
         requestDao.save(requestRow);
         OptimizeScheduleStatus status = OptimizeScheduleStatus.valueOf(requestRow.getStatus());
-        if (status == OptimizeScheduleStatus.COMPLETED)
-        {
+        if (status == OptimizeScheduleStatus.COMPLETED) {
             // COmpletely synchronous optimization
             optimizerResponse = getCompletedOptimizerResponse(uuid);
-        }
-        else
-        {
+        } else {
             // One or more steps are asynchronous
             optimizerResponse.setStatus(status);
             optimizerResponse.setErrorMessage("");
@@ -195,7 +192,7 @@ public class OptimizerManager {
                 case IN_PROGRESS:
                     requestRow.setRequestStart(System.currentTimeMillis());
                     requestRow.setStatus(OptimizeScheduleStatus.TOPOLOGY_IN_PROGRESS.toString());
-                   return;
+                    return;
                 default:
                     break;
             }
@@ -259,17 +256,19 @@ public class OptimizerManager {
                         requestRow.getUuid().toString());
     }
 
-    public OptimizerResponse getCompletedOptimizerResponse(UUID uuid)
-    {
+    /**
+     * Gets the completed optimizer response.
+     *
+     * @param uuid the uuid
+     * @return the completed optimizer response
+     */
+    public OptimizerResponse getCompletedOptimizerResponse(UUID uuid) {
         OptimizerResponse response = null;
-        Response responseRow  = getResponseRow(uuid);
-        try
-        {
+        Response responseRow = getResponseRow(uuid);
+        try {
             String responseStr = responseRow.getRepsonse();
             response = new ObjectMapper().readValue(responseStr, OptimizerResponse.class);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = new OptimizerResponse();
             response.setRequestId(uuid.toString());
@@ -279,11 +278,15 @@ public class OptimizerManager {
         return response;
     }
 
-    public Response getResponseRow(UUID uuid)
-    {
+    /**
+     * Gets the response row.
+     *
+     * @param uuid the uuid
+     * @return the response row
+     */
+    public Response getResponseRow(UUID uuid) {
         Optional<Response> opt = responseDao.findById(uuid);
-        if (opt.isPresent())
-        {
+        if (opt.isPresent()) {
             return opt.get();
         }
         return null;
@@ -296,8 +299,8 @@ public class OptimizerManager {
         if (requestOptional.isPresent()) {
             return requestOptional.get();
         }
-        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.EXPECTED_DATA_NOT_FOUND,
-                       uuid.toString(), "Request table");
+        throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.EXPECTED_DATA_NOT_FOUND, uuid.toString(),
+                        "Request table");
     }
 
 
