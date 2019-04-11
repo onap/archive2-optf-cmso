@@ -32,6 +32,7 @@
 package org.onap.optf.ticketmgt.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
+
 import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -72,9 +73,11 @@ public class CMSOClientFilters implements ClientRequestFilter, ClientResponseFil
 
         String transactionId = (String) headers.getFirst(MessageHeaders.HeadersEnum.TransactionID.toString());
         String mdcId = MDC.get(MDC_KEY_REQUEST_ID);
-        if (transactionId == null || transactionId.equals(""))
-            if (mdcId != null)
+        if (transactionId == null || transactionId.equals("")) {
+            if (mdcId != null) {
                 headers.add(HeadersEnum.TransactionID.toString(), mdcId);
+            }
+        }
         headers.add(HeadersEnum.FromAppID.toString(), appId);
     }
 

@@ -1,27 +1,27 @@
 /*******************************************************************************
- * 
+ *
  *  Copyright © 2019 AT&T Intellectual Property.
- *  
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *          http://www.apache.org/licenses/LICENSE-2.0
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- *  
- *  
+ *
+ *
  *  Unless otherwise specified, all documentation contained herein is licensed
  *  under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  *  you may not use this documentation except in compliance with the License.
  *  You may obtain a copy of the License at
- *  
+ *
  *          https://creativecommons.org/licenses/by/4.0/
- *  
+ *
  *  Unless required by applicable law or agreed to in writing, documentation
  *  distributed under the License is distributed on an "AS IS" BASIS,
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,9 +89,9 @@ public enum LogMessages implements ObservationInterface {
     private final Boolean metric;
 
 
-    private LogMessages(String message, Status code, Level l) {
+    private LogMessages(String message, Status code, Level lev) {
         defaultMessage         = message;
-        level                  = l;
+        level                  = lev;
         status                 = code;
         this.defaultId         = this.name();
         this.defaultResolution = "No resolution needed";
@@ -100,9 +100,9 @@ public enum LogMessages implements ObservationInterface {
         this.metric            = false;
     }
 
-    private LogMessages(String message, Status code, Level l, Boolean audit, Boolean metric) {
+    private LogMessages(String message, Status code, Level lev, Boolean audit, Boolean metric) {
         defaultMessage         = message;
-        level                  = l;
+        level                  = lev;
         status                 = code;
         this.audit             = audit;
         this.metric            = metric;
@@ -111,8 +111,8 @@ public enum LogMessages implements ObservationInterface {
         this.defaultAction     = "No action is required";
     }
 
-    private LogMessages(String message, Status code, Level l, String id, String resolution, String action) {
-        level                  = l;
+    private LogMessages(String message, Status code, Level lev, String id, String resolution, String action) {
+        level                  = lev;
         status                 = code;
         defaultMessage         = message;
         this.defaultId         = id;
@@ -126,6 +126,11 @@ public enum LogMessages implements ObservationInterface {
         EELFResourceManager.loadMessageBundle("logmessages");
     }
 
+    /**
+     * Gen properties.
+     *
+     * @return the string
+     */
     public String genProperties() {
         // Use this to regenerate properties file. The desire to change messages without updating code is
         // well understood, but the developer should be able to code the defaults without having to update 2
@@ -181,7 +186,12 @@ public enum LogMessages implements ObservationInterface {
         return metric;
     }
 
-    public static void main(String argv[]) {
+    /**
+     * The main method.
+     *
+     * @param argv the arguments
+     */
+    public static void main(String[] argv) {
         System.out.println(LogMessages.UNEXPECTED_EXCEPTION.genProperties());
         try {
             Files.write(Paths.get("src/main/resources/logmessages.properties"),

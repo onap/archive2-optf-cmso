@@ -73,11 +73,11 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        initMDCData();
+        initMdcData();
         SpringApplication.run(Application.class, args);
     }
 
-    protected static void initMDCData() {
+    protected static void initMdcData() {
         MDC.clear();
         try {
             MDC.put(Configuration.MDC_SERVER_FQDN, InetAddress.getLocalHost().getHostName());

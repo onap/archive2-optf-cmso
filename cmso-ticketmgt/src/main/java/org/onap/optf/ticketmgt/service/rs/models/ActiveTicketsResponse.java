@@ -55,7 +55,8 @@ public class ActiveTicketsResponse implements Serializable {
     private String requestId;
 
     @ApiModelProperty(
-                    value = "List of TicketData for the requested elements. A single ticket may apply to more than 1 passed elementId.")
+                    value = "List of TicketData for the requested elements."
+                                    + " A single ticket may apply to more than 1 passed elementId.")
     private List<TicketData> elements = new ArrayList<>();
 
     @ApiModelProperty(

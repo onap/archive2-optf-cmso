@@ -17,8 +17,8 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
-package org.onap.optf.ticketmgt.aaf;
 
+package org.onap.optf.ticketmgt.aaf;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -38,7 +38,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * AAF authentication filter
+ * AAF authentication filter.
  */
 
 @Component
@@ -47,6 +47,12 @@ public class AafFilter extends OrderedRequestContextFilter {
 
     private final CadiFilter cadiFilter;
 
+    /**
+     * Instantiates a new aaf filter.
+     *
+     * @throws IOException Signals that an I/O exception has occurred.
+     * @throws ServletException the servlet exception
+     */
     public AafFilter() throws IOException, ServletException {
         Properties cadiProperties = new Properties();
         cadiProperties.load(Application.class.getClassLoader().getResourceAsStream("cadi.properties"));

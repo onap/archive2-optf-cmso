@@ -17,19 +17,18 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.optf.ticketmgt.aaf;
 
 import org.springframework.core.Ordered;
 
 public enum FilterPriority {
     AAF_AUTHENTICATION(Ordered.HIGHEST_PRECEDENCE), AAF_AUTHORIZATION(Ordered.HIGHEST_PRECEDENCE + 1); // higher number
-                                                                                                       // = lower
-                                                                                                       // priority
 
     private final int priority;
 
-    FilterPriority(final int p) {
-        priority = p;
+    FilterPriority(final int pri) {
+        priority = pri;
     }
 
     public int getPriority() {

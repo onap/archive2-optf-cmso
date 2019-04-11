@@ -17,6 +17,7 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.optf.ticketmgt.aaf;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * AAF authorization filter
+ * AAF authorization filter.
  */
 
 @Component
@@ -49,6 +50,9 @@ public class AafAuthorizationFilter extends OrderedRequestContextFilter {
     @Value("${permission.instance}")
     String instance;
 
+    /**
+     * Instantiates a new aaf authorization filter.
+     */
     public AafAuthorizationFilter() {
         this.setOrder(FilterPriority.AAF_AUTHORIZATION.getPriority());
 

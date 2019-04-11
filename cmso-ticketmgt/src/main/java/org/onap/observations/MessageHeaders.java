@@ -35,7 +35,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The Class MessageHeaders.
+ */
 public class MessageHeaders {
+
+    /**
+     * The Enum HeadersEnum.
+     */
     public enum HeadersEnum {
         UNDEFINED("UNDEFINED"),
         TransactionID("X-TransactionId"),
@@ -50,51 +57,98 @@ public class MessageHeaders {
             this.text = text;
         }
 
+        /**
+         * To string.
+         *
+         * @return the string
+         */
         @Override
         public String toString() {
             return text;
         }
     }
 
+    /** The Constant supportedMajorVersions. */
     public static final Map<String, String> supportedMajorVersions = new HashMap<String, String>();
+
     static {
         supportedMajorVersions.put("v1", "0");
         supportedMajorVersions.put("v2", "0");
     }
+
+    /** The Constant supportedMajorMinorVersions. */
     public static final Set<String> supportedMajorMinorVersions = new HashSet<String>();
+
     static {
         supportedMajorMinorVersions.add("v1.0");
         supportedMajorMinorVersions.add("v2.0");
     }
+
+    /** The Constant latestVersion. */
     public static final String latestVersion = "2.0.0";
+
+    /** The Constant patchVersion. */
     public static final String patchVersion = "0";
 
+    /**
+     * From string.
+     *
+     * @param text the text
+     * @return the headers enum
+     */
     public static HeadersEnum fromString(String text) {
-        for (HeadersEnum e : HeadersEnum.values())
-            if (e.text.equals(text))
+        for (HeadersEnum e : HeadersEnum.values()) {
+            if (e.text.equals(text)) {
                 return e;
+            }
+        }
         return HeadersEnum.UNDEFINED;
     }
 
+    /**
+     * Gets the patch version.
+     *
+     * @return the patch version
+     */
     public static String getPatchVersion() {
         return patchVersion;
     }
 
+    /**
+     * Gets the latest version.
+     *
+     * @return the latest version
+     */
     public static String getLatestVersion() {
         return latestVersion;
     }
 
+    /**
+     * Validate major version.
+     *
+     * @param major the major
+     * @return true, if successful
+     */
     public static boolean validateMajorVersion(String major) {
         String majorKey = major.toLowerCase();
-        if (!supportedMajorVersions.containsKey(majorKey))
+        if (!supportedMajorVersions.containsKey(majorKey)) {
             return false;
+        }
         return true;
     }
 
+    /**
+     * Validate major minor version.
+     *
+     * @param major the major
+     * @param minor the minor
+     * @return true, if successful
+     */
     public static boolean validateMajorMinorVersion(String major, String minor) {
         String majorKey = major.toLowerCase();
-        if (!supportedMajorVersions.containsKey(majorKey))
+        if (!supportedMajorVersions.containsKey(majorKey)) {
             return false;
+        }
 
         if (minor != null) {
             String majorMinorKey = majorKey + "." + minor;

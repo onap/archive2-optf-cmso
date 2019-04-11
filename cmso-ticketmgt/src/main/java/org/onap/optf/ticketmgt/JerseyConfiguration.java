@@ -1,27 +1,27 @@
 /*
  * Copyright © 2017-2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -59,6 +59,11 @@ import org.springframework.stereotype.Component;
 public class JerseyConfiguration extends ResourceConfig {
     private static final Logger log = Logger.getLogger(JerseyConfiguration.class.getName());
 
+    /**
+     * Object mapper.
+     *
+     * @return the object mapper
+     */
     @Bean
     @Primary
     public ObjectMapper objectMapper() {
@@ -70,6 +75,9 @@ public class JerseyConfiguration extends ResourceConfig {
         return objectMapper;
     }
 
+    /**
+     * Instantiates a new jersey configuration.
+     */
     @Autowired
     public JerseyConfiguration( /* LogRequestFilter lrf */ ) {
         register(HealthCheckImpl.class);
@@ -86,6 +94,11 @@ public class JerseyConfiguration extends ResourceConfig {
         register(CMSOContainerFilters.class);
     }
 
+    /**
+     * Jersey client.
+     *
+     * @return the client
+     */
     @Bean
     public Client jerseyClient() {
         ClientConfig client = new ClientConfig();
