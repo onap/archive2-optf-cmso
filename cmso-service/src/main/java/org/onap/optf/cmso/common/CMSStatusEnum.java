@@ -31,6 +31,9 @@
 
 package org.onap.optf.cmso.common;
 
+/**
+ * The Enum CMSStatusEnum.
+ */
 public enum CMSStatusEnum {
     PendingSchedule("Pending Schedule",
                     "Schedule request as been accepted. Pending determination of recommended schedule."),
@@ -63,24 +66,44 @@ public enum CMSStatusEnum {
         this.description = description;
     }
 
+    /**
+     * To string.
+     *
+     * @return the string
+     */
     @Override
     public String toString() {
         return text;
     }
 
+    /**
+     * From string.
+     *
+     * @param text the text
+     * @return the CMS status enum
+     */
     public CMSStatusEnum fromString(String text) {
-        for (CMSStatusEnum e : CMSStatusEnum.values())
-            if (e.text.equals(text))
+        for (CMSStatusEnum e : CMSStatusEnum.values()) {
+            if (e.text.equals(text)) {
                 return e;
+            }
+        }
         return null;
     }
 
+    /**
+     * The main method.
+     *
+     * @param argv the arguments
+     */
     // To include in the AID.
-    public static void main(String argv[]) {
+    public static void main(String[] argv) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html><body><table border=\"1\">\n");
-        for (CMSStatusEnum v : CMSStatusEnum.values())
-            sb.append("<tr><td>").append(v.text).append("</td><td>").append(v.description).append("</td></tr>\n");
+        for (CMSStatusEnum v : CMSStatusEnum.values()) {
+            sb.append("<tr><td>").append(v.text).append("</td><td>").append(v.description)
+            .append("</td></tr>\n");
+        }
         sb.append("</table></body></html>\n");
         System.out.println(sb.toString());
     }

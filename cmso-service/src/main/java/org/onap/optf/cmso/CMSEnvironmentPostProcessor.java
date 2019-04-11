@@ -27,8 +27,10 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 
 public class CMSEnvironmentPostProcessor implements EnvironmentPostProcessor {
-    // TODO tested in ONAP springboot and this is called before all of the properties files have been loaded...
-	//      perhaps there is a post post processor? Until this works. DB password will be in the clear in the proeprties files.
+    // TODO tested in ONAP springboot and this is called before all of the properties files have been
+    // loaded...
+    // perhaps there is a post post processor? Until this works. DB password will be in the clear in the
+    // proeprties files.
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         String pwd = environment.getProperty("cmso.database.password");

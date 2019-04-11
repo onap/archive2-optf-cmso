@@ -17,6 +17,9 @@
 
 package org.onap.optf.cmso;
 
+import com.att.eelf.configuration.Configuration;
+import com.att.eelf.configuration.EELFLogger;
+import com.att.eelf.configuration.EELFManager;
 import java.net.InetAddress;
 import java.util.TimeZone;
 import javax.annotation.PostConstruct;
@@ -34,9 +37,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
-import com.att.eelf.configuration.Configuration;
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"org.onap.optf.cmso"})
@@ -61,11 +61,11 @@ public class Application extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-        initMDCData();
+        initMdcData();
         SpringApplication.run(Application.class, args);
     }
 
-    protected static void initMDCData() {
+    protected static void initMdcData() {
         MDC.clear();
         try {
             MDC.put(Configuration.MDC_SERVER_FQDN, InetAddress.getLocalHost().getHostName());
@@ -78,6 +78,11 @@ public class Application extends SpringBootServletInitializer {
         }
     }
 
+    /**
+     * Servlet container.
+     *
+     * @return the servlet web server factory
+     */
     @Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();

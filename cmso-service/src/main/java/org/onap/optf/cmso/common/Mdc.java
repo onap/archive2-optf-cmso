@@ -1,27 +1,27 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
- * 
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,6 +47,8 @@ import static com.att.eelf.configuration.Configuration.MDC_SERVICE_NAME;
 import static com.att.eelf.configuration.Configuration.MDC_STATUS_CODE;
 import static com.att.eelf.configuration.Configuration.MDC_TARGET_ENTITY;
 import static com.att.eelf.configuration.Configuration.MDC_TARGET_SERVICE_NAME;
+
+import com.att.eelf.utils.Stopwatch;
 import java.net.InetAddress;
 import java.net.URI;
 import java.util.Date;
@@ -57,7 +59,6 @@ import javax.ws.rs.core.Response;
 import org.onap.optf.cmso.filters.MessageHeaders;
 import org.quartz.JobExecutionContext;
 import org.slf4j.MDC;
-import com.att.eelf.utils.Stopwatch;
 
 /**
  * EELF logging MDC fields not defined in the MDC Configuration (i.e.
@@ -90,6 +91,12 @@ public class Mdc {
         ErrorCode, ErrorDescription, Timer,
     }
 
+    /**
+     * Begin.
+     *
+     * @param request the request
+     * @param requestId the request id
+     */
     public static void begin(HttpServletRequest request, String requestId) {
         MDC.clear();
         Stopwatch.start();
@@ -143,11 +150,17 @@ public class Mdc {
         if (transactionId == null) {
             transactionId = requestId;
         }
-        if (transactionId == null)
+        if (transactionId == null) {
             transactionId = "Unknown";
+        }
         MDC.put(MDC_KEY_REQUEST_ID, transactionId);
     }
 
+    /**
+     * End.
+     *
+     * @param response the response
+     */
     public static void end(Response response) {
         Stopwatch.stop();
         // MDC.put(MDC_ALERT_SEVERITY, "");
@@ -168,8 +181,9 @@ public class Mdc {
         // MDC.put(MDC_SERVICE_INSTANCE_ID, "");
         // MDC.put(MDC_SERVICE_NAME, "");
         MDC.put(MDC_STATUS_CODE, "COMPLETE");
-        if (response.getStatus() == 500)
+        if (response.getStatus() == 500) {
             MDC.put(MDC_STATUS_CODE, "ERROR");
+        }
         // MDC.put(MDC_TARGET_ENTITY, "");
         // MDC.put(MDC_TARGET_SERVICE_NAME, "");
         // MDC.put(MDC_TARGET_VIRTUAL_ENTITY, "");
@@ -191,6 +205,11 @@ public class Mdc {
         return stackTraceElements[back].getClassName() + "." + stackTraceElements[back].getMethodName();
     }
 
+    /**
+     * Quartz job begin.
+     *
+     * @param context the context
+     */
     public static void quartzJobBegin(JobExecutionContext context) {
         MDC.clear();
         Stopwatch.start();
@@ -235,6 +254,11 @@ public class Mdc {
 
     }
 
+    /**
+     * Quartz job end.
+     *
+     * @param context the context
+     */
     public static void quartzJobEnd(JobExecutionContext context) {
         Stopwatch.stop();
         // MDC.put(MDC_ALERT_SEVERITY, "");
@@ -278,12 +302,24 @@ public class Mdc {
         return save;
     }
 
+    /**
+     * Restore.
+     *
+     * @param mdcSave the mdc save
+     */
     public static void restore(Map<String, String> mdcSave) {
         MDC.clear();
-        for (String name : mdcSave.keySet())
+        for (String name : mdcSave.keySet()) {
             MDC.put(name, mdcSave.get(name));
+        }
     }
 
+    /**
+     * Metric start.
+     *
+     * @param requestId the request id
+     * @param url the url
+     */
     public static void metricStart(String requestId, String url) {
         MDC.put(MDC_BEGIN_TIMESTAMP, Stopwatch.isoFormatter.format(new Date()));
         // MDC.put(MDC_ELAPSED_TIME, String.valueOf(Stopwatch.getDuration()));
@@ -321,6 +357,11 @@ public class Mdc {
 
     }
 
+    /**
+     * Metric end.
+     *
+     * @param response the response
+     */
     public static void metricEnd(Response response) {
 
         // MDC.put(MDC_BEGIN_TIMESTAMP, Stopwatch.isoFormatter.format(new Date()));
@@ -349,8 +390,9 @@ public class Mdc {
         // MDC.put(MDC_SERVICE_INSTANCE_ID, "UNKNOWN");
         // MDC.put(MDC_SERVICE_NAME, "cmso");
         MDC.put(MDC_STATUS_CODE, "COMPLETE");
-        if (response.getStatus() == 500)
+        if (response.getStatus() == 500) {
             MDC.put(MDC_STATUS_CODE, "ERROR");
+        }
         // MDC.put(MDC_TARGET_ENTITY, "");
         // MDC.put(MDC_TARGET_SERVICE_NAME, "");
         // MDC.put(MDC_TARGET_VIRTUAL_ENTITY, "");

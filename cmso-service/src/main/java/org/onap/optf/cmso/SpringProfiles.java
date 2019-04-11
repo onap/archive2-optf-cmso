@@ -17,10 +17,10 @@
  * limitations under the License.
  * ============LICENSE_END=========================================================
  */
+
 package org.onap.optf.cmso;
 
-public class SpringProfiles 
-{
+public class SpringProfiles {
 
     public static final String AAF_AUTHENTICATION  = "aaf-auth";
     public static final String PROPRIETARY__AUTHENTICATION  = "proprietary-auth";

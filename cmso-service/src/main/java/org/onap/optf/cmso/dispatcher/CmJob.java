@@ -80,10 +80,10 @@ public class CmJob implements Job {
     ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
     TmClient tmClient;
@@ -113,6 +113,11 @@ public class CmJob implements Job {
         debug.debug(LogMessages.CM_JOB, "Exited");
     }
 
+    /**
+     * Loopback.
+     *
+     * @param id the id
+     */
     public void loopback(String id) {
         Map<String, String> mdcSave = Mdc.save();
         try {
