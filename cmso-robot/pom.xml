@@ -57,7 +57,18 @@
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 
 	</properties>
-
+	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -130,12 +141,27 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>disable</id>
-						<phase>none</phase>
+						<id>post-integration-test</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<dataFile>/Users/jerry/Documents/onap/Dublin/OPTFRA-426_sonar/cmso/cmso-robot/target/code-coverage/service.jacoco.exec</dataFile>
+							<outputDirectory>/Users/jerry/Documents/onap/Dublin/OPTFRA-426_sonar/cmso/cmso-robot/target/site/jacoco-it</outputDirectory>
+							<includes>
+								<include>service/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/gen/**</exclude>
+								<exclude>**/generated-sources/**</exclude>
+								<exclude>**/yang-gen/**</exclude>
+								<exclude>**/pax/**</exclude>
+							</excludes>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
 		<finalName>optf-cmso-robot</finalName>
 	</build>
