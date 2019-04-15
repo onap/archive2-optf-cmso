@@ -16,6 +16,24 @@
       "revId": "655ed7d71e2d615e20c54469cc404a82a187f31f",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c02469b8_39680ac9",
+        "filename": "cmso-robot/pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 89
+      },
+      "writtenOn": "2019-04-15T13:10:31Z",
+      "side": 1,
+      "message": "Done. Good catch. Thanks",
+      "parentUuid": "8b654e04_0d1e5039",
+      "revId": "655ed7d71e2d615e20c54469cc404a82a187f31f",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
