@@ -7,7 +7,7 @@ unzip org.jacoco.agent-0.8.2.jar
 cp org.jacoco.agent-0.8.2/jacocoagent.jar .
 ls -l
 
-VM_ARGS="${VM_ARGS} -javaagent:./jacocoagent.jar=destfile=/share/logs/jacoco.exec,dumponexit=true,jmx=true,append=true,output=file,includes=org.onap.optf.cmso.*"
+VM_ARGS="${VM_ARGS} -javaagent:./jacocoagent.jar=destfile=/share/logs/service.jacoco.exec,dumponexit=true,jmx=true,append=true,output=file,includes=org.onap.*"
 
 echo "VM_ARGS=${VM_ARGS}"
 
