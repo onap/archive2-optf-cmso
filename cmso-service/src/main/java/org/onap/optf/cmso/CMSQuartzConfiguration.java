@@ -1,27 +1,27 @@
 /*
- * Copyright © 2017-2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
- * 
+ * Copyright ï¿½ 2017-2018 AT&T Intellectual Property.
+ * Modifications Copyright ï¿½ 2018 IBM.
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
- * 
+ *
+ *
  * Unless otherwise specified, all documentation contained herein is licensed
  * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
  * you may not use this documentation except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *         https://creativecommons.org/licenses/by/4.0/
- * 
+ *
  * Unless required by applicable law or agreed to in writing, documentation
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -54,6 +54,11 @@ public class CMSQuartzConfiguration {
     @Autowired
     Environment env;
 
+    /**
+     * Eventq trigger factory bean.
+     *
+     * @return the simple trigger factory bean
+     */
     @Bean
     public SimpleTriggerFactoryBean eventqTriggerFactoryBean() {
 
@@ -66,6 +71,11 @@ public class CMSQuartzConfiguration {
         return stFactory;
     }
 
+    /**
+     * Eventq detail factory bean.
+     *
+     * @return the job detail factory bean
+     */
     @Bean
     public JobDetailFactoryBean eventqDetailFactoryBean() {
         JobDetailFactoryBean factory = new JobDetailFactoryBean();
@@ -73,6 +83,11 @@ public class CMSQuartzConfiguration {
         return factory;
     }
 
+    /**
+     * Status trigger factory bean.
+     *
+     * @return the simple trigger factory bean
+     */
     @Bean
     public SimpleTriggerFactoryBean statusTriggerFactoryBean() {
 
@@ -85,6 +100,11 @@ public class CMSQuartzConfiguration {
         return stFactory;
     }
 
+    /**
+     * Status detail factory bean.
+     *
+     * @return the job detail factory bean
+     */
     @Bean
     public JobDetailFactoryBean statusDetailFactoryBean() {
         JobDetailFactoryBean factory = new JobDetailFactoryBean();
@@ -92,6 +112,11 @@ public class CMSQuartzConfiguration {
         return factory;
     }
 
+    /**
+     * Optimizer trigger factory bean.
+     *
+     * @return the simple trigger factory bean
+     */
     @Bean
     public SimpleTriggerFactoryBean optimizerTriggerFactoryBean() {
 
@@ -104,6 +129,11 @@ public class CMSQuartzConfiguration {
         return stFactory;
     }
 
+    /**
+     * Optimizer detail factory bean.
+     *
+     * @return the job detail factory bean
+     */
     @Bean
     public JobDetailFactoryBean optimizerDetailFactoryBean() {
         JobDetailFactoryBean factory = new JobDetailFactoryBean();
@@ -111,6 +141,12 @@ public class CMSQuartzConfiguration {
         return factory;
     }
 
+    /**
+     * Job factory.
+     *
+     * @param applicationContext the application context
+     * @return the job factory
+     */
     @Bean
     public JobFactory jobFactory(ApplicationContext applicationContext) {
         AutowiringSpringBeanJobFactory jobFactory = new AutowiringSpringBeanJobFactory();
@@ -118,6 +154,12 @@ public class CMSQuartzConfiguration {
         return jobFactory;
     }
 
+    /**
+     * Cmso factory bean.
+     *
+     * @param jobFactory the job factory
+     * @return the scheduler factory bean
+     */
     @Bean
     public SchedulerFactoryBean cmsoFactoryBean(JobFactory jobFactory) {
         SchedulerFactoryBean cmso = new SchedulerFactoryBean();

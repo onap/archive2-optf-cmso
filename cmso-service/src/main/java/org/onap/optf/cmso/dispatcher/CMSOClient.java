@@ -71,13 +71,13 @@ public class CMSOClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
 
     @Autowired
@@ -89,19 +89,27 @@ public class CMSOClient {
     @Autowired
     TmClient tmClient;
 
+    /**
+     * Dispatch.
+     *
+     * @param cmSchedule the cm schedule
+     * @param schedule the schedule
+     */
     public void dispatch(ChangeManagementSchedule cmSchedule, Schedule schedule) {
         try {
 
             String url = env.getProperty("so.url");
-            if (!url.endsWith("/"))
+            if (!url.endsWith("/")) {
                 url += "/";
+            }
             url = url + "schedule/" + cmSchedule.getVnfName();
             String callbackData = cmSchedule.getRequest();
             String user = env.getProperty("so.user", "");
             String pass = pm.getProperty("so.pass", "");
             Client client = ClientBuilder.newClient();
-            if (!user.equals(""))
+            if (!user.equals("")) {
                 client.register(new BasicAuthenticatorFilter(user, pass));
+            }
             client.register(new CmsoClientFilters());
             WebTarget target = client.target(url);
             ObjectMapper om = new ObjectMapper();
@@ -205,19 +213,27 @@ public class CMSOClient {
     private void updateTicket(ChangeManagementSchedule cmSchedule, Schedule schedule) {
         try {
             String changeId = cmSchedule.getTmChangeId();
-            if (changeId != null && !changeId.equals(""))
+            if (changeId != null && !changeId.equals("")) {
                 tmClient.updateTicket(schedule, cmSchedule, changeId);
+            }
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
     }
 
+    /**
+     * Update schedule status.
+     *
+     * @param cmSchedule the cm schedule
+     * @param schedule the schedule
+     */
     @Transactional
     public void updateScheduleStatus(ChangeManagementSchedule cmSchedule, Schedule schedule) {
-        cmScheduleDAO.save(cmSchedule);
-        if (schedule != null)
-            scheduleDAO.save(schedule);
+        cmScheduleDao.save(cmSchedule);
+        if (schedule != null) {
+            scheduleDao.save(schedule);
+        }
 
     }
 }

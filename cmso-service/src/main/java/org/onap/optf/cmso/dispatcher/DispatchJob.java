@@ -72,13 +72,13 @@ public class DispatchJob {
     CMSOClient vidClient;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDAO;
+    ChangeManagementScheduleDAO cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDAO;
+    ChangeManagementGroupDAO cmGroupDao;
 
     @Autowired
-    ScheduleDAO scheduleDAO;
+    ScheduleDAO scheduleDao;
 
     @Autowired
     TmClient tmClient;
@@ -86,19 +86,26 @@ public class DispatchJob {
     @Autowired
     Environment env;
 
+    /**
+     * Execute.
+     *
+     * @param id the id
+     * @throws JobExecutionException the job execution exception
+     */
     public void execute(UUID id) throws JobExecutionException {
         debug.debug(LogMessages.CM_JOB, "Entered");
         try {
             // No other instance can read this cmso until we are done.
-            ChangeManagementSchedule cmSchedule = cmScheduleDAO.lockOne(id);
+            ChangeManagementSchedule cmSchedule = cmScheduleDao.lockOne(id);
             cmSchedule.setDispatcherInstance(InetAddress.getLocalHost().getHostAddress());
-            ChangeManagementGroup group = cmGroupDAO.findById(cmSchedule.getChangeManagementGroupUuid()).orElse(null);
+            ChangeManagementGroup group = cmGroupDao.findById(cmSchedule.getChangeManagementGroupUuid()).orElse(null);
             if (group != null) {
-                Schedule schedule = scheduleDAO.findById(group.getSchedulesUuid()).orElse(null);
+                Schedule schedule = scheduleDao.findById(group.getSchedulesUuid()).orElse(null);
                 if (schedule != null) {
                     schedule.setStatus(CMSStatusEnum.NotificationsInitiated.toString());
-                    if (safeToDispatch(cmSchedule, schedule))
+                    if (safeToDispatch(cmSchedule, schedule)) {
                         vidClient.dispatch(cmSchedule, schedule);
+                    }
                 }
             }
 
@@ -111,7 +118,6 @@ public class DispatchJob {
 
     private boolean safeToDispatch(ChangeManagementSchedule cmSchedule, Schedule schedule) {
 
-        Integer leadTime = env.getProperty("cmso.cm.dispatch.lead.time.ms", Integer.class, 1000);
         Boolean scheduleImmediateEnabled = env.getProperty("cmso.cm.dispatch.immediate.enabled", Boolean.class, false);
 
         // *******************************************************************
@@ -122,7 +128,6 @@ public class DispatchJob {
         // *******************************************************************
         // Validate that the state is accurate.
         // Another instance may have dispatched
-        Long startTime = cmSchedule.getStartTimeMillis();
         if (!cmSchedule.getStatus().equals(CMSStatusEnum.Scheduled.toString())
                 && !cmSchedule.getStatus().equals(CMSStatusEnum.ScheduledImmediate.toString())) {
             log.info("Attempt to dispatch an event that is in the incorrect state scheduleId={0}, vnf={1}, status={2}",
@@ -169,6 +174,8 @@ public class DispatchJob {
         // Do not account for lead time. This should be inconsequential, maybe????
         //
         long now = System.currentTimeMillis();
+        Long startTime = cmSchedule.getStartTimeMillis();
+
         long startMillis = startTime;
         if (now > startMillis) {
             String message = EELFResourceManager.format(LogMessages.SCHEDULE_PAST_DUE, schedule.getScheduleId(),
@@ -184,6 +191,7 @@ public class DispatchJob {
         // *******************************************************************
         // (Sleep until actual dispatch time...)
         // leadTime allows for preparing call to VID to the start of workflow.
+        Integer leadTime = env.getProperty("cmso.cm.dispatch.lead.time.ms", Integer.class, 1000);
         long sleep = (startMillis - leadTime) - System.currentTimeMillis();
         if (sleep > 0L) {
             try {
@@ -241,10 +249,16 @@ public class DispatchJob {
         return false;
     }
 
+    /**
+     * Update schedule status.
+     *
+     * @param cmSchedule the cm schedule
+     * @param schedule the schedule
+     */
     @Transactional
     public void updateScheduleStatus(ChangeManagementSchedule cmSchedule, Schedule schedule) {
-        cmScheduleDAO.save(cmSchedule);
-        scheduleDAO.save(schedule);
+        cmScheduleDao.save(cmSchedule);
+        scheduleDao.save(schedule);
 
     }
 

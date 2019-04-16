@@ -45,7 +45,7 @@ public class ObservationObject implements ObservationInterface {
     //
     private Enum<?> value = null;
 
-    private Level level = null;;
+    private Level level = null;
     private String message = null;
     private Status status = null;
     private String domain = null;

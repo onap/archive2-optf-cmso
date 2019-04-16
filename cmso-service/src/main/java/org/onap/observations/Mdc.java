@@ -114,8 +114,7 @@ public class Mdc {
      */
     public static void setCaller(int back) {
         String caller = MDC.get(Enum.ClassName.name());
-        if (caller == null)
-        {
+        if (caller == null) {
             MDC.put(Enum.ClassName.name(), getCaller(back));
         }
     }
@@ -187,8 +186,7 @@ public class Mdc {
      */
     public static void restore(Map<String, String> mdcSave) {
         MDC.clear();
-        for (String name : mdcSave.keySet())
-        {
+        for (String name : mdcSave.keySet()) {
             MDC.put(name, mdcSave.get(name));
         }
     }
