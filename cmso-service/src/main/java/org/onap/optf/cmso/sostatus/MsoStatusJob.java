@@ -32,7 +32,7 @@ import java.util.UUID;
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -57,7 +57,7 @@ public class MsoStatusJob implements Job {
     MsoStatusClient mso;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
     Environment env;

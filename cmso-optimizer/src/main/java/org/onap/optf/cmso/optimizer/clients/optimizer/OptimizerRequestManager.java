@@ -76,7 +76,7 @@ public class OptimizerRequestManager {
      */
     public OptimizerEngineResponse createOptimizerRequest(Request requestRow) {
         //
-        if (okToDispatch()) {
+        if (okToDispatch(false)) {
             Optimizer optimizer = getExistingOptmizer(requestRow.getUuid());
             if (optimizer == null) {
                 optimizer = new Optimizer();
@@ -146,11 +146,14 @@ public class OptimizerRequestManager {
 
 
 
-    private boolean okToDispatch() {
-        // TODO Auto-generated method stub
-
-        // Will probably change to @Async on makeRequest to queue requests in a different thread.
-        return true;
+    private boolean okToDispatch(boolean checkDispatchability) {
+        if (checkDispatchability) {
+            // not yet implemented
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
 

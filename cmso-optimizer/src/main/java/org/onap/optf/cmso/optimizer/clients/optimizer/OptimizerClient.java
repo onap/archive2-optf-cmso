@@ -230,7 +230,7 @@ public class OptimizerClient {
             apiResponse.setErrorMessage(LogMessages.UNEXPECTED_EXCEPTION.format(e.getMessage()));
             Observation.report(LogMessages.UNEXPECTED_RESPONSE, e, e.getMessage());
         } finally {
-            if (process.isAlive()) {
+            if (process != null && process.isAlive()) {
                 process.destroyForcibly();
             }
             if (workingFolder.exists()) {

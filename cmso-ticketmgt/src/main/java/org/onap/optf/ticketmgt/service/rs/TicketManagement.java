@@ -47,7 +47,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.onap.optf.cmso.common.CMSRequestError;
+import org.onap.optf.cmso.common.CmsoRequestError;
 import org.onap.optf.ticketmgt.service.rs.models.TicketData;
 
 @Api("Ticket Management")
@@ -61,7 +61,7 @@ public interface TicketManagement {
     @ApiOperation(value = "Fetch Ticket", notes = "Returns ticket information for the provided ticket id.",
                     response = TicketData.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-                    @ApiResponse(code = 404, message = "No record found", response = CMSRequestError.class),
+                    @ApiResponse(code = 404, message = "No record found", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response fetchTicket(@ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
                     @ApiParam(value = "Unique ticket identifier") @PathParam("id") String id);
@@ -74,7 +74,7 @@ public interface TicketManagement {
     @ApiResponses(value = {
                     @ApiResponse(code = 200, message = "Ticket Created. Ticket Id returned.",
                                     response = TicketData.class),
-                    @ApiResponse(code = 400, message = "Bad request.", response = CMSRequestError.class),
+                    @ApiResponse(code = 400, message = "Bad request.", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response createTicket(@ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
                     @ApiParam(value = "Data for creating a ticket") TicketData ticketData);
@@ -85,7 +85,7 @@ public interface TicketManagement {
     @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Update Ticket", notes = "Updates a ticket to the passed data")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Ticket Updated."),
-                    @ApiResponse(code = 400, message = "Bad request.", response = CMSRequestError.class),
+                    @ApiResponse(code = 400, message = "Bad request.", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response updateTicket(@ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
                     @ApiParam(value = "Data for updating a ticket") TicketData ticketData);
@@ -96,8 +96,8 @@ public interface TicketManagement {
     @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Cancel the ticket", notes = "Cancels the ticket.")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Delete successful"),
-                    @ApiResponse(code = 404, message = "No record found", response = CMSRequestError.class),
-                    @ApiResponse(code = 400, message = "Bad request", response = CMSRequestError.class),
+                    @ApiResponse(code = 404, message = "No record found", response = CmsoRequestError.class),
+                    @ApiResponse(code = 400, message = "Bad request", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response deleteScheduleRequest(
                     @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
@@ -113,7 +113,7 @@ public interface TicketManagement {
     @ApiOperation(value = "Search Tickets", notes = "Returns a list of based upon the filter criteria.",
                     response = TicketData.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-                    @ApiResponse(code = 400, message = "Bad request", response = CMSRequestError.class),
+                    @ApiResponse(code = 400, message = "Bad request", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response searchTcikets(
                     @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,

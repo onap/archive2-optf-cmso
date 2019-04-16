@@ -45,13 +45,13 @@ import javax.ws.rs.core.Response;
 import org.onap.observations.Mdc;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.DomainData;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.optimizer.model.OptimizerElementInfo;
 import org.onap.optf.cmso.optimizer.model.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.model.OptimizerResponse;
@@ -72,7 +72,7 @@ public class CmsoOptimizerClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
     Environment env;
@@ -93,10 +93,10 @@ public class CmsoOptimizerClient {
         try {
             // Ensure that only one cmso is requsting this call to optimizer
             Schedule schedule = scheduleDao.lockOne(uuid);
-            if (schedule.getStatus().equals(CMSStatusEnum.PendingSchedule.toString())) {
+            if (schedule.getStatus().equals(CmsoStatusEnum.PendingSchedule.toString())) {
                 scheduleNewOptimization(schedule);
             }
-            if (schedule.getStatus().equals(CMSStatusEnum.OptimizationInProgress.toString())) {
+            if (schedule.getStatus().equals(CmsoStatusEnum.OptimizationInProgress.toString())) {
                 pollOptimizer(schedule);
             }
             return;
@@ -121,7 +121,7 @@ public class CmsoOptimizerClient {
             // message, try the next one. We don't want bad data to
             //
             if (schedule.getOptimizerAttemptsToSchedule() >= maxAttempts) {
-                schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+                schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
                 schedule.setOptimizerMessage("Maximum number of attempts exceeded " + maxAttempts);
                 updateScheduleStatus(schedule);
                 return;
@@ -134,7 +134,7 @@ public class CmsoOptimizerClient {
                 }
             } catch (Exception e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-                schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+                schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
                 schedule.setOptimizerMessage("Unexpected exception: " + e.getMessage());
                 updateScheduleStatus(schedule);
                 return;
@@ -168,7 +168,7 @@ public class CmsoOptimizerClient {
                 //
                 schedule.setOptimizerTransactionId(cmReq.getRequestId());
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
-                schedule.setStatus(CMSStatusEnum.OptimizationInProgress.toString());
+                schedule.setStatus(CmsoStatusEnum.OptimizationInProgress.toString());
                 updateScheduleStatus(schedule);
                 debug.debug("optimizer url / user: " + optimizerurl + " / " + username);
                 debug.debug("optimizer Request: " + new ObjectMapper().writeValueAsString(cmReq));
@@ -193,7 +193,7 @@ public class CmsoOptimizerClient {
                         schedule.setOptimizerStatus("HTTP Status: " + response.getStatus());
                         String message = response.readEntity(String.class);
                         schedule.setOptimizerMessage(message);
-                        schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+                        schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
                         // Need to understand the cause of this error. May be teh same as optimizer
                         // down.
                         int tries = schedule.getOptimizerAttemptsToSchedule();
@@ -209,7 +209,7 @@ public class CmsoOptimizerClient {
                         schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                         int tries = schedule.getOptimizerAttemptsToSchedule();
                         tries++;
-                        schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+                        schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
                         schedule.setOptimizerAttemptsToSchedule(tries);
                         String message = response.readEntity(String.class);
                         schedule.setOptimizerMessage(message);
@@ -223,7 +223,7 @@ public class CmsoOptimizerClient {
             } catch (ResponseProcessingException e) {
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
                 schedule.setOptimizerStatus("Failed to parse optimizer response");
-                schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+                schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
                 // Need to understand the cause of this error. May be teh same as optimizer down.
                 int tries = schedule.getOptimizerAttemptsToSchedule();
                 tries++;
@@ -235,7 +235,7 @@ public class CmsoOptimizerClient {
             } catch (ProcessingException e) {
                 // Don't track number of retries on IO error (optimizer is down)
                 schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
-                schedule.setStatus(CMSStatusEnum.PendingSchedule.toString());
+                schedule.setStatus(CmsoStatusEnum.PendingSchedule.toString());
                 updateScheduleStatus(schedule);
                 /// Cannot connect to optimizer
                 Observation.report(LogMessages.OPTIMIZER_EXCEPTION, e, e.getMessage());
@@ -264,7 +264,7 @@ public class CmsoOptimizerClient {
             }
             Long now = System.currentTimeMillis();
             if (now > schedule.getOptimizerDateTimeMillis() + (timeout * 1000)) {
-                schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+                schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
                 updateScheduleStatus(schedule);
                 return;
             }
@@ -299,7 +299,7 @@ public class CmsoOptimizerClient {
                     schedule.setOptimizerStatus("HTTP Status: " + response.getStatus());
                     String message = response.readEntity(String.class);
                     schedule.setOptimizerMessage(message);
-                    schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+                    schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
                     updateScheduleStatus(schedule);
                     Observation.report(LogMessages.OPTIMIZER_EXCEPTION, message);
                 }
@@ -308,7 +308,7 @@ public class CmsoOptimizerClient {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
             schedule.setOptimizerMessage(e.getMessage());
-            schedule.setStatus(CMSStatusEnum.ScheduleFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.ScheduleFailed.toString());
             updateScheduleStatus(schedule);
         }
     }
@@ -336,7 +336,7 @@ public class CmsoOptimizerClient {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, "Unable to parse message. Format changed?");
             schedule.setOptimizerStatus("Failed to parse optimizer request");
             schedule.setOptimizerDateTimeMillis(System.currentTimeMillis());
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             scheduleDao.save(schedule);
         }
         return null;

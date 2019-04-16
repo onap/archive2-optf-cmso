@@ -35,7 +35,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -55,7 +55,7 @@ public class CmQuartzJob extends QuartzJobBean {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSQueueJob qqJob;
+    CmsoQueueJob qqJob;
 
     // This is not called directly. Using @Autowired to ensure that startup
     // Runs before the fist invocation of executeInternal
@@ -63,10 +63,9 @@ public class CmQuartzJob extends QuartzJobBean {
     CmQuartzJobStartup startup;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Override
-    @Transactional
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         Mdc.quartzJobBegin(context);
         debug.debug(LogMessages.CM_QUARTZ_JOB, "Entered");
