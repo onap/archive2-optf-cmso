@@ -39,14 +39,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.ticketmgt.TmClient;
 import org.onap.optf.cmso.ticketmgt.bean.TmApprovalStatusEnum;
 import org.onap.optf.cmso.ticketmgt.bean.TmChangeInfo;
@@ -69,16 +69,16 @@ public class DispatchJob {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSOClient vidClient;
+    CmsoClient vidClient;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
     TmClient tmClient;
@@ -102,7 +102,7 @@ public class DispatchJob {
             if (group != null) {
                 Schedule schedule = scheduleDao.findById(group.getSchedulesUuid()).orElse(null);
                 if (schedule != null) {
-                    schedule.setStatus(CMSStatusEnum.NotificationsInitiated.toString());
+                    schedule.setStatus(CmsoStatusEnum.NotificationsInitiated.toString());
                     if (safeToDispatch(cmSchedule, schedule)) {
                         vidClient.dispatch(cmSchedule, schedule);
                     }
@@ -128,8 +128,8 @@ public class DispatchJob {
         // *******************************************************************
         // Validate that the state is accurate.
         // Another instance may have dispatched
-        if (!cmSchedule.getStatus().equals(CMSStatusEnum.Scheduled.toString())
-                && !cmSchedule.getStatus().equals(CMSStatusEnum.ScheduledImmediate.toString())) {
+        if (!cmSchedule.getStatus().equals(CmsoStatusEnum.Scheduled.toString())
+                && !cmSchedule.getStatus().equals(CmsoStatusEnum.ScheduledImmediate.toString())) {
             log.info("Attempt to dispatch an event that is in the incorrect state scheduleId={0}, vnf={1}, status={2}",
                     schedule.getScheduleId(), cmSchedule.getVnfName(), cmSchedule.getStatus());
             return false;
@@ -161,7 +161,7 @@ public class DispatchJob {
                 String message = "Attempt to schedule immediate when immmediate scheduling is disabled: "
                         + cmSchedule.getVnfName();
                 log.info(message);
-                cmSchedule.setStatus(CMSStatusEnum.SchedulingFailed.toString());
+                cmSchedule.setStatus(CmsoStatusEnum.SchedulingFailed.toString());
                 cmSchedule.setStatusMessage(message);
                 updateScheduleStatus(cmSchedule, schedule);
                 return false;
@@ -182,7 +182,7 @@ public class DispatchJob {
                     cmSchedule.getVnfName(), new Date(now).toString(), new Date(startMillis).toString());
             log.info(message);
 
-            cmSchedule.setStatus(CMSStatusEnum.PastDue.toString());
+            cmSchedule.setStatus(CmsoStatusEnum.PastDue.toString());
             cmSchedule.setStatusMessage(message);
             updateScheduleStatus(cmSchedule, schedule);
             return false;
@@ -243,7 +243,7 @@ public class DispatchJob {
                     cmSchedule.getVnfName(), cmSchedule.getTmChangeId());
             errors.error(message);
         }
-        cmSchedule.setStatus(CMSStatusEnum.SchedulingFailed.toString());
+        cmSchedule.setStatus(CmsoStatusEnum.SchedulingFailed.toString());
         cmSchedule.setStatusMessage(message);
         updateScheduleStatus(cmSchedule, schedule);
         return false;

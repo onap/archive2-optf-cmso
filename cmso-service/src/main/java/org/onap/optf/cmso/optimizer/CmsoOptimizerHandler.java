@@ -33,17 +33,17 @@ import java.util.List;
 import java.util.Map;
 import javax.ws.rs.core.Response.Status;
 import org.onap.observations.Observation;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementDetailDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementDetailDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.optimizer.model.OptimizerResponse;
 import org.onap.optf.cmso.optimizer.model.OptimizerScheduleInfo;
 import org.onap.optf.cmso.optimizer.model.ScheduledElement;
@@ -63,19 +63,19 @@ public class CmsoOptimizerHandler {
     Environment env;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDao;
+    ChangeManagementChangeWindowDao cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDao;
+    ChangeManagementDetailDao cmDetailsDao;
 
     /**
      * Handle optimizer response.
@@ -88,7 +88,7 @@ public class CmsoOptimizerHandler {
             // Note that transaction ID and schedule ID are currently the same value.
 
             String id = response.getRequestId();
-            CMSStatusEnum status = CMSStatusEnum.PendingApproval.fromString(schedule.getStatus());
+            CmsoStatusEnum status = CmsoStatusEnum.PendingApproval.fromString(schedule.getStatus());
             debug.debug("Status at time of optimizer status is " + status.toString() + " for " + id);
             switch (status) {
                 // PendingSchedule may be a valid status in the cases where SNIRO async call
@@ -100,8 +100,8 @@ public class CmsoOptimizerHandler {
                     scheduleDao.save(schedule);
                     break;
                 default:
-                    throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.OPTIMIZER_CALLBACK_STATE_ERROR,
-                                    CMSStatusEnum.OptimizationInProgress.toString(), schedule.getStatus().toString());
+                    throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.OPTIMIZER_CALLBACK_STATE_ERROR,
+                                    CmsoStatusEnum.OptimizationInProgress.toString(), schedule.getStatus().toString());
             }
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
@@ -118,7 +118,7 @@ public class CmsoOptimizerHandler {
                     saveSchedules(response, schedule);
                     break;
                 case FAILED:
-                    schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+                    schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
                     break;
                 case PENDING_OPTIMIZER:
                 case PENDING_TICKETS:
@@ -129,20 +129,20 @@ public class CmsoOptimizerHandler {
                     break;
             }
             scheduleDao.save(schedule);
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerStatus(e.getStatus().toString());
             schedule.setOptimizerMessage(e.getLocalizedMessage());
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerStatus("Exception");
             schedule.setOptimizerMessage(e.getLocalizedMessage());
         }
     }
 
-    private void saveSchedules(OptimizerResponse response, Schedule schedule) throws CMSException {
+    private void saveSchedules(OptimizerResponse response, Schedule schedule) throws CmsoException {
 
         // TODO: Persist the list of schedules in the DB
 
@@ -153,12 +153,12 @@ public class CmsoOptimizerHandler {
 
         OptimizerScheduleInfo osi = chooseSchedule(schedules);
         if (osi == null) {
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerMessage("No schedules returned for COMPLETED status");
             return;
         }
         if (osi.getScheduledElements().size() == 0) {
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerMessage("No elements scheduled for COMPLETED status");
             return;
         }
@@ -174,7 +174,7 @@ public class CmsoOptimizerHandler {
                             cmScheduleDao.findOneByScheduleUuidGroupIdAndVnfName(schedule.getUuid(), groupId, vnfName);
             cms.setStartTimeMillis(element.getStartTime().getTime());
             cms.setFinishTimeMillis(element.getEndTime().getTime());
-            cms.setStatus(CMSStatusEnum.PendingApproval.toString());
+            cms.setStatus(CmsoStatusEnum.PendingApproval.toString());
             cmScheduleDao.save(cms);
         }
         if (osi.getUnScheduledElements() != null) {
@@ -183,7 +183,7 @@ public class CmsoOptimizerHandler {
                 String vnfName = element.getElementId();
                 ChangeManagementSchedule cms = cmScheduleDao.findOneByScheduleUuidGroupIdAndVnfName(schedule.getUuid(),
                                 groupId, vnfName);
-                cms.setStatus(CMSStatusEnum.NotScheduled.toString());
+                cms.setStatus(CmsoStatusEnum.NotScheduled.toString());
                 cmScheduleDao.save(cms);
 
             }
@@ -193,7 +193,7 @@ public class CmsoOptimizerHandler {
         for (ChangeManagementGroup cmg : updatedGroups.values()) {
             cmGroupDao.save(cmg);
         }
-        schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
+        schedule.setStatus(CmsoStatusEnum.PendingApproval.toString());
     }
 
     private void updateGroup(ScheduledElement element, List<ChangeManagementGroup> groups,
@@ -214,7 +214,7 @@ public class CmsoOptimizerHandler {
                 }
             }
             if (cmg == null) {
-                throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.MISSING_VALID_GROUP_FOR_ELEMENT,
+                throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.MISSING_VALID_GROUP_FOR_ELEMENT,
                                 element.getElementId());
             }
             Long elementStartTime = element.getStartTime().getTime();

@@ -47,9 +47,9 @@ import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.eventq.DispatchedEventList;
 import org.onap.optf.cmso.filters.CmsoClientFilters;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.ticketmgt.TmClient;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
@@ -74,16 +74,16 @@ public class CmJob implements Job {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSOClient vidClient;
+    CmsoClient vidClient;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
     TmClient tmClient;

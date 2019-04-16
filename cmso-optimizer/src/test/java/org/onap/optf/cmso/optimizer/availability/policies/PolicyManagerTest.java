@@ -50,7 +50,6 @@ public class PolicyManagerTest {
 
     @Test
     public void getPolicyByName() {
-        String policyName = "Weekday_00_06";
 
         String result = "CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,CMSO.Weekday_00_06,";
         List<Policy> policies = policyManager.getSupportedPolicies();
@@ -60,6 +59,7 @@ public class PolicyManagerTest {
         }
         System.out.println("        String result = \"" + sb.toString() + "\";");
         Assert.assertTrue(result.equals(sb.toString()));
+        String policyName = "Weekday_00_06";
         Policy policy = policyManager.getPolicyForName(policyName);
         Assert.assertTrue(policy != null);
         TimeLimitAndVerticalTopology top = policyManager.getTimeLimitAndVerticalTopologyByName(policyName);

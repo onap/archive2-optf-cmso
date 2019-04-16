@@ -39,24 +39,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response.Status;
 import org.onap.optf.cmso.common.ApprovalStatusEnum;
 import org.onap.optf.cmso.common.ApprovalTypesEnum;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.eventq.CMSQueueJob;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.eventq.CmsoQueueJob;
 import org.onap.optf.cmso.model.ChangeManagementChangeWindow;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.DomainData;
 import org.onap.optf.cmso.model.ElementData;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementDetailDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ElementDataDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleQueryDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementDetailDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ElementDataDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleQueryDao;
 import org.onap.optf.cmso.service.rs.models.ApprovalMessage;
 import org.onap.optf.cmso.service.rs.models.v2.ChangeWindow;
 import org.onap.optf.cmso.service.rs.models.v2.ElementInfo;
@@ -75,31 +75,31 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSQueueJob qqJob;
+    CmsoQueueJob qqJob;
 
     @Autowired
     Environment env;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDao;
+    ChangeManagementChangeWindowDao cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDao;
+    ChangeManagementDetailDao cmDetailsDao;
 
     @Autowired
-    ScheduleQueryDAO scheduleQueryDao;
+    ScheduleQueryDao scheduleQueryDao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
-    ElementDataDAO elementDataDao;
+    ElementDataDao elementDataDao;
 
     @Autowired
     TmClient tmClient;
@@ -109,13 +109,13 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
 
 
     protected void createSchedule(OptimizedScheduleMessage scheduleMessage, String scheduleId,
-                    HttpServletRequest request) throws CMSException, JsonProcessingException {
+                    HttpServletRequest request) throws CmsoException, JsonProcessingException {
         if (!scheduleMessage.getDomain().equals(DomainsEnum.ChangeManagement.toString())) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "domain",
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "domain",
                             scheduleMessage.getDomain());
         }
         if (scheduleMessage.getScheduleId() == null || !scheduleMessage.getScheduleId().equals(scheduleId)) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "schedulerId",
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "schedulerId",
                             scheduleMessage.getScheduleId());
         }
         // Force the name to be = to the ID because there is no way fot the provide a
@@ -145,56 +145,56 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
      * Returns whether this is an immediate request.
      */
     private boolean validate(OptimizedScheduleMessage scheduleMessage, Map<String, List<ElementInfo>> groups)
-                    throws CMSException {
+                    throws CmsoException {
         SchedulingData info = scheduleMessage.getSchedulingData();
         boolean immediate = true;
         if (info == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_PARSE_SCHEDULING_INFO);
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_PARSE_SCHEDULING_INFO);
         }
 
         if (info.getAdditionalDurationInSeconds() == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE,
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE,
                             "additionalDurationInSeconds");
         }
         if (info.getNormalDurationInSeconds() == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE,
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE,
                             "normalDurationInSeconds");
         }
         if (info.getAdditionalDurationInSeconds() < 0) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "additionalDurationInSeconds",
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "additionalDurationInSeconds",
                             info.getAdditionalDurationInSeconds().toString());
         }
         if (info.getNormalDurationInSeconds() < 1) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "normalDurationInSeconds",
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "normalDurationInSeconds",
                             info.getNormalDurationInSeconds().toString());
         }
         if (info.getChangeWindows() != null && info.getChangeWindows().size() > 0) {
             for (ChangeWindow cw : info.getChangeWindows()) {
                 immediate = false;
                 if (cw.getStartTime() == null) {
-                    throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "startTime");
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "startTime");
                 }
                 if (cw.getEndTime() == null) {
-                    throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "endTime");
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "endTime");
                 }
                 Date start = cw.getStartTime();
                 Date end = cw.getEndTime();
                 if (!end.after(start)) {
-                    throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_CHANGE_WINDOW, start.toString(),
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_CHANGE_WINDOW, start.toString(),
                                     end.toString());
                 }
             }
             if (info.getConcurrencyLimit() == null) {
-                throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "concurrencyLimit");
+                throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "concurrencyLimit");
             }
             if (info.getConcurrencyLimit() < 1) {
-                throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "concurrencyLimit",
+                throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "concurrencyLimit",
                                 info.getConcurrencyLimit().toString());
             }
         }
 
         if (info.getElements() == null || info.getElements().size() == 0) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "elements");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "elements");
         }
 
         for (ElementInfo element : info.getElements()) {
@@ -213,7 +213,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     }
 
     private void createChangeManagement(Schedule schedule, OptimizedScheduleMessage scheduleMessage,
-                    Map<String, List<ElementInfo>> groups) throws CMSException {
+                    Map<String, List<ElementInfo>> groups) throws CmsoException {
         SchedulingData schedulingInfo = scheduleMessage.getSchedulingData();
         for (String groupId : groups.keySet()) {
 
@@ -240,7 +240,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                 cms.setUuid(UUID.randomUUID());
                 cms.setChangeManagementGroupUuid(cmg.getUuid());
                 cms.setVnfName(element.getElementId());
-                cms.setStatus(CMSStatusEnum.PendingSchedule.toString());
+                cms.setStatus(CmsoStatusEnum.PendingSchedule.toString());
                 cms.setRequest(element.getRequest().toString());
                 cmScheduleDao.save(cms);
                 // Save elementData
@@ -266,7 +266,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     }
 
     private void createChangeManagementImmediate(Schedule schedule, OptimizedScheduleMessage scheduleMessage,
-                    Map<String, List<ElementInfo>> groups) throws CMSException, JsonProcessingException {
+                    Map<String, List<ElementInfo>> groups) throws CmsoException, JsonProcessingException {
         SchedulingData schedulingInfo = scheduleMessage.getSchedulingData();
         for (String groupId : groups.keySet()) {
             ChangeManagementGroup cmg = new ChangeManagementGroup();
@@ -286,33 +286,33 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
                 cms.setChangeManagementGroupUuid(cmg.getUuid());
                 cms.setVnfName(element.getElementId());
                 cms.setRequest(element.getRequest().toString());
-                cms.setStatus(CMSStatusEnum.PendingApproval.toString());
+                cms.setStatus(CmsoStatusEnum.PendingApproval.toString());
                 cmScheduleDao.save(cms);
             }
-            schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
+            schedule.setStatus(CmsoStatusEnum.PendingApproval.toString());
             scheduleDao.save(schedule);
         }
     }
 
-    protected void deleteChangeManagement(Schedule schedule) throws CMSException {
+    protected void deleteChangeManagement(Schedule schedule) throws CmsoException {
         List<ChangeManagementGroup> cmgs = cmGroupDao.findBySchedulesId(schedule.getUuid());
 
         for (ChangeManagementGroup cmg : cmgs) {
             List<ChangeManagementSchedule> schedules = cmScheduleDao.findByChangeManagementGroupId(cmg.getUuid());
             for (ChangeManagementSchedule s : schedules) {
-                CMSStatusEnum currentState = CMSStatusEnum.Completed.fromString(s.getStatus());
+                CmsoStatusEnum currentState = CmsoStatusEnum.Completed.fromString(s.getStatus());
                 switch (currentState) {
                     case Scheduled:
                         if (s.getTmChangeId() != null && !s.getTmChangeId().equals("")) {
                             tmClient.cancelTicket(schedule, s, s.getTmChangeId());
                         }
-                        s.setStatus(CMSStatusEnum.Cancelled.toString());
+                        s.setStatus(CmsoStatusEnum.Cancelled.toString());
                         break;
                     case Triggered:
                         // Too late...
                         break;
                     default:
-                        s.setStatus(CMSStatusEnum.Deleted.toString());
+                        s.setStatus(CmsoStatusEnum.Deleted.toString());
                 }
                 cmScheduleDao.save(s);
             }
@@ -324,7 +324,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     // Marshall commonData into DB DomainData
     // No validation.
     //
-    private List<DomainData> marshallDomainData(OptimizedScheduleMessage scheduleMessage) throws CMSException {
+    private List<DomainData> marshallDomainData(OptimizedScheduleMessage scheduleMessage) throws CmsoException {
         List<NameValue> domainData = scheduleMessage.getCommonData();
         List<DomainData> domainDataList = new ArrayList<DomainData>();
         for (NameValue nameValue : domainData) {
@@ -341,19 +341,19 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
 
 
     protected void processApproveScheduleRequest(Schedule sch, ApprovalMessage approval, List<DomainData> domainData)
-                    throws CMSException {
+                    throws CmsoException {
         sch = scheduleDao.lockOne(sch.getUuid());
         String domain = DomainsEnum.ChangeManagement.toString();
         processApproval(sch, domain, approval);
-        if (sch.getStatus().equals(CMSStatusEnum.Accepted.toString())) {
+        if (sch.getStatus().equals(CmsoStatusEnum.Accepted.toString())) {
             openTickets(sch, domainData);
         }
-        if (sch.getStatus().equals(CMSStatusEnum.Rejected.toString())) {
-            updateChangeManagementSchedules(sch, CMSStatusEnum.ApprovalRejected);
+        if (sch.getStatus().equals(CmsoStatusEnum.Rejected.toString())) {
+            updateChangeManagementSchedules(sch, CmsoStatusEnum.ApprovalRejected);
         }
     }
 
-    private void openTickets(Schedule sch, List<DomainData> domainData) throws CMSException {
+    private void openTickets(Schedule sch, List<DomainData> domainData) throws CmsoException {
         debug.debug("Entered openTickets scheduleId=" + sch.getScheduleId());
 
         Integer maxvnfsperticket = env.getProperty("tm.vnfs.per.ticket", Integer.class, 1);
@@ -379,7 +379,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     }
 
     private void openTicketForList(Schedule schedule, ChangeManagementGroup group, List<ChangeManagementSchedule> list,
-                    List<DomainData> domainData) throws CMSException {
+                    List<DomainData> domainData) throws CmsoException {
         List<String> vnfNames = new ArrayList<>();
         for (ChangeManagementSchedule cms : list) {
             vnfNames.add(cms.getVnfName());
@@ -396,18 +396,18 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
             cms.setTmApprovalStatus(TmApprovalStatusEnum.Approved.toString());
             // cms.setStatus(CMSStatusEnum.PendingApproval.toString());
             if (cms.getStartTimeMillis() == null) {
-                cms.setStatus(CMSStatusEnum.ScheduledImmediate.toString());
+                cms.setStatus(CmsoStatusEnum.ScheduledImmediate.toString());
             }
             else {
-                cms.setStatus(CMSStatusEnum.Scheduled.toString());
+                cms.setStatus(CmsoStatusEnum.Scheduled.toString());
             }
             cmScheduleDao.save(cms);
         }
-        schedule.setStatus(CMSStatusEnum.Scheduled.toString());
+        schedule.setStatus(CmsoStatusEnum.Scheduled.toString());
         scheduleDao.save(schedule);
     }
 
-    private void updateChangeManagementSchedules(Schedule sch, CMSStatusEnum approvalrejected) {
+    private void updateChangeManagementSchedules(Schedule sch, CmsoStatusEnum approvalrejected) {
         debug.debug("Entered updateChangeManagementSchedules");
         List<ChangeManagementGroup> groups = cmGroupDao.findBySchedulesId(sch.getUuid());
         for (ChangeManagementGroup group : groups) {
