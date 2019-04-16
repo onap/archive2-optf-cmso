@@ -44,13 +44,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.onap.observations.Mdc;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -71,7 +71,7 @@ public class OptimizerQuartzJob extends QuartzJobBean {
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
     PropertiesManagement pm;
@@ -96,12 +96,12 @@ public class OptimizerQuartzJob extends QuartzJobBean {
             // schedule the request and update the status to PendingSchedule
             // and update the state to OptimizationInProgress
             List<Schedule> schedules = scheduleDao.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
-                            CMSStatusEnum.PendingSchedule.toString());
+                            CmsoStatusEnum.PendingSchedule.toString());
             for (Schedule s : schedules) {
                 scheduleOptimization(s);
             }
             List<Schedule> inProgressSchedules = scheduleDao.findByDomainStatus(DomainsEnum.ChangeManagement.toString(),
-                            CMSStatusEnum.OptimizationInProgress.toString());
+                            CmsoStatusEnum.OptimizationInProgress.toString());
             for (Schedule s : inProgressSchedules) {
                 scheduleOptimization(s);
             }

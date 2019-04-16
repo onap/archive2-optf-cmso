@@ -35,7 +35,7 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +55,7 @@ public class CmQuartzJobStartup {
     private static EELFLogger log = EELFManager.getInstance().getLogger(CmQuartzJobStartup.class);
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     private AtomicBoolean started = new AtomicBoolean(false);
 

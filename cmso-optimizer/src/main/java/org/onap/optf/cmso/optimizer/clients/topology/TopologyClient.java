@@ -21,7 +21,6 @@ package org.onap.optf.cmso.optimizer.clients.topology;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import com.att.eelf.i18n.EELFResourceManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
@@ -102,6 +101,7 @@ public class TopologyClient {
             topologyResponse.setStatus(TopologyRequestStatus.FAILED);
             topologyResponse.setErrorMessage(LogMessages.UNEXPECTED_EXCEPTION.format(e.getMessage()));
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            return topologyResponse;
         }
         topologyRequest = new TopologyRequest();
         topologyRequest.setRequestId(optimizerRequest.getRequestId());

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.onap.aaf.cadi.PropAccess;
 import org.onap.aaf.cadi.filter.CadiFilter;
 import org.onap.observations.Observation;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.ticketmgt.Application;
 import org.onap.optf.ticketmgt.SpringProfiles;
 import org.onap.optf.ticketmgt.common.LogMessages;
@@ -67,7 +67,7 @@ public class AafFilter extends OrderedRequestContextFilter {
             cadiFilter.doFilter(request, response, filterChain);
             if (response.getStatus() >= 400 && response.getStatus() < 500) {
                 Observation.report(LogMessages.UNAUTHENTICATED);
-                ResponseFormatter.errorResponse(request, response, new CMSException(
+                ResponseFormatter.errorResponse(request, response, new CmsoException(
                                 LogMessages.UNAUTHENTICATED.getStatus(), LogMessages.UNAUTHENTICATED, ""));
             }
         } else {

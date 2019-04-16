@@ -33,12 +33,12 @@ package org.onap.optf.cmso.aaf;
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 
 class ResponseFormatter {
 
 
-    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CMSException error)
+    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CmsoException error)
                     throws IOException {
         response.setStatus(error.getStatus().getStatusCode());
         response.getWriter().write(error.getRequestError().toString());

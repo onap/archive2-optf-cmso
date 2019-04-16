@@ -44,14 +44,14 @@ import javax.ws.rs.core.Response;
 import org.onap.observations.Mdc;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
 import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
 import org.onap.optf.cmso.so.bean.MsoOrchestrationQueryResponse;
 import org.onap.optf.cmso.so.bean.MsoOrchestrationQueryResponse.MsoStatus;
@@ -66,13 +66,13 @@ public class MsoStatusClient {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupdao;
+    ChangeManagementGroupDao cmGroupdao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
     Environment env;
@@ -146,18 +146,18 @@ public class MsoStatusClient {
                         switch (msoStatus) {
                             case COMPLETE:
                                 cmSchedule.setExecutionCompletedTimeMillis(finishTime);
-                                cmSchedule.setStatus(CMSStatusEnum.Completed.toString());
+                                cmSchedule.setStatus(CmsoStatusEnum.Completed.toString());
                                 break;
                             case FAILED:
                                 cmSchedule.setExecutionCompletedTimeMillis(finishTime);
-                                cmSchedule.setStatus(CMSStatusEnum.Failed.toString());
+                                cmSchedule.setStatus(CmsoStatusEnum.Failed.toString());
                                 break;
                             case UNKNOWN:
                             default:
                         }
                     } else {
                         // Do not keep polling...
-                        cmSchedule.setStatus(CMSStatusEnum.Error.toString());
+                        cmSchedule.setStatus(CmsoStatusEnum.Error.toString());
                         cmSchedule.setMsoStatus("Bad Response");
                         cmSchedule.setMsoMessage("Unable to parse :" + respString);
 
@@ -167,21 +167,21 @@ public class MsoStatusClient {
                     break;
                 case 404: { // Not found
                     // Do not keep polling...
-                    cmSchedule.setStatus(CMSStatusEnum.Failed.toString());
+                    cmSchedule.setStatus(CmsoStatusEnum.Failed.toString());
                     cmSchedule.setMsoStatus("Not found");
                     cmSchedule.setMsoMessage("Call to MSO Failed :" + response.toString());
                 }
                     break;
                 case 400: { // Bad request
                     // Do not keep polling...
-                    cmSchedule.setStatus(CMSStatusEnum.Error.toString());
+                    cmSchedule.setStatus(CmsoStatusEnum.Error.toString());
                     cmSchedule.setMsoStatus("Bad Request");
                     cmSchedule.setMsoMessage("Call to MSO Failed :" + response.toString());
                 }
                     break;
                 case 500:
                 default: {
-                    cmSchedule.setStatus(CMSStatusEnum.Error.toString());
+                    cmSchedule.setStatus(CmsoStatusEnum.Error.toString());
                     cmSchedule.setMsoStatus("Failed");
                     cmSchedule.setMsoMessage("Call to MSO Failed :" + response.toString());
                 }

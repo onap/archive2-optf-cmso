@@ -42,7 +42,7 @@ import org.onap.observations.Observation;
 import org.onap.optf.cmso.Application;
 import org.onap.optf.cmso.SpringProfiles;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -77,7 +77,8 @@ public class AafFilter extends OrderedRequestContextFilter {
         if (response.getStatus() == 401) {
             Observation.report(LogMessages.UNAUTHENTICATED);
             ResponseFormatter.errorResponse(request, response,
-                            new CMSException(LogMessages.UNAUTHENTICATED.getStatus(), LogMessages.UNAUTHENTICATED, ""));
+                            new CmsoException(LogMessages.UNAUTHENTICATED.getStatus(),
+                                            LogMessages.UNAUTHENTICATED, ""));
         }
     }
 
