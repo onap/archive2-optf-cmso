@@ -2,7 +2,7 @@
 docker-compose up >up.txt 2>&1 &
 
 ### Wait for robot to finish
-sleep 60
+sleep 240
 docker exec cmso-service_cmso-robot_1 ls
 while [ $? -ne 1 ]; do
   sleep 60
@@ -27,6 +27,7 @@ while [ $? -ne 1 ]; do
   docker exec cmso-service_cmso-optimizer_1 ls
 done
 
+cat up.txt
 
 docker ps -a
 docker-compose down
