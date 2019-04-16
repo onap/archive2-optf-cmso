@@ -45,7 +45,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.onap.optf.cmso.common.CMSRequestError;
+import org.onap.optf.cmso.common.CmsoRequestError;
 import org.onap.optf.ticketmgt.service.rs.models.ActiveTicketsRequest;
 import org.onap.optf.ticketmgt.service.rs.models.ActiveTicketsResponse;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,7 +72,7 @@ public interface AvailabilityInterface {
                                     + "optimizer will begin to poll the request until COMPLETED.",
                     response = ActiveTicketsResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-                    @ApiResponse(code = 400, message = "Bad request", response = CMSRequestError.class),
+                    @ApiResponse(code = 400, message = "Bad request", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response getActiveTickets(
                     @ApiParam(value = "v1") @PathParam("apiVersion") @PathVariable(
@@ -92,7 +92,7 @@ public interface AvailabilityInterface {
                                     + "receipt of the response.",
                     response = ActiveTicketsResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-                    @ApiResponse(code = 404, message = "Not found.", response = CMSRequestError.class),
+                    @ApiResponse(code = 404, message = "Not found.", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response pollActiveTickets(
                     @ApiParam(value = "v1") @PathParam("apiVersion") @PathVariable(
@@ -111,7 +111,7 @@ public interface AvailabilityInterface {
                     + " treat Not found reponse on as normal.",
                     response = ActiveTicketsResponse.class)
     @ApiResponses(value = {@ApiResponse(code = 204, message = "OK"),
-                    @ApiResponse(code = 404, message = "Not found", response = CMSRequestError.class),
+                    @ApiResponse(code = 404, message = "Not found", response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response deleteActiveTicketsRequest(
                     @ApiParam(value = "v1") @PathParam("apiVersion") @PathVariable(

@@ -44,7 +44,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletProperties;
-import org.onap.optf.ticketmgt.filters.CMSOContainerFilters;
+import org.onap.optf.ticketmgt.filters.CmsoContainerFilters;
 import org.onap.optf.ticketmgt.service.rs.AdminToolImpl;
 import org.onap.optf.ticketmgt.service.rs.AvailabilityInterfaceImpl;
 import org.onap.optf.ticketmgt.service.rs.HealthCheckImpl;
@@ -91,7 +91,7 @@ public class JerseyConfiguration extends ResourceConfig {
 
         // TODO: Examine which logging features to enable
         register(new LoggingFeature(log));
-        register(CMSOContainerFilters.class);
+        register(CmsoContainerFilters.class);
     }
 
     /**

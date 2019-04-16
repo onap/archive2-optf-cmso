@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.onap.optf.cmso.model.dao.ApprovalTypeDAO;
+import org.onap.optf.cmso.model.dao.ApprovalTypeDao;
 import org.onap.optf.cmso.optimizer.CmsoOptimizerClient;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
 import org.onap.optf.cmso.service.rs.models.HealthCheckMessage;
@@ -69,7 +69,7 @@ public class HealthCheckImpl implements HealthCheck {
     CmsoOptimizerClient optimizerClient;
 
     @Autowired
-    ApprovalTypeDAO approvalTypeDao;
+    ApprovalTypeDao approvalTypeDao;
 
     @Autowired
     Environment env;

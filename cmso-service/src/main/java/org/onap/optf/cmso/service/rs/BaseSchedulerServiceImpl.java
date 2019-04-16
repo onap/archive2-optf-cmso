@@ -35,19 +35,19 @@ import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.core.Response.Status;
 import org.onap.optf.cmso.common.ApprovalStatusEnum;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSAlreadyExistsException;
-import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.common.exceptions.CMSNotFoundException;
+import org.onap.optf.cmso.common.exceptions.CmsoAlreadyExistsException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.common.exceptions.CmsoNotFoundException;
 import org.onap.optf.cmso.model.ApprovalType;
 import org.onap.optf.cmso.model.DomainData;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.model.ScheduleApproval;
-import org.onap.optf.cmso.model.dao.ApprovalTypeDAO;
-import org.onap.optf.cmso.model.dao.DomainDataDAO;
-import org.onap.optf.cmso.model.dao.ScheduleApprovalDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ApprovalTypeDao;
+import org.onap.optf.cmso.model.dao.DomainDataDao;
+import org.onap.optf.cmso.model.dao.ScheduleApprovalDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.onap.optf.cmso.service.rs.models.ApprovalMessage;
 import org.onap.optf.cmso.service.rs.models.v2.OptimizedScheduleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,24 +58,24 @@ public class BaseSchedulerServiceImpl {
     private static EELFLogger log = EELFManager.getInstance().getLogger(BaseSchedulerServiceImpl.class);
 
     @Autowired
-    protected ScheduleDAO scheduleDao;
+    protected ScheduleDao scheduleDao;
 
     @Autowired
-    DomainDataDAO domainDataDao;
+    DomainDataDao domainDataDao;
 
     @Autowired
-    ApprovalTypeDAO approvalTypeDao;
+    ApprovalTypeDao approvalTypeDao;
 
     @Autowired
-    ScheduleApprovalDAO scheduleApprovalDao;
+    ScheduleApprovalDao scheduleApprovalDao;
 
     protected Schedule validateAndAddScheduleRequest(OptimizedScheduleMessage scheduleMessage,
-                    List<DomainData> domainData) throws CMSException {
+                    List<DomainData> domainData) throws CmsoException {
         messageValidations(scheduleMessage);
         Schedule sch = scheduleDao.findByDomainScheduleId(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
 
         if (sch != null) {
-            throw new CMSAlreadyExistsException(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
+            throw new CmsoAlreadyExistsException(scheduleMessage.getDomain(), scheduleMessage.getScheduleId());
         }
         sch = new Schedule();
         sch.setUuid(UUID.randomUUID());
@@ -90,7 +90,7 @@ public class BaseSchedulerServiceImpl {
         sch.setScheduleName(scheduleMessage.getScheduleName());
         sch.setOptimizerAttemptsToSchedule(0);
         sch.setScheduleInfo(scheduleMessage.getSchedulingData().toString());
-        sch.setStatus(CMSStatusEnum.PendingSchedule.toString());
+        sch.setStatus(CmsoStatusEnum.PendingSchedule.toString());
         scheduleDao.save(sch);
         for (DomainData dd : domainData) {
             dd.setUuid(UUID.randomUUID());
@@ -101,51 +101,51 @@ public class BaseSchedulerServiceImpl {
         return sch;
     }
 
-    private void messageValidations(OptimizedScheduleMessage scheduleMessage) throws CMSException {
+    private void messageValidations(OptimizedScheduleMessage scheduleMessage) throws CmsoException {
         if (scheduleMessage.getScheduleName() == null || scheduleMessage.getScheduleName().equals("")) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "schedulerName", "");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "schedulerName", "");
         }
         if (scheduleMessage.getUserId() == null || scheduleMessage.getUserId().equals("")) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "userId", "");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "userId", "");
         }
     }
 
-    protected void deleteScheduleRequest(String domain, String scheduleId) throws CMSException {
+    protected void deleteScheduleRequest(String domain, String scheduleId) throws CmsoException {
         Schedule sch = scheduleDao.findByDomainScheduleId(domain, scheduleId);
         if (sch == null) {
-            throw new CMSNotFoundException(domain, scheduleId);
+            throw new CmsoNotFoundException(domain, scheduleId);
         }
-        CMSStatusEnum currentStatus = CMSStatusEnum.Completed.fromString(sch.getStatus());
+        CmsoStatusEnum currentStatus = CmsoStatusEnum.Completed.fromString(sch.getStatus());
         sch.setDeleteDateTimeMillis(System.currentTimeMillis());
         switch (currentStatus) {
             case Scheduled:
                 // TODO CLose all tickets....
-                sch.setStatus(CMSStatusEnum.Cancelled.toString());
+                sch.setStatus(CmsoStatusEnum.Cancelled.toString());
                 break;
             case NotificationsInitiated:
-                throw new CMSException(Status.NOT_ACCEPTABLE, LogMessages.CANNOT_CANCEL_IN_PROGRESS);
+                throw new CmsoException(Status.NOT_ACCEPTABLE, LogMessages.CANNOT_CANCEL_IN_PROGRESS);
             default:
-                sch.setStatus(CMSStatusEnum.Deleted.toString());
+                sch.setStatus(CmsoStatusEnum.Deleted.toString());
         }
         scheduleDao.save(sch);
     }
 
     protected Schedule processApproval(Schedule sch, String domain, ApprovalMessage approvalMessage)
-                    throws CMSException {
+                    throws CmsoException {
         String scheduleId = sch.getScheduleId();
         ApprovalType approvalType =
                         approvalTypeDao.findByDomainAndType(domain, approvalMessage.getApprovalType().toString());
         if (approvalType == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "approvalType",
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, "approvalType",
                             approvalMessage.getApprovalType().toString());
         }
 
-        if (!sch.getStatus().equals(CMSStatusEnum.PendingApproval.toString())) {
-            throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.NOT_PENDING_APPROVAL, domain, scheduleId,
+        if (!sch.getStatus().equals(CmsoStatusEnum.PendingApproval.toString())) {
+            throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.NOT_PENDING_APPROVAL, domain, scheduleId,
                             sch.getStatus());
         }
         if (approvalMessage.getApprovalUserId() == null || approvalMessage.getApprovalUserId().equals("")) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "userId");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "userId");
         }
         ScheduleApproval sa = null;
         // only 1 approval per user....
@@ -171,10 +171,10 @@ public class BaseSchedulerServiceImpl {
         sch.addScheduleApproval(sa);
         scheduleDao.save(sch);
         if (sa.getStatus().equals(ApprovalStatusEnum.Rejected.toString())) {
-            sch.setStatus(CMSStatusEnum.Rejected.toString());
+            sch.setStatus(CmsoStatusEnum.Rejected.toString());
         } else {
             if (allApprovalsReceived(sch, sa)) {
-                sch.setStatus(CMSStatusEnum.Accepted.toString());
+                sch.setStatus(CmsoStatusEnum.Accepted.toString());
             }
         }
         scheduleDao.save(sch);

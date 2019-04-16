@@ -33,7 +33,7 @@ import javax.ws.rs.core.Response.Status;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.model.DomainData;
 
 /**
@@ -102,12 +102,12 @@ public class CmQueryParameters {
      * @param urlName the url name
      * @param values the values
      * @return the string
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
-    public static String buildClause(String urlName, List<String> values) throws CMSException {
+    public static String buildClause(String urlName, List<String> values) throws CmsoException {
         QueryColumns qc = getQueryColumn(urlName);
         if (qc == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.UNDEFINED_FILTER_ATTRIBUTE, urlName);
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.UNDEFINED_FILTER_ATTRIBUTE, urlName);
         }
         if (qc.type == Date.class) {
             return formatDate(urlName, values, qc);
@@ -169,7 +169,7 @@ public class CmQueryParameters {
         return clause.toString();
     }
 
-    private static String formatDate(String urlName, List<String> values, QueryColumns qc) throws CMSException {
+    private static String formatDate(String urlName, List<String> values, QueryColumns qc) throws CmsoException {
         List<String> clauses = new ArrayList<String>();
         for (String value : values) {
             String[] dates = value.split(",");
@@ -181,7 +181,7 @@ public class CmQueryParameters {
                     formatDatePair(qc, dates[0].trim(), "", clauses);
                     break;
                 default:
-                    throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, value);
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, value);
             }
         }
         StringBuilder clause = new StringBuilder();
@@ -197,7 +197,7 @@ public class CmQueryParameters {
     }
 
     private static void formatDatePair(QueryColumns qc, String lowDate, String highDate, List<String> clauses)
-                    throws CMSException {
+                    throws CmsoException {
         StringBuilder clause = new StringBuilder();
         DateTime date1 = null;
         DateTime date2 = null;
@@ -222,12 +222,12 @@ public class CmQueryParameters {
         }
     }
 
-    private static DateTime convertDate(String utcDate, String urlName) throws CMSException {
+    private static DateTime convertDate(String utcDate, String urlName) throws CmsoException {
         DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
         if (dateTime != null) {
             return dateTime;
         }
-        throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, utcDate);
+        throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, utcDate);
     }
 
     // public static void main(String argv[])

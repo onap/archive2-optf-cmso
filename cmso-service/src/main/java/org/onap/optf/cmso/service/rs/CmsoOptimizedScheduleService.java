@@ -43,7 +43,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.onap.optf.cmso.common.CMSRequestError;
+import org.onap.optf.cmso.common.CmsoRequestError;
 import org.onap.optf.cmso.service.rs.models.v2.OptimizedScheduleMessage;
 
 @Api("CMSO Optimized Schedule API")
@@ -59,7 +59,7 @@ public interface CmsoOptimizedScheduleService {
     @ApiResponses(
             value = {@ApiResponse(code = 202, message = "Schedule request accepted for optimization."),
                     @ApiResponse(code = 409, message = "Schedule request already exists for this schedule id.",
-                            response = CMSRequestError.class),
+                            response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error")})
     public Response createScheduleRequest(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,

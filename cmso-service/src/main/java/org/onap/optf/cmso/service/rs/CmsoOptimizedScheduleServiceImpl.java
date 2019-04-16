@@ -33,7 +33,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.service.rs.models.v2.OptimizedScheduleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -63,7 +63,7 @@ public class CmsoOptimizedScheduleServiceImpl extends CommonServiceImpl implemen
         try {
             createSchedule(scheduleMessage, scheduleId, request);
             response = Response.accepted().build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();

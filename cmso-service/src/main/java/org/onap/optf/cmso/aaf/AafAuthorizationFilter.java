@@ -41,7 +41,7 @@ import org.onap.aaf.cadi.Permission;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.SpringProfiles;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Profile;
@@ -78,7 +78,7 @@ public class AafAuthorizationFilter extends OrderedRequestContextFilter {
                     filterChain.doFilter(request, response);
                 } else {
                     Observation.report(LogMessages.UNAUTHORIZED);
-                    ResponseFormatter.errorResponse(request, response, new CMSException(
+                    ResponseFormatter.errorResponse(request, response, new CmsoException(
                                     LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
                 }
             } else {
@@ -87,7 +87,7 @@ public class AafAuthorizationFilter extends OrderedRequestContextFilter {
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             ResponseFormatter.errorResponse(request, response,
-                            new CMSException(LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
+                            new CmsoException(LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
         }
     }
 }

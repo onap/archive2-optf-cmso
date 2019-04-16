@@ -49,7 +49,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.onap.optf.cmso.common.CMSRequestError;
+import org.onap.optf.cmso.common.CmsoRequestError;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.service.rs.models.ApprovalMessage;
 import org.onap.optf.cmso.service.rs.models.CmDetailsMessage;
@@ -66,7 +66,7 @@ public interface CmsoService {
     @ApiOperation(value = "", notes = "Returns a list of Scheduler Requests based upon the filter criteria.",
             response = Schedule.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "No records found", response = CMSRequestError.class),
+            @ApiResponse(code = 404, message = "No records found", response = CmsoRequestError.class),
             @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response searchScheduleRequests(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
@@ -92,7 +92,7 @@ public interface CmsoService {
     @ApiResponses(
             value = {@ApiResponse(code = 202, message = "Schedule request accepted for optimization."),
                     @ApiResponse(code = 409, message = "Schedule request already exists for this schedule id.",
-                            response = CMSRequestError.class),
+                            response = CmsoRequestError.class),
                     @ApiResponse(code = 500, message = "Unexpected Runtime error")})
     public Response createScheduleRequest(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
@@ -108,7 +108,7 @@ public interface CmsoService {
     @Produces({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "", notes = "Cancels the schedule request for scheduleId")
     @ApiResponses(value = {@ApiResponse(code = 204, message = "Delete successful"),
-            @ApiResponse(code = 404, message = "No record found", response = CMSRequestError.class),
+            @ApiResponse(code = 404, message = "No record found", response = CmsoRequestError.class),
             @ApiResponse(code = 500, message = "Unexpected Runtime error")})
     public Response deleteScheduleRequest(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
@@ -153,7 +153,7 @@ public interface CmsoService {
     @ApiOperation(value = "", notes = "Returns a list of Schedule request details based upon the filter criteria.",
             response = CmDetailsMessage.class, responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK"),
-            @ApiResponse(code = 404, message = "No records found", response = CMSRequestError.class),
+            @ApiResponse(code = 404, message = "No records found", response = CmsoRequestError.class),
             @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response searchScheduleRequestDetails(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,

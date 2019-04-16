@@ -107,7 +107,7 @@ public class ChangeWindow implements Serializable {
             return true;
         }
         // end is before start or start is before end, cannot overlap
-        if (endstart == -1 || startend == 1) {
+        if (endstart < 0 || startend > 0) {
             return false;
         }
         return true;

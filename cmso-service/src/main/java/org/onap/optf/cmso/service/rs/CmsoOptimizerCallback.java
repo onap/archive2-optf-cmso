@@ -43,7 +43,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.onap.optf.cmso.optimizer.bean.CMOptimizerResponse;
+import org.onap.optf.cmso.optimizer.bean.CmsoOptimizerResponse;
 
 @Api("CMSO Optimized Schedule API")
 @Path("/{apiVersion}")
@@ -59,6 +59,6 @@ public interface CmsoOptimizerCallback {
             @ApiResponse(code = 500, message = "Unexpected Runtime error", response = Exception.class)})
     public Response sniroCallback(
             @ApiParam(value = "v1") @PathParam("apiVersion") @DefaultValue("v1") String apiVersion,
-            @ApiParam(value = "Return schedules > lastScheduleId") CMOptimizerResponse reponse);
+            @ApiParam(value = "Return schedules > lastScheduleId") CmsoOptimizerResponse reponse);
 
 }

@@ -22,7 +22,7 @@
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.onap.optf.cmso.tcketmgt</groupId>
+	<groupId>org.onap.optf.cmso.ticketmgt</groupId>
 	<artifactId>cmso-ticketmgt</artifactId>
 
 	<packaging>jar</packaging>
