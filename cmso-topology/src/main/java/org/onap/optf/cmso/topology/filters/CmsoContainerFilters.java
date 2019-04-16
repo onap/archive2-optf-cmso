@@ -68,8 +68,8 @@ public class CmsoContainerFilters implements ContainerRequestFilter, ContainerRe
             MultivaluedMap<String, Object> respHeaders = responseContext.getHeaders();
             String minorVersion = reqHeaders.getFirst(HeadersEnum.MinorVersion.toString());
             respHeaders.add(HeadersEnum.MinorVersion.toString(), minorVersion);
-            respHeaders.add(HeadersEnum.LatestVersion.toString(), MessageHeaders.latestVersion);
-            respHeaders.add(HeadersEnum.PatchVersion.toString(), MessageHeaders.patchVersion);
+            respHeaders.add(HeadersEnum.LatestVersion.toString(), MessageHeaders.getLatestversion());
+            respHeaders.add(HeadersEnum.PatchVersion.toString(), MessageHeaders.getPatchVersion());
 
         } catch (Exception e) {
             if (e instanceof WebApplicationException) {
@@ -110,7 +110,7 @@ public class CmsoContainerFilters implements ContainerRequestFilter, ContainerRe
             }
             String minorVersion = headers.getFirst(HeadersEnum.MinorVersion.toString());
             if (minorVersion == null) {
-                minorVersion = MessageHeaders.supportedMajorVersions.get(majorVersion);
+                minorVersion = MessageHeaders.getSupportedmajorversions().get(majorVersion);
                 headers.add(HeadersEnum.MinorVersion.toString(), minorVersion);
             }
             if (!MessageHeaders.validateMajorMinorVersion(majorVersion, minorVersion)) {

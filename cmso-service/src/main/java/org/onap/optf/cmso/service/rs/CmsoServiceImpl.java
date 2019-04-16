@@ -49,21 +49,21 @@ import org.joda.time.DateTime;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.common.exceptions.CMSNotFoundException;
-import org.onap.optf.cmso.eventq.CMSQueueJob;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.common.exceptions.CmsoNotFoundException;
+import org.onap.optf.cmso.eventq.CmsoQueueJob;
 import org.onap.optf.cmso.model.ChangeManagementDetail;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
 import org.onap.optf.cmso.model.ScheduleQuery;
-import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementDetailDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ElementDataDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleQueryDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementDetailDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ElementDataDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleQueryDao;
 import org.onap.optf.cmso.service.rs.models.ApprovalMessage;
 import org.onap.optf.cmso.service.rs.models.ChangeWindowMessage;
 import org.onap.optf.cmso.service.rs.models.CmDetailsMessage;
@@ -90,31 +90,31 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
     @Autowired
-    CMSQueueJob qqJob;
+    CmsoQueueJob qqJob;
 
     @Autowired
     Environment env;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDao;
+    ChangeManagementChangeWindowDao cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDao;
+    ChangeManagementDetailDao cmDetailsDao;
 
     @Autowired
-    ScheduleQueryDAO scheduleQueryDao;
+    ScheduleQueryDao scheduleQueryDao;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
-    ElementDataDAO elementDataDao;
+    ElementDataDao elementDataDao;
 
     @Autowired
     TmClient tmClient;
@@ -139,7 +139,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             // buildWhere(qp, where);
             List<ScheduleQuery> list = scheduleQueryDao.searchSchedules(where.toString(), maxRows);
             if (list == null || !list.iterator().hasNext()) {
-                throw new CMSException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
+                throw new CmsoException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
                                 DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
             Iterator<ScheduleQuery> iter = list.iterator();
@@ -159,7 +159,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                 }
             }
             response = Response.ok(schedules.toArray(new Schedule[schedules.size()])).build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
@@ -183,7 +183,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             OptimizedScheduleMessage osm = adaptScheduleMessage(scheduleMessage);
             createSchedule(osm, scheduleId, request);
             response = Response.accepted().build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
@@ -198,7 +198,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
     }
 
     private OptimizedScheduleMessage adaptScheduleMessage(CmsoMessage sm)
-                    throws CMSException, JsonParseException, JsonMappingException, IOException {
+                    throws CmsoException, JsonParseException, JsonMappingException, IOException {
         OptimizedScheduleMessage osm = new OptimizedScheduleMessage();
         osm.setScheduleId(sm.getScheduleId());
         osm.setDomain(sm.getDomain());
@@ -220,7 +220,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         osm.setCommonData(dd);
         CmsoInfo sinfo = sm.getSchedulingInfo();
         if (sinfo == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "schedulingInfo");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "schedulingInfo");
         }
         SchedulingData sd = new SchedulingData();
         osm.setSchedulingData(sd);
@@ -236,7 +236,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
 
         List<VnfDetailsMessage> details = sinfo.getVnfDetails();
         if (details == null) {
-            throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "vnfDetails");
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "vnfDetails");
         }
         List<ChangeWindow> windows = new ArrayList<>();
         List<ElementInfo> elements = new ArrayList<>();
@@ -265,7 +265,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
     }
 
     private Object getRequestFromCallbackData(String node, String value)
-                    throws CMSException, JsonParseException, JsonMappingException, IOException {
+                    throws CmsoException, JsonParseException, JsonMappingException, IOException {
         ObjectMapper om = new ObjectMapper();
         JsonNode json = om.readValue(value, JsonNode.class);
         JsonNode details = json.get("requestDetails");
@@ -277,7 +277,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                 return request;
             }
         }
-        throw new CMSException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "CallbackData", "");
+        throw new CmsoException(Status.BAD_REQUEST, LogMessages.MISSING_REQUIRED_ATTRIBUTE, "CallbackData", "");
     }
 
     @Override
@@ -288,12 +288,12 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         try {
             Schedule schedule = scheduleDao.findByDomainScheduleId(DomainsEnum.ChangeManagement.toString(), scheduleId);
             if (schedule == null) {
-                throw new CMSNotFoundException(DomainsEnum.ChangeManagement.toString(), scheduleId);
+                throw new CmsoNotFoundException(DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
             deleteChangeManagement(schedule);
             deleteScheduleRequest(DomainsEnum.ChangeManagement.toString(), scheduleId);
             response = Response.noContent().build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
@@ -315,11 +315,11 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         try {
             schedule = scheduleDao.findByDomainScheduleId(DomainsEnum.ChangeManagement.toString(), scheduleId);
             if (schedule == null) {
-                throw new CMSException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
+                throw new CmsoException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
                                 DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
             response = Response.ok().entity(schedule).build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
@@ -342,11 +342,11 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             String domain = DomainsEnum.ChangeManagement.toString();
             Schedule sch = scheduleDao.findByDomainScheduleId(domain, scheduleId);
             if (sch == null) {
-                throw new CMSNotFoundException(domain, scheduleId);
+                throw new CmsoNotFoundException(domain, scheduleId);
             }
             processApproveScheduleRequest(sch, approval, sch.getDomainData());
             response = Response.noContent().build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
@@ -388,7 +388,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             buildWhere(qp, where);
             List<ChangeManagementDetail> list = cmDetailsDao.searchScheduleDetails(where.toString(), maxRows);
             if (list == null || !list.iterator().hasNext()) {
-                throw new CMSException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
+                throw new CmsoException(Status.NOT_FOUND, LogMessages.SCHEDULE_NOT_FOUND,
                                 DomainsEnum.ChangeManagement.toString(), scheduleId);
             }
             Iterator<ChangeManagementDetail> iter = list.iterator();
@@ -399,7 +399,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
                 schedules.add(msg);
             }
             response = Response.ok(schedules.toArray(new CmDetailsMessage[schedules.size()])).build();
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             Observation.report(LogMessages.EXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
@@ -411,7 +411,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         return response;
     }
 
-    private void buildWhere(MultivaluedMap<String, String> qp, StringBuilder where) throws CMSException {
+    private void buildWhere(MultivaluedMap<String, String> qp, StringBuilder where) throws CmsoException {
         String delim = " where ";
         for (String urlName : qp.keySet()) {
             List<String> values = qp.get(urlName);

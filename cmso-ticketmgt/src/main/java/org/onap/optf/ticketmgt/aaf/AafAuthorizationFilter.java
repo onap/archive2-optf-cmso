@@ -26,7 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.onap.observations.Observation;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.ticketmgt.SpringProfiles;
 import org.onap.optf.ticketmgt.common.LogMessages;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +69,7 @@ public class AafAuthorizationFilter extends OrderedRequestContextFilter {
         if (!request.isUserInRole(permission)) {
             Observation.report(LogMessages.UNAUTHORIZED);
             ResponseFormatter.errorResponse(request, response,
-                            new CMSException(LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
+                            new CmsoException(LogMessages.UNAUTHORIZED.getStatus(), LogMessages.UNAUTHORIZED, ""));
         } else {
             filterChain.doFilter(request, response);
         }

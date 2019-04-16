@@ -37,15 +37,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import javax.transaction.Transactional;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.model.dao.ScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.model.dao.ScheduleDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -80,13 +80,13 @@ public class TmStatusClient {
     Environment env;
 
     @Autowired
-    ScheduleDAO scheduleDao;
+    ScheduleDao scheduleDao;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
     TmClient tmClient;
@@ -103,8 +103,8 @@ public class TmStatusClient {
             // Multiple cmso instance support - re-get the record with a Schedule lock
             UUID uuid = UUID.fromString(id);
             Schedule sch = scheduleDao.lockOne(uuid);
-            if (!sch.getStatus().equals(CMSStatusEnum.NotificationsInitiated.toString())) {
-                debug.debug(sch.getScheduleId() + " is no longer in " + CMSStatusEnum.NotificationsInitiated.toString()
+            if (!sch.getStatus().equals(CmsoStatusEnum.NotificationsInitiated.toString())) {
+                debug.debug(sch.getScheduleId() + " is no longer in " + CmsoStatusEnum.NotificationsInitiated.toString()
                                 + " : it is " + sch.getStatus());
                 // Attempt at avoiding race condition in a load balance env. ?
                 return;
@@ -135,10 +135,10 @@ public class TmStatusClient {
             }
             //
             if (groupStatus.containsKey(GroupAuditStatus.CompletedWithErrors)) {
-                sch.setStatus(CMSStatusEnum.CompletedWithError.toString());
+                sch.setStatus(CmsoStatusEnum.CompletedWithError.toString());
             }
             if (groupStatus.containsKey(GroupAuditStatus.Completed)) {
-                sch.setStatus(CMSStatusEnum.Completed.toString());
+                sch.setStatus(CmsoStatusEnum.Completed.toString());
             }
             scheduleDao.save(sch);
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class TmStatusClient {
         }
     }
 
-    private void processGroup(Schedule sch, ChangeManagementGroup group) throws CMSException {
+    private void processGroup(Schedule sch, ChangeManagementGroup group) throws CmsoException {
         debug.debug("{Processing status of " + sch.getScheduleId() + " group=" + group.getGroupId());
         // Get status of all VNFs within a ticket within the group (Tickets will not
         // span groups)
@@ -161,7 +161,7 @@ public class TmStatusClient {
         for (ChangeManagementSchedule cmSchedule : cmSchedules) {
             String status = cmSchedule.getStatus();
             String tmStatus = cmSchedule.getTmStatus();
-            CMSStatusEnum cmsStatus = CMSStatusEnum.Completed.fromString(status);
+            CmsoStatusEnum cmsStatus = CmsoStatusEnum.Completed.fromString(status);
             switch (cmsStatus) {
                 case Scheduled:
                 case Triggered:
@@ -241,7 +241,7 @@ public class TmStatusClient {
             allNames.add(vnfName);
             String status = cmSchedule.getStatus();
             String tmStatus = cmSchedule.getTmStatus();
-            CMSStatusEnum cmsStatus = CMSStatusEnum.Completed.fromString(status);
+            CmsoStatusEnum cmsStatus = CmsoStatusEnum.Completed.fromString(status);
             switch (cmsStatus) {
                 case Scheduled:
                 case Triggered:
@@ -307,7 +307,7 @@ public class TmStatusClient {
 
     private void closeTheTicket(Schedule sch, ChangeManagementGroup group, String changeId,
                     List<ChangeManagementSchedule> list, ClosureCode closureCode, String closingComments)
-                    throws CMSException {
+                    throws CmsoException {
         debug.debug("Closing ticket " + changeId + ":" + closureCode);
         try {
             tmClient.closeTicket(sch, group, list, changeId, closureCode, closingComments);
@@ -315,7 +315,7 @@ public class TmStatusClient {
                 cms.setTmStatus("Closed");
                 cmScheduleDao.save(cms);
             }
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             throw e;
         }
 

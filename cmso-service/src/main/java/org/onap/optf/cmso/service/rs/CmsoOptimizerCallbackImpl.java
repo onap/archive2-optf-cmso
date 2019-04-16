@@ -46,20 +46,20 @@ import javax.ws.rs.core.UriInfo;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.ISODateTimeFormat;
-import org.onap.optf.cmso.common.CMSStatusEnum;
+import org.onap.optf.cmso.common.CmsoStatusEnum;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
-import org.onap.optf.cmso.common.exceptions.CMSException;
-import org.onap.optf.cmso.common.exceptions.CMSNotFoundException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
+import org.onap.optf.cmso.common.exceptions.CmsoNotFoundException;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementDetailDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementGroupDAO;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
-import org.onap.optf.cmso.optimizer.bean.CMOptimizerResponse;
-import org.onap.optf.cmso.optimizer.bean.CMSchedule;
+import org.onap.optf.cmso.model.dao.ChangeManagementChangeWindowDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementDetailDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementGroupDao;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
+import org.onap.optf.cmso.optimizer.bean.CmsoOptimizerResponse;
+import org.onap.optf.cmso.optimizer.bean.CmsoSchedule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -80,16 +80,16 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
 
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
-    ChangeManagementGroupDAO cmGroupDao;
+    ChangeManagementGroupDao cmGroupDao;
 
     @Autowired
-    ChangeManagementChangeWindowDAO cmChangeWindowDao;
+    ChangeManagementChangeWindowDao cmChangeWindowDao;
 
     @Autowired
-    ChangeManagementDetailDAO cmDetailsDaoO;
+    ChangeManagementDetailDao cmDetailsDaoO;
 
     /**
      * Sniro callback.
@@ -100,7 +100,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
      */
     @Override
     @Transactional
-    public Response sniroCallback(String apiVersion, CMOptimizerResponse sniroResponse) {
+    public Response sniroCallback(String apiVersion, CmsoOptimizerResponse sniroResponse) {
         Response response = null;
         log.info(LogMessages.PROCESS_OPTIMIZER_CALLBACK, "Received", request.getRemoteAddr(), "");
         log.info(LogMessages.OPTIMIZER_REQUEST, "Callback received", sniroResponse.getTransactionId(),
@@ -123,11 +123,11 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
             Schedule schedule = scheduleDao.lockOneByTransactionId(transactionId);
 
             if (schedule == null) {
-                throw new CMSNotFoundException(DomainsEnum.ChangeManagement.toString(),
+                throw new CmsoNotFoundException(DomainsEnum.ChangeManagement.toString(),
                         "(OptimizerTransactionID=" + transactionId + ")");
 
             }
-            CMSStatusEnum status = CMSStatusEnum.PendingApproval.fromString(schedule.getStatus());
+            CmsoStatusEnum status = CmsoStatusEnum.PendingApproval.fromString(schedule.getStatus());
             debug.debug("Status at time of SNIRO callback is " + status.toString());
             switch (status) {
                 // PendingSchedule may be a valid status in the cases where SNIRO async call
@@ -140,10 +140,10 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                     response = Response.ok().build();
                     break;
                 default:
-                    throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.OPTIMIZER_CALLBACK_STATE_ERROR,
-                            CMSStatusEnum.OptimizationInProgress.toString(), schedule.getStatus().toString());
+                    throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.OPTIMIZER_CALLBACK_STATE_ERROR,
+                            CmsoStatusEnum.OptimizationInProgress.toString(), schedule.getStatus().toString());
             }
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             response = Response.status(e.getStatus()).entity(e.getRequestError()).build();
         } catch (Exception e) {
@@ -153,25 +153,25 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         return response;
     }
 
-    private void processSniroResponse(CMOptimizerResponse sniroResponse, Schedule schedule) {
+    private void processSniroResponse(CmsoOptimizerResponse sniroResponse, Schedule schedule) {
         try {
             schedule.setOptimizerReturnDateTimeMillis(System.currentTimeMillis());
             schedule.setOptimizerStatus(sniroResponse.getRequestState());
             schedule.setOptimizerMessage(sniroResponse.getDescription());
             String scheduleId = sniroResponse.getScheduleId();
             ObjectMapper om = new ObjectMapper();
-            CMSchedule[] scheduleArray = sniroResponse.getSchedule();
+            CmsoSchedule[] scheduleArray = sniroResponse.getSchedule();
             if (scheduleArray != null && scheduleArray.length > 0) {
                 String scheduleString = om.writeValueAsString(scheduleArray);
                 schedule.setSchedule(scheduleString);
                 log.debug("scheduleId={0} schedule={1}", scheduleId, scheduleString);
-                for (CMSchedule sniroSchedule : sniroResponse.getSchedule()) {
+                for (CmsoSchedule sniroSchedule : sniroResponse.getSchedule()) {
                     String groupId = sniroSchedule.getGroupId();
                     DateTime finishTime = convertDate(sniroSchedule.getFinishTime(), "finishTime");
                     DateTime startTime = convertDate(sniroSchedule.getStartTime(), "startTime");
                     ChangeManagementGroup group = cmGroupDao.findOneBySchedulesIdGroupId(schedule.getUuid(), groupId);
                     if (group == null) {
-                        throw new CMSException(Status.PRECONDITION_FAILED,
+                        throw new CmsoException(Status.PRECONDITION_FAILED,
                                 LogMessages.CHANGE_MANAGEMENT_GROUP_NOT_FOUND, schedule.getScheduleId(), groupId);
                     }
                     group.setStartTimeMillis(startTime.getMillis());
@@ -189,19 +189,19 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                         processNode(schedule, group, node, startAndFinishTimeMap);
                     }
                 }
-                schedule.setStatus(CMSStatusEnum.PendingApproval.toString());
+                schedule.setStatus(CmsoStatusEnum.PendingApproval.toString());
             } else {
                 debug.debug("scheduleId={0} schedule=null status={1} ", scheduleId, schedule.getOptimizerStatus());
-                schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+                schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             }
-        } catch (CMSException e) {
+        } catch (CmsoException e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerStatus(e.getStatus().toString());
             schedule.setOptimizerMessage(e.getLocalizedMessage());
         } catch (Exception e) {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            schedule.setStatus(CMSStatusEnum.OptimizationFailed.toString());
+            schedule.setStatus(CmsoStatusEnum.OptimizationFailed.toString());
             schedule.setOptimizerStatus("Exception");
             schedule.setOptimizerMessage(e.getLocalizedMessage());
         }
@@ -216,10 +216,10 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
      * @param totalDuration the total duration
      * @param nodeList the node list
      * @param startAndFinishTimeMap the start and finish time map
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
     public static void makeMap(Long startTime, Long latestInstanceStartTime, int concurrencyLimit, long totalDuration,
-            List<String> nodeList, Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
+            List<String> nodeList, Map<String, Map<String, Long>> startAndFinishTimeMap) throws CmsoException {
         Long nextStartTime = null;
         Long nextFinishTime = null;
         for (int nodeNumber = 0; nodeNumber < nodeList.size(); nodeNumber++) {
@@ -231,7 +231,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
                     nextStartTime = nextStartTime + totalDuration;
                 }
                 if (nextStartTime > latestInstanceStartTime) {
-                    throw new CMSException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_ALLOCATE_VNF_TIMESLOTS,
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_ALLOCATE_VNF_TIMESLOTS,
                             startTime.toString(), latestInstanceStartTime.toString(), String.valueOf(totalDuration),
                             String.valueOf(concurrencyLimit), String.valueOf(nodeList.size()));
                 }
@@ -247,17 +247,17 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
     }
 
     private void processNode(Schedule schedule, ChangeManagementGroup group, String node,
-            Map<String, Map<String, Long>> startAndFinishTimeMap) throws CMSException {
+            Map<String, Map<String, Long>> startAndFinishTimeMap) throws CmsoException {
         Map<String, Long> map = startAndFinishTimeMap.get(node);
         ChangeManagementSchedule detail = cmScheduleDao.findOneByGroupUuidAndVnfName(group.getUuid(), node);
         if (detail == null) {
-            throw new CMSException(Status.NOT_FOUND, LogMessages.UNABLE_TO_LOCATE_SCHEDULE_DETAIL,
+            throw new CmsoException(Status.NOT_FOUND, LogMessages.UNABLE_TO_LOCATE_SCHEDULE_DETAIL,
                     schedule.getScheduleId(), group.getGroupId(), node);
         }
         detail.setStartTimeMillis(map.get("startTime"));
         detail.setFinishTimeMillis(map.get("finishTime"));
         detail.setVnfId("");
-        detail.setStatus(CMSStatusEnum.PendingApproval.toString());
+        detail.setStatus(CmsoStatusEnum.PendingApproval.toString());
         cmScheduleDao.save(detail);
     }
 
@@ -267,9 +267,9 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
      * @param utcDate the utc date
      * @param attrName the attr name
      * @return the date time
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
-    public static DateTime convertDate(String utcDate, String attrName) throws CMSException {
+    public static DateTime convertDate(String utcDate, String attrName) throws CmsoException {
         try {
             DateTime dateTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC().parseDateTime(utcDate);
             if (dateTime != null) {
@@ -278,7 +278,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         } catch (Exception e) {
             debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
-        throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, attrName, utcDate);
+        throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, attrName, utcDate);
     }
 
     /**
@@ -287,9 +287,9 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
      * @param utcDate the utc date
      * @param attrName the attr name
      * @return the date time
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
-    public static DateTime convertIsoDate(String utcDate, String attrName) throws CMSException {
+    public static DateTime convertIsoDate(String utcDate, String attrName) throws CmsoException {
         try {
             DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
             if (dateTime != null) {
@@ -298,7 +298,7 @@ public class CmsoOptimizerCallbackImpl extends BaseSchedulerServiceImpl implemen
         } catch (Exception e) {
             debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
         }
-        throw new CMSException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, attrName, utcDate);
+        throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, attrName, utcDate);
     }
 
 }

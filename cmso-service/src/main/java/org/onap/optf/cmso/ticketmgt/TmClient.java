@@ -56,13 +56,13 @@ import org.onap.optf.cmso.common.BasicAuthenticatorFilter;
 import org.onap.optf.cmso.common.CmHelpers;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
-import org.onap.optf.cmso.common.exceptions.CMSException;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.filters.CmsoClientFilters;
 import org.onap.optf.cmso.model.ChangeManagementGroup;
 import org.onap.optf.cmso.model.ChangeManagementSchedule;
 import org.onap.optf.cmso.model.DomainData;
 import org.onap.optf.cmso.model.Schedule;
-import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDAO;
+import org.onap.optf.cmso.model.dao.ChangeManagementScheduleDao;
 import org.onap.optf.cmso.service.rs.models.CmDomainDataEnum;
 import org.onap.optf.cmso.service.rs.models.HealthCheckComponent;
 import org.onap.optf.cmso.ticketmgt.TmEndpoints.Endpoint;
@@ -89,7 +89,7 @@ public class TmClient {
     PropertiesManagement pm;
 
     @Autowired
-    ChangeManagementScheduleDAO cmScheduleDao;
+    ChangeManagementScheduleDao cmScheduleDao;
 
     @Autowired
     BuildCreateRequest buildCreateRequest;
@@ -105,10 +105,10 @@ public class TmClient {
      * @param vnfNames the vnf names
      * @param domainData the domain data
      * @return the string
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
     public String createChangeTicket(Schedule schedule, ChangeManagementGroup group, List<String> vnfNames,
-                    List<DomainData> domainData) throws CMSException {
+                    List<DomainData> domainData) throws CmsoException {
 
         String changeId = "";
         String workflowName = CmHelpers.getDomainData(domainData, CmDomainDataEnum.WorkflowName);
@@ -129,10 +129,10 @@ public class TmClient {
      * @param changeId the change id
      * @param closureCode the closure code
      * @param closingComments the closing comments
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
     public void closeTicket(Schedule schedule, ChangeManagementGroup group, List<ChangeManagementSchedule> cmSchedules,
-                    String changeId, ClosureCode closureCode, String closingComments) throws CMSException {
+                    String changeId, ClosureCode closureCode, String closingComments) throws CmsoException {
         Map<String, Object> variables =
                         getCloseVariables(schedule, group, cmSchedules, changeId, closureCode, closingComments);
         JsonNode closeChangeRecord = buildCreateRequest.createCloseCancelChangeRecord(variables);
@@ -146,9 +146,9 @@ public class TmClient {
      * @param schedule the schedule
      * @param cms the cms
      * @param changeId the change id
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
-    public void cancelTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CMSException {
+    public void cancelTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CmsoException {
         Map<String, Object> variables = getCancelVariables(schedule, changeId);
         JsonNode cancelChangeRecord = buildCreateRequest.createCancelChangeRecord(variables);
         debug.debug("cancelChangeRecord=" + cancelChangeRecord.toString());
@@ -161,9 +161,9 @@ public class TmClient {
      * @param schedule the schedule
      * @param cms the cms
      * @param changeId the change id
-     * @throws CMSException the CMS exception
+     * @throws CmsoException the CMS exception
      */
-    public void updateTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CMSException {
+    public void updateTicket(Schedule schedule, ChangeManagementSchedule cms, String changeId) throws CmsoException {
         Map<String, Object> variables = getUpdateVariables(schedule, changeId);
         JsonNode updateChangeRecord = buildCreateRequest.createUpdateChangeRecord(variables);
         debug.debug("updateChangeRecord=" + updateChangeRecord.toString());
@@ -269,7 +269,7 @@ public class TmClient {
     }
 
     private void postCloseChangeTicket(JsonNode closeChangeRecord, String scheduleId, String changeId)
-                    throws CMSException {
+                    throws CmsoException {
         Map<String, String> mdcSave = Mdc.save();
         try {
             Response response = null;
@@ -290,7 +290,7 @@ public class TmClient {
                     if (!isAlreadyClosed(respString)) {
                         Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                         response.toString() + " : " + respString);
-                        throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
+                        throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
                                         scheduleId, changeId, respString);
                     }
                 }
@@ -299,13 +299,13 @@ public class TmClient {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                     response.toString() + " : " + message);
-                    throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
+                    throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET,
                                     scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET, scheduleId,
+            throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_CLOSE_CHANGE_TICKET, scheduleId,
                             changeId, e.toString());
         } finally {
             Mdc.restore(mdcSave);
@@ -411,7 +411,7 @@ public class TmClient {
 
     }
 
-    private String postCreateChangeTicket(JsonNode createChangeRecord, String scheduleId) throws CMSException {
+    private String postCreateChangeTicket(JsonNode createChangeRecord, String scheduleId) throws CmsoException {
         String changeId = null;
         Map<String, String> mdcSave = Mdc.save();
         try {
@@ -435,7 +435,7 @@ public class TmClient {
                     } else {
                         Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                         response.toString() + " : " + "Response is empty");
-                        throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
+                        throw new CmsoException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                                         scheduleId, "Response is empty");
                     }
                 }
@@ -444,13 +444,13 @@ public class TmClient {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                     response.toString() + " : " + message);
-                    throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
+                    throw new CmsoException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                                     scheduleId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            throw new CMSException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
+            throw new CmsoException(Status.EXPECTATION_FAILED, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET, scheduleId,
                             e.toString());
         } finally {
             Mdc.restore(mdcSave);
@@ -459,7 +459,7 @@ public class TmClient {
     }
 
     private String postUpdateChangeTicket(JsonNode updateChangeRecord, String scheduleId, String changeId)
-                    throws CMSException {
+                    throws CmsoException {
         Map<String, String> mdcSave = Mdc.save();
         try {
             String url = env.getProperty("vtm.url") + env.getProperty("vtm.updatePath");
@@ -480,13 +480,13 @@ public class TmClient {
                     String message = response.readEntity(String.class);
                     Observation.report(LogMessages.UNEXPECTED_RESPONSE, "vTM", String.valueOf(response.getStatus()),
                                     response.toString() + " : " + message);
-                    throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET,
+                    throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET,
                                     scheduleId, changeId, message);
                 }
             }
         } catch (ProcessingException e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
-            throw new CMSException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET, scheduleId,
+            throw new CmsoException(Status.PRECONDITION_FAILED, LogMessages.UNABLE_TO_UPDATE_CHANGE_TICKET, scheduleId,
                             changeId, e.toString());
         } finally {
             Mdc.restore(mdcSave);
@@ -495,7 +495,7 @@ public class TmClient {
     }
 
 
-    private Response tmPost(Endpoint ep, Object request, String scheduleId) throws CMSException {
+    private Response tmPost(Endpoint ep, Object request, String scheduleId) throws CmsoException {
         Response response = null;
         List<String> endpoints = new ArrayList<>();
         String url = tmEndpoints.getEndpoint(ep, endpoints);
@@ -525,12 +525,12 @@ public class TmClient {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
                 url = tmEndpoints.getNextEndpoint(ep, endpoints);
                 if (url == null || !tryNextUrl(e)) {
-                    throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
+                    throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                                     scheduleId, e.getMessage());
                 }
             } catch (Exception e) {
                 Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
-                throw new CMSException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
+                throw new CmsoException(Status.INTERNAL_SERVER_ERROR, LogMessages.UNABLE_TO_CREATE_CHANGE_TICKET,
                                 scheduleId, e.getMessage());
             }
         }
