@@ -119,7 +119,7 @@ public class IT_FullIntegrationTest {
         ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = new ArrayList<>();
         String basepath = env.getProperty("base.path", "./");
-        File workdir = new File(basepath + "docker/cmso-service");
+        File workdir = new File(env.getProperty("workdir", "./docker/integration"));
         command.add("/bin/bash");
         command.add("-x");
         command.add(basepath + "ete_test.sh");
