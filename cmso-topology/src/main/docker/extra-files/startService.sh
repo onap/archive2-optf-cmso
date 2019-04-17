@@ -1,11 +1,28 @@
 #!/bin/sh
 
 AUTHENTICATION=${AUTHENTICATION:-proprietary-auth}
-JAVA_TRUSTSTORE=${JAVA_TRUSTSTORE:-etc/config/truststoreONAPall.jks}
 
 VM_ARGS="${VM_ARGS} -Dserver.local.startpath=${RESOURCES_HOME}"
-VM_ARGS="${VM_ARGS} -Djavax.net.ssl.trustStore==${JAVA_TRUSTSTORE}"
 
+if [ "${JAVA_TRUSTSTORE}" != '' ] 
+then
+	VM_ARGS="${VM_ARGS} -Djavax.net.ssl.trustStore=${JAVA_TRUSTSTORE}"
+fi
+
+if [ "${JAVA_TRUSTSTORE_PASSWORD}" != '' ] 
+then
+	VM_ARGS="${VM_ARGS} -Djavax.net.ssl.trustStorePassword=${JAVA_TRUSTSTORE_PASSWORD}"
+fi
+
+if [ "${SSL_KEYSTORE}" != '' ]
+then
+	VM_ARGS="${VM_ARGS} -Dserver.ssl.key-store=${SSL_KEYSTORE}"
+fi
+
+if [ "${SSL_KEYSTORE_PASSWORD}" != '' ]
+then
+	VM_ARGS="${VM_ARGS} -Djavax.net.ssl.keyStorePassword==${SSL_KEYSTORE_PASSWORD}"
+fi
 
 echo "VM_ARGS="${VM_ARGS}
 
