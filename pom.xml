@@ -68,6 +68,7 @@
         <module>cmso-optimizer</module>
         <module>cmso-ticketmgt</module>
         <module>cmso-robot</module>
+		<module>cmso-sonar</module>
     </modules>
 
 	<build> 

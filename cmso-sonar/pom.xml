@@ -28,10 +28,10 @@
 	</parent>
 
 	<groupId>org.onap.optf.cmso</groupId>
-	<artifactId>cmso-robot</artifactId>
+	<artifactId>cmso-sonar</artifactId>
 
-	<name>cmso-robot</name>
-	<description>Robot Framework for testing CMSO  Service</description>
+	<name>cmso-sonar</name>
+	<description>Maven Porject for Running CMSO CSIT for Code Coverage</description>
 
 	<properties>
 		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
@@ -40,9 +40,9 @@
 		<cmso.build.timestamp>${maven.build.timestamp}</cmso.build.timestamp>
 
 		<service.name>cmso-robot</service.name>
-		<release-tag>Casablanca</release-tag>
+		<release-tag>Dublin</release-tag>
 		<name.space>org.onap.optf</name.space>
-		<serviceArtifactName>cmso-robot</serviceArtifactName>
+		<serviceArtifactName>cmso-sonar</serviceArtifactName>
 
 		<build.number>${maven.build.timestamp}</build.number>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -88,55 +88,32 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>io.fabric8</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>0.26.0</version>
-				<configuration>
-					<verbose>true</verbose>
-					<apiVersion>1.23</apiVersion>
-					<images>
-						<image>
-							<name>onap/optf-cmso-robot</name>
-							<alias>onap-optf-cmso-robot</alias>
-							<build>
-								<cleanup>true</cleanup>
-								<tags>
-									<tag>latest</tag>
-									<tag>${project.docker.latesttagtimestamp.version}</tag>
-									<tag>${project.docker.latesttag.version}</tag>
-								</tags>
-								<dockerFile>${project.basedir}/docker/Dockerfile</dockerFile>
-								<assembly>
-									<descriptor>${project.basedir}/docker/assembly/cmso-files.xml</descriptor>
-									<name>onap-cmso</name>
-								</assembly>
-
-							</build>
-						</image>
-					</images>
-				</configuration>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>generate-images</id>
-						<phase>install</phase>
+						<id>post-integration-test1</id>
+						<phase>post-integration-test</phase>
 						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>push-images</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>build</goal>
-							<goal>push</goal>
+							<goal>report</goal>
 						</goals>
 						<configuration>
-							<image>onap/optf-cmso-robot:%l</image>
+							<dataFile>${project.basedir}/target/code-coverage/service.jacoco.exec</dataFile>
+							<outputDirectory>${project.basedir}/target/site/service-it</outputDirectory>
+							<includes>
+								<include>service/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/gen/**</exclude>
+								<exclude>**/generated-sources/**</exclude>
+								<exclude>**/yang-gen/**</exclude>
+								<exclude>**/pax/**</exclude>
+							</excludes>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
-		<finalName>optf-cmso-robot</finalName>
+		<finalName>optf-cmso-sonar</finalName>
 	</build>
 </project>
