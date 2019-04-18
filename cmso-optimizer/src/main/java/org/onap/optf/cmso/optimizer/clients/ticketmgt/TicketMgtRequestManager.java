@@ -21,7 +21,6 @@ package org.onap.optf.cmso.optimizer.clients.ticketmgt;
 
 import java.util.Optional;
 import java.util.UUID;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.clients.ticketmgt.models.ActiveTicketsResponse;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
 import org.onap.optf.cmso.optimizer.model.Request;
@@ -29,6 +28,7 @@ import org.onap.optf.cmso.optimizer.model.Ticket;
 import org.onap.optf.cmso.optimizer.model.Topology;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
 import org.onap.optf.cmso.optimizer.model.dao.TicketDao;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;

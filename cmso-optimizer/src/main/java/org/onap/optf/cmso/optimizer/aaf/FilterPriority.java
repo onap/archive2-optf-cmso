@@ -1,4 +1,4 @@
-/*
+/*******************************************************************************
  * Copyright © 2019 AT&T Intellectual Property.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -22,28 +22,21 @@
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ ******************************************************************************/
 
-package org.onap.observations;
+package org.onap.optf.cmso.optimizer.aaf;
 
-import com.att.eelf.i18n.EELFResolvableErrorEnum;
-import javax.ws.rs.core.Response.Status;
-import org.apache.log4j.Level;
+import org.springframework.core.Ordered;
 
-public interface ObservationInterface extends EELFResolvableErrorEnum {
-    public Enum<?> getValue();
+public enum FilterPriority {
+    AAF_AUTHENTICATION(Ordered.HIGHEST_PRECEDENCE), AAF_AUTHORIZATION(Ordered.HIGHEST_PRECEDENCE + 1);
+    private final int priority;
 
-    public Level getLevel();
+    FilterPriority(final int ppri) {
+        priority = ppri;
+    }
 
-    public String getMessage();
-
-    public Status getStatus();
-
-    public String getDomain();
-
-    public String name();
-
-    public Boolean getAudit();
-
-    public Boolean getMetric();
+    public int getPriority() {
+        return priority;
+    }
 }

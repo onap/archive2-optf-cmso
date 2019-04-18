@@ -24,7 +24,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.optimizer.aaf;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,10 +34,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.onap.aaf.cadi.CadiWrap;
 import org.onap.aaf.cadi.Permission;
-import org.onap.observations.Observation;
-import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.optimizer.SpringProfiles;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
+import org.onap.optf.cmso.optimizer.exceptions.CmsoException;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Profile;

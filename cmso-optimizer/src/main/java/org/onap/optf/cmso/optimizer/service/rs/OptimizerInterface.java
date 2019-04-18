@@ -40,7 +40,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.onap.optf.cmso.common.CmsoRequestError;
+import org.onap.optf.cmso.optimizer.common.CmsoRequestError;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerResponse;
 import org.onap.optf.cmso.optimizer.service.rs.models.PolicyInfo;

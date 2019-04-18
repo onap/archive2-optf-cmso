@@ -28,7 +28,7 @@ package org.onap.optf.cmso.optimizer;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.optimizer.common.PropertiesManagement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.EnvironmentPostProcessor;
 import org.springframework.core.env.ConfigurableEnvironment;

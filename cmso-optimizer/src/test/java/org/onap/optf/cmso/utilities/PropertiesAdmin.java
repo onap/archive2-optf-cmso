@@ -19,7 +19,7 @@
 
 package org.onap.optf.cmso.utilities;
 
-import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.optimizer.common.PropertiesManagement;
 
 /**
  * The Class PropertiesAdmin.

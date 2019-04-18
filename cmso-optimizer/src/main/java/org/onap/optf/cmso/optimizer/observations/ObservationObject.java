@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.observations;
+package org.onap.optf.cmso.optimizer.observations;
 
 import com.att.eelf.i18n.EELFResolvableErrorEnum;
 import com.att.eelf.i18n.EELFResourceManager;

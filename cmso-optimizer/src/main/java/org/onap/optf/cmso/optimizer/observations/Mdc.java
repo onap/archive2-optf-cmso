@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.observations;
+package org.onap.optf.cmso.optimizer.observations;
 
 import static com.att.eelf.configuration.Configuration.MDC_BEGIN_TIMESTAMP;
 import static com.att.eelf.configuration.Configuration.MDC_END_TIMESTAMP;
@@ -49,7 +49,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.StatusType;
-import org.onap.observations.MessageHeaders.HeadersEnum;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders.HeadersEnum;
 import org.slf4j.MDC;
 
 /**

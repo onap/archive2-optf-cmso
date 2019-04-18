@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright © 2019 AT&T Intellectual Property.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -22,24 +22,28 @@
  * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the License for the specific language governing permissions and
  * limitations under the License.
- ******************************************************************************/
+ */
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.optimizer.observations;
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.onap.optf.cmso.common.exceptions.CmsoException;
+import com.att.eelf.i18n.EELFResolvableErrorEnum;
+import javax.ws.rs.core.Response.Status;
+import org.apache.log4j.Level;
 
-class ResponseFormatter {
+public interface ObservationInterface extends EELFResolvableErrorEnum {
+    public Enum<?> getValue();
 
+    public Level getLevel();
 
-    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CmsoException error)
-                    throws IOException {
-        response.setStatus(error.getStatus().getStatusCode());
-        response.getWriter().write(error.getRequestError().toString());
-        response.getWriter().flush();
-        response.getWriter().close();
-    }
+    public String getMessage();
 
+    public Status getStatus();
+
+    public String getDomain();
+
+    public String name();
+
+    public Boolean getAudit();
+
+    public Boolean getMetric();
 }

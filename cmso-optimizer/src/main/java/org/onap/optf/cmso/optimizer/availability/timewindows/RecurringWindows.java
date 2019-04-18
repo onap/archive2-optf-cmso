@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Set;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.availability.policies.model.AllowedPeriodicTime;
 import org.onap.optf.cmso.optimizer.availability.policies.model.TimeLimitAndVerticalTopology;
 import org.onap.optf.cmso.optimizer.availability.policies.model.TimeRange;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 
 /**
