@@ -22,7 +22,6 @@ package org.onap.optf.cmso.optimizer.clients.optimizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Optional;
 import java.util.UUID;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerEngineResponse;
 import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerEngineResponse.OptimizerEngineResponseStatus;
 import org.onap.optf.cmso.optimizer.clients.optimizer.models.OptimizerResults;
@@ -36,6 +35,7 @@ import org.onap.optf.cmso.optimizer.model.Response;
 import org.onap.optf.cmso.optimizer.model.dao.OptimizerDao;
 import org.onap.optf.cmso.optimizer.model.dao.RequestDao;
 import org.onap.optf.cmso.optimizer.model.dao.ResponseDao;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerResponse;
 import org.onap.optf.cmso.optimizer.service.rs.models.OptimizerResponse.OptimizeScheduleStatus;
@@ -76,7 +76,7 @@ public class OptimizerRequestManager {
      */
     public OptimizerEngineResponse createOptimizerRequest(Request requestRow) {
         //
-        if (okToDispatch(false)) {
+        if (okToDispatch()) {
             Optimizer optimizer = getExistingOptmizer(requestRow.getUuid());
             if (optimizer == null) {
                 optimizer = new Optimizer();
@@ -146,14 +146,12 @@ public class OptimizerRequestManager {
 
 
 
-    private boolean okToDispatch(boolean checkDispatchability) {
-        if (checkDispatchability) {
+    private boolean okToDispatch() {
+        if (env.getProperty("ok.to.dispatch.check", Boolean.class, true)) {
             // not yet implemented
-            return false;
-        }
-        else {
             return true;
         }
+        return false;
     }
 
 

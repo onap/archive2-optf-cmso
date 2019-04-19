@@ -23,7 +23,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +55,7 @@ public class RecurringWindowsTest {
 
     @Test
     public void getAvailabilityWindowsForPolicies() {
-        getAvailabilityWindowsForPolicy("AllDayEveryDay", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 5);
+        getAvailabilityWindowsForPolicy("AllDayEveryDay", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 1);
         getAvailabilityWindowsForPolicy("Weekday_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 3);
         getAvailabilityWindowsForPolicy("EveryDay_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 5);
         getAvailabilityWindowsForPolicy("Weekend_00_06", "2019-03-08T00:00:00.00Z", "2019-03-12T00:00:00.00Z", 3);

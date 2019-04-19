@@ -5,7 +5,7 @@ services:
     image: mariadb:10.1.11
     volumes:
       - "/var/lib/mysql"
-      - "../mariadb/conf1:/etc/mysql/conf.d:ro"
+      - "./mariadb/conf1:/etc/mysql/conf.d:ro"
     environment:
       - MYSQL_ROOT_PASSWORD=beer
     ports:
@@ -20,6 +20,7 @@ services:
       - mariadb
     environment: 
       - DB_HOST=mariadb
+      - DB_PORT=3306
     entrypoint: "bash -x /share/etc/startDbinitService.sh"
 
   db-init-opt:
@@ -31,6 +32,7 @@ services:
       - mariadb
     environment: 
       - DB_HOST=mariadb
+      - DB_PORT=3306
     entrypoint: "bash -x /share/etc/startDbinitService.sh"
 
 
@@ -47,6 +49,7 @@ services:
       - "8080:8080"
     environment: 
       - DB_HOST=mariadb
+      - DB_PORT=3306
       - OPTIMIZER_URL=http://cmso-optimizer:7997/optimizer/v1/optimize/schedule
       - OPTIMIZER_HEALTH_URL=http://cmso-optimizer:7997/optimizer/v1/health?checkInterfaces=true
 
@@ -83,6 +86,7 @@ services:
       - "7997:7997"
     environment: 
       - DB_HOST=mariadb
+      - DB_PORT=3306
       - TOPOLOGY_HOST=cmso-topology
       - TICKETMGT_HOST=cmso-ticketmgt
 
@@ -96,7 +100,7 @@ services:
     environment:
       - GLOBAL_SCHEDULER_URL=http://cmso-service:8080
       - GLOBAL_OPTIMIZER_URL=http://cmso-optimizer:7997
-      - CMSO_STARTUP_WAIT_TIME=600s
+      - CMSO_STARTUP_WAIT_TIME=20m
       - TAGS=-i ete
       - OUTPUT=-d /share
     working_dir: /opt/cmso-robot  

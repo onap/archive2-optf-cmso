@@ -140,7 +140,7 @@ public class ChangeWindow implements Serializable {
         Instant startInstant = startTime.toInstant();
         Instant endInstant = endTime.toInstant();
         Instant testStart = test.getStartTime().toInstant().plusMillis(startTimeZoneOffset);;
-        Instant testEnd = test.getEndTime().toInstant().plusMillis(startTimeZoneOffset);;
+        Instant testEnd = test.getEndTime().toInstant().plusMillis(endTimeZoneOffset);;
         if (!testStart.isBefore(startInstant)
                         && !testEnd.isAfter(endInstant)) {
             return true;
