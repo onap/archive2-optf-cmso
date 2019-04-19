@@ -24,19 +24,22 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.optimizer.aaf;
 
-import org.springframework.core.Ordered;
+import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.onap.optf.cmso.optimizer.exceptions.CmsoException;
 
-public enum FilterPriority {
-    AAF_AUTHENTICATION(Ordered.HIGHEST_PRECEDENCE), AAF_AUTHORIZATION(Ordered.HIGHEST_PRECEDENCE + 1);
-    private final int priority;
+class ResponseFormatter {
 
-    FilterPriority(final int ppri) {
-        priority = ppri;
+
+    static void errorResponse(HttpServletRequest request, HttpServletResponse response, CmsoException error)
+                    throws IOException {
+        response.setStatus(error.getStatus().getStatusCode());
+        response.getWriter().write(error.getRequestError().toString());
+        response.getWriter().flush();
+        response.getWriter().close();
     }
 
-    public int getPriority() {
-        return priority;
-    }
 }

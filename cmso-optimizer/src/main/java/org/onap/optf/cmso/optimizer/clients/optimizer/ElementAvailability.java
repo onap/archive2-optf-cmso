@@ -122,6 +122,7 @@ public class ElementAvailability extends ElementWindowMapping {
         if (optimizerRequest.getAdditionalDuration() != null) {
             duration += optimizerRequest.getAdditionalDuration();
         }
+        duration = duration * 1000;
         for (String elementId : nodeInfo.keySet()) {
 
             TopologyElementInfo info = nodeInfo.get(elementId);

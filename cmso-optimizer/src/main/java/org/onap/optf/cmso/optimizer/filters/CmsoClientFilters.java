@@ -27,18 +27,17 @@
 package org.onap.optf.cmso.optimizer.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
-
 import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.client.ClientResponseContext;
 import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.core.MultivaluedMap;
-import org.onap.observations.Mdc;
-import org.onap.observations.MessageHeaders;
-import org.onap.observations.MessageHeaders.HeadersEnum;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
+import org.onap.optf.cmso.optimizer.observations.Mdc;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders.HeadersEnum;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
