@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.optf.cmso.common;
+package org.onap.optf.cmso.optimizer.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
