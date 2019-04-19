@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.optimizer.aaf;
 
 import org.onap.optf.cmso.optimizer.SpringProfiles;
 import org.springframework.context.annotation.ComponentScan;
