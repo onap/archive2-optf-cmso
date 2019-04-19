@@ -24,7 +24,7 @@
  * limitations under the License.
  */
 
-package org.onap.observations;
+package org.onap.optf.cmso.optimizer.observations;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -65,7 +65,7 @@ public class MessageHeaders {
     }
 
     /** The Constant supportedMajorVersions. */
-    private static final Map<String, String> supportedMajorVersions = new HashMap<String, String>();
+    public static final Map<String, String> supportedMajorVersions = new HashMap<String, String>();
 
     static {
         supportedMajorVersions.put("v1", "0");
@@ -73,7 +73,7 @@ public class MessageHeaders {
     }
 
     /** The Constant supportedMajorMinorVersions. */
-    private static final Set<String> supportedMajorMinorVersions = new HashSet<String>();
+    public static final Set<String> supportedMajorMinorVersions = new HashSet<String>();
 
     static {
         supportedMajorMinorVersions.add("v1.0");
@@ -81,10 +81,10 @@ public class MessageHeaders {
     }
 
     /** The Constant latestVersion. */
-    private static final String latestVersion = "2.0.0";
+    public static final String latestVersion = "2.0.0";
 
     /** The Constant patchVersion. */
-    private static final String patchVersion = "0";
+    public static final String patchVersion = "0";
 
     /**
      * From string.
@@ -119,6 +119,14 @@ public class MessageHeaders {
         return latestVersion;
     }
 
+    public static Map<String, String> getSupportedmajorversions() {
+        return supportedMajorVersions;
+    }
+
+    public static Set<String> getSupportedmajorminorversions() {
+        return supportedMajorMinorVersions;
+    }
+
     /**
      * Validate major version.
      *
@@ -151,21 +159,5 @@ public class MessageHeaders {
             return supportedMajorMinorVersions.contains(majorMinorKey);
         }
         return true;
-    }
-
-    public static Map<String, String> getSupportedmajorversions() {
-        return supportedMajorVersions;
-    }
-
-    public static Set<String> getSupportedmajorminorversions() {
-        return supportedMajorMinorVersions;
-    }
-
-    public static String getLatestversion() {
-        return latestVersion;
-    }
-
-    public static String getPatchversion() {
-        return patchVersion;
     }
 }

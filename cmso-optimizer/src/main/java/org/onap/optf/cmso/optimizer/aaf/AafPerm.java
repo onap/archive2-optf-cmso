@@ -24,7 +24,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package org.onap.optf.cmso.aaf;
+package org.onap.optf.cmso.optimizer.aaf;
 
 import java.util.HashSet;
 import java.util.Set;

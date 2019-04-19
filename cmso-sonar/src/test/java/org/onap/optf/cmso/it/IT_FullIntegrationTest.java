@@ -48,12 +48,34 @@ public class IT_FullIntegrationTest {
             System.out.println("stderr=" + stderr);
             copyJacocoFiles();
             copyClassFiles();
+            copyForSonar();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             if (process.isAlive()) {
                 process.destroyForcibly();
             }
+        }
+    }
+
+    private void copyForSonar() throws IOException {
+        String[] jacocoFiles = env.getProperty("copy.jacoco.for.sonar").split(",");
+        for (String jacocoFile : jacocoFiles) {
+            String[] parts = jacocoFile.split("\\|");
+            if (parts.length == 2) {
+                File source = new File(parts[0]);
+                File dest = new File(parts[1]);
+                if (source.exists() && source.isFile() && dest.getParentFile().isDirectory()) {
+                    Path srcFile = Paths.get(source.getAbsolutePath());
+                    Path dstFile = Paths.get(dest.getAbsolutePath());
+                    Files.copy(srcFile, dstFile, StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    System.out.println("Skipping " + jacocoFile);
+                }
+            } else {
+                System.out.println("Skipping " + jacocoFile);
+            }
+
         }
     }
 

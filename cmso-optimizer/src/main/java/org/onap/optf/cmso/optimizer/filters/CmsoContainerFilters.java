@@ -40,11 +40,11 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.ext.Provider;
-import org.onap.observations.Mdc;
-import org.onap.observations.MessageHeaders;
-import org.onap.observations.MessageHeaders.HeadersEnum;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
+import org.onap.optf.cmso.optimizer.observations.Mdc;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders.HeadersEnum;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.springframework.stereotype.Component;
 
 @Priority(1)
@@ -68,8 +68,8 @@ public class CmsoContainerFilters implements ContainerRequestFilter, ContainerRe
             MultivaluedMap<String, Object> respHeaders = responseContext.getHeaders();
             String minorVersion = reqHeaders.getFirst(HeadersEnum.MinorVersion.toString());
             respHeaders.add(HeadersEnum.MinorVersion.toString(), minorVersion);
-            respHeaders.add(HeadersEnum.LatestVersion.toString(), MessageHeaders.getLatestversion());
-            respHeaders.add(HeadersEnum.PatchVersion.toString(), MessageHeaders.getPatchversion());
+            respHeaders.add(HeadersEnum.LatestVersion.toString(), MessageHeaders.getLatestVersion());
+            respHeaders.add(HeadersEnum.PatchVersion.toString(), MessageHeaders.getPatchVersion());
 
         } catch (Exception e) {
             if (e instanceof WebApplicationException) {

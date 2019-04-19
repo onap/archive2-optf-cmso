@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.optimizer.common.PropertiesManagement;
 import org.springframework.stereotype.Controller;
 
 @Controller

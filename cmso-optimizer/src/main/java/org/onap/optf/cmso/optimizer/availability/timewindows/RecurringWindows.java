@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Set;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.onap.observations.Observation;
 import org.onap.optf.cmso.optimizer.availability.policies.model.AllowedPeriodicTime;
 import org.onap.optf.cmso.optimizer.availability.policies.model.TimeLimitAndVerticalTopology;
 import org.onap.optf.cmso.optimizer.availability.policies.model.TimeRange;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
+import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.onap.optf.cmso.optimizer.service.rs.models.ChangeWindow;
 
 /**
@@ -128,7 +128,7 @@ public class RecurringWindows {
             if (ranges.size() == 0) {
                 TimeRange range = new TimeRange();
                 range.setStartTime("00:00:00+00:00");
-                range.setEndTime("23:59:59+00:00");
+                range.setEndTime("24:00:00+00:00");
                 ranges.add(range);
             }
             StringBuilder rdata = new StringBuilder();
@@ -204,6 +204,11 @@ public class RecurringWindows {
     private static Instant getInstanceFromTime(String timeIn, Instant cwStartInstant) {
         Instant instant = null;
         Instant date = cwStartInstant.truncatedTo(ChronoUnit.DAYS);
+        // Handle ending midnight
+        if (timeIn.startsWith("24:00:00")) {
+            timeIn = "00:00:00+00:00";
+            date = date.plus(1, ChronoUnit.DAYS);
+        }
         LocalDate epoch = LocalDate.ofEpochDay(0);
         try {
             OffsetTime offset = OffsetTime.parse(timeIn);
