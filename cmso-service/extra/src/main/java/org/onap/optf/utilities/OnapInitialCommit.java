@@ -1,4 +1,4 @@
-/*******************************************************************************
+/*
  * Copyright 2019 AT&T Intellectual Property.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not

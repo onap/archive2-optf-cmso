@@ -27,7 +27,7 @@
 		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>org.onap.optf.cmso</groupId>
+	<groupId>org.onap.optf.cmso.sonar</groupId>
 	<artifactId>cmso-sonar</artifactId>
 
 	<name>cmso-sonar</name>
@@ -91,6 +91,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
+					<testSourceDirectory>${project.basedir}/src/it/java</testSourceDirectory>
 					<skipITs>${skipIntegrationTests}</skipITs>
 				</configuration>
 			</plugin>

@@ -381,7 +381,7 @@ public class CmsoOptimizerClient {
     /**
      * Health check.
      *
-     * @return
+     * @return - health check component status
      */
     public HealthCheckComponent healthCheck() {
         Map<String, String> mdcSave = Mdc.save();

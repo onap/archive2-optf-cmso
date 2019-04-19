@@ -27,6 +27,7 @@
 package org.onap.optf.cmso.optimizer.filters;
 
 import static com.att.eelf.configuration.Configuration.MDC_KEY_REQUEST_ID;
+
 import java.io.IOException;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;

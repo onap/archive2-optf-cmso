@@ -24,18 +24,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-public class IT_FullIntegrationTest {
+public class ItFullIntegrationTest {
 
     private Properties env = new Properties();
 
     @Test
     public void runTest() throws IOException {
-        InputStream is = new FileInputStream(new File("src/test/resources/integration.properties"));
+        InputStream is = new FileInputStream(new File("src/it/resources/integration.properties"));
         env.load(is);
         Process process = null;
         try {
@@ -121,13 +120,14 @@ public class IT_FullIntegrationTest {
         try {
             Files.walk(src).forEach(s -> {
                 try {
-                    Path d = dest.resolve(src.relativize(s));
+                    Path dpath = dest.resolve(src.relativize(s));
                     if (Files.isDirectory(s)) {
-                        if (!Files.exists(d))
-                            Files.createDirectory(d);
+                        if (!Files.exists(dpath)) {
+                            Files.createDirectory(dpath);
+                        }
                         return;
                     }
-                    Files.copy(s, d);
+                    Files.copy(s, dpath);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,14 +138,13 @@ public class IT_FullIntegrationTest {
     }
 
     private ProcessBuilder buildCommand() {
-        ProcessBuilder processBuilder = new ProcessBuilder();
         List<String> command = new ArrayList<>();
         String basepath = env.getProperty("base.path", "./");
-        File workdir = new File(env.getProperty("workdir", "./docker/integration"));
         command.add("/bin/bash");
         command.add("-x");
         command.add(basepath + "ete_test.sh");
-        Map<String, String> environment = processBuilder.environment();
+        File workdir = new File(env.getProperty("workdir", "./docker/integration"));
+        ProcessBuilder processBuilder = new ProcessBuilder();
         processBuilder.directory(workdir);
         processBuilder.command(command);
         return processBuilder;
