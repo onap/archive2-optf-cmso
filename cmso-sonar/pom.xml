@@ -88,10 +88,20 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/It*.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<configuration>
-					<testSourceDirectory>${project.basedir}/src/it/java</testSourceDirectory>
+					<includes>
+						<include>**/It*.java</include>
+					</includes>
 					<skipITs>${skipIntegrationTests}</skipITs>
 				</configuration>
 			</plugin>

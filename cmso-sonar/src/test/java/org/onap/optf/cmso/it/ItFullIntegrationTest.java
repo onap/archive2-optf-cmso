@@ -34,7 +34,7 @@ public class ItFullIntegrationTest {
 
     @Test
     public void runTest() throws IOException {
-        InputStream is = new FileInputStream(new File("src/it/resources/integration.properties"));
+        InputStream is = new FileInputStream(new File("src/test/resources/integration.properties"));
         env.load(is);
         Process process = null;
         try {
