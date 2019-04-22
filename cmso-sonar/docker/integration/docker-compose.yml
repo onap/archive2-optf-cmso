@@ -101,7 +101,7 @@ services:
       - GLOBAL_SCHEDULER_URL=http://cmso-service:8080
       - GLOBAL_OPTIMIZER_URL=http://cmso-optimizer:7997
       - CMSO_STARTUP_WAIT_TIME=20m
-      - TAGS=-i ete
+      - TAGS=-i ete -i opt_validation
       - OUTPUT=-d /share
     working_dir: /opt/cmso-robot  
     entrypoint: "bash -x /opt/cmso-robot/ete.sh"
