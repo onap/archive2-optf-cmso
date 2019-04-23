@@ -46,6 +46,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.DomainsEnum;
 import org.onap.optf.cmso.common.LogMessages;
@@ -244,8 +245,8 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
             if (vdm.getChangeWindow() != null) {
                 for (ChangeWindowMessage cwm : vdm.getChangeWindow()) {
                     ChangeWindow cw = new ChangeWindow();
-                    DateTime start = CmsoOptimizerCallbackImpl.convertIsoDate(cwm.getStartTime(), "startTime");
-                    DateTime end = CmsoOptimizerCallbackImpl.convertIsoDate(cwm.getEndTime(), "endTime");
+                    DateTime start = convertIsoDate(cwm.getStartTime(), "startTime");
+                    DateTime end = convertIsoDate(cwm.getEndTime(), "endTime");
                     cw.setStartTime(start.toDate());
                     cw.setEndTime(end.toDate());
                     windows.add(cw);
@@ -457,4 +458,24 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
         }
         return msg;
     }
+    /**
+     * Convert ISO date.
+     *
+     * @param utcDate the utc date
+     * @param attrName the attr name
+     * @return the date time
+     * @throws CmsoException the CMS exception
+     */
+    public static DateTime convertIsoDate(String utcDate, String attrName) throws CmsoException {
+        try {
+            DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
+            if (dateTime != null) {
+                return dateTime;
+            }
+        } catch (Exception e) {
+            debug.debug(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+        }
+        throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_ATTRIBUTE, attrName, utcDate);
+    }
+
 }

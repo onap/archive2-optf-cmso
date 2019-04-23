@@ -83,3 +83,16 @@ Get Scheduler
     ${valid}=   Split String   ${valid_status_codes}
     Validate Status   ${resp}   ${valid}
     [Return]    ${resp}
+
+Get Scheduler Plain Text
+    [Documentation]    Runs a scheduler GET request
+    [Arguments]    ${alias}   ${data_path} 
+    ${url}=   Catenate   ${GLOBAL_SCHEDULER_URL}
+    ${uuid}=    Generate UUID
+    ${proxies}=   Create Dictionary   no=pass
+    ${session}=    Create Session 	${alias}   ${url}     
+    ${auth_string}=   B64 Encode    ${GLOBAL_SCHEDULER_USER}:${GLOBAL_SCHEDULER_PASSWORD}
+    ${headers}=  Create Dictionary   Accept=text/plain    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}
+    ${resp}= 	Get Request 	${alias} 	${data_path}     headers=${headers}
+    Log    Received response from scheduler ${resp.text}
+    [Return]    ${resp}

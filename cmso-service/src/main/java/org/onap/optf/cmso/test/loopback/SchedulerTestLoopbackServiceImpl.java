@@ -42,6 +42,7 @@ import org.joda.time.DateTime;
 import org.onap.observations.Observation;
 import org.onap.optf.cmso.common.LogMessages;
 import org.onap.optf.cmso.common.PropertiesManagement;
+import org.onap.optf.cmso.common.exceptions.CmsoException;
 import org.onap.optf.cmso.optimizer.model.OptimizerElementInfo;
 import org.onap.optf.cmso.optimizer.model.OptimizerRequest;
 import org.onap.optf.cmso.optimizer.model.OptimizerResponse;
@@ -49,7 +50,6 @@ import org.onap.optf.cmso.optimizer.model.OptimizerScheduleInfo;
 import org.onap.optf.cmso.optimizer.model.ScheduledElement;
 import org.onap.optf.cmso.optimizer.model.ScheduledElement.ScheduleType;
 import org.onap.optf.cmso.optimizer.model.UnScheduledElement;
-import org.onap.optf.cmso.service.rs.CmsoOptimizerCallbackImpl;
 import org.onap.optf.cmso.service.rs.models.v2.ChangeWindow;
 import org.onap.optf.cmso.wf.bean.WfCmResponse200;
 import org.onap.optf.cmso.wf.bean.WfMsoRequestReferences;
@@ -129,13 +129,12 @@ public class SchedulerTestLoopbackServiceImpl implements SchedulerTestLoopbackSe
             serialized = (serialized * totalDuration);
         }
         DateTime latestInstanceStartTime = startTime.plus(serialized);
-        DateTime finishTime = latestInstanceStartTime.plus(totalDuration);
         // Reformat request into a response setting the groups start finish
         // time based upon
 
         Map<String, Map<String, Long>> startAndFinishTimeMap = new HashMap<String, Map<String, Long>>();
         try {
-            CmsoOptimizerCallbackImpl.makeMap(startTime.getMillis(), latestInstanceStartTime.getMillis(),
+            makeMap(startTime.getMillis(), latestInstanceStartTime.getMillis(),
                             concurrencyLimit, totalDuration, nodeList, startAndFinishTimeMap);
             for (String node : nodes.keySet()) {
                 Map<String, Long> map = startAndFinishTimeMap.get(node);
@@ -197,5 +196,43 @@ public class SchedulerTestLoopbackServiceImpl implements SchedulerTestLoopbackSe
         return Response.ok().entity(response).build();
     }
 
+    /**
+     * Make map.
+     *
+     * @param startTime the start time
+     * @param latestInstanceStartTime the latest instance start time
+     * @param concurrencyLimit the concurrency limit
+     * @param totalDuration the total duration
+     * @param nodeList the node list
+     * @param startAndFinishTimeMap the start and finish time map
+     * @throws CmsoException the CMS exception
+     */
+    public static void makeMap(Long startTime, Long latestInstanceStartTime, int concurrencyLimit, long totalDuration,
+            List<String> nodeList, Map<String, Map<String, Long>> startAndFinishTimeMap) throws CmsoException {
+        Long nextStartTime = null;
+        Long nextFinishTime = null;
+        for (int nodeNumber = 0; nodeNumber < nodeList.size(); nodeNumber++) {
+            if (nodeNumber % concurrencyLimit == 0) {
+                if (nodeNumber == 0) {
+                    nextStartTime = startTime;
+                }
+                else {
+                    nextStartTime = nextStartTime + totalDuration;
+                }
+                if (nextStartTime > latestInstanceStartTime) {
+                    throw new CmsoException(Status.BAD_REQUEST, LogMessages.UNABLE_TO_ALLOCATE_VNF_TIMESLOTS,
+                            startTime.toString(), latestInstanceStartTime.toString(), String.valueOf(totalDuration),
+                            String.valueOf(concurrencyLimit), String.valueOf(nodeList.size()));
+                }
+                nextFinishTime = nextStartTime + totalDuration;
+            }
+            Map<String, Long> map = new HashMap<String, Long>();
+            map.put("startTime", nextStartTime);
+            map.put("finishTime", nextFinishTime);
+            String node = nodeList.get(nodeNumber);
+            startAndFinishTimeMap.put(node, map);
+        }
+
+    }
 
 }

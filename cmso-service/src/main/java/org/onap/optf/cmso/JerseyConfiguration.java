@@ -47,7 +47,6 @@ import org.glassfish.jersey.servlet.ServletProperties;
 import org.onap.optf.cmso.dispatcher.rs.DispatcherServiceImpl;
 import org.onap.optf.cmso.filters.CmsoContainerFilters;
 import org.onap.optf.cmso.service.rs.AdminToolImpl;
-import org.onap.optf.cmso.service.rs.CmsoOptimizerCallbackImpl;
 import org.onap.optf.cmso.service.rs.CmsoServiceImpl;
 import org.onap.optf.cmso.service.rs.HealthCheckImpl;
 import org.onap.optf.cmso.test.loopback.SchedulerTestLoopbackServiceImpl;
@@ -84,7 +83,6 @@ public class JerseyConfiguration extends ResourceConfig {
     @Autowired
     public JerseyConfiguration( /* LogRequestFilter lrf */ ) {
         register(CmsoServiceImpl.class);
-        register(CmsoOptimizerCallbackImpl.class);
         register(SchedulerTestLoopbackServiceImpl.class);
         register(TicketMgtLoopbackServiceImpl.class);
         register(HealthCheckImpl.class);

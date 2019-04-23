@@ -9,65 +9,64 @@ Library           String
 Resource   misc.robot
 *** Variables ***
 *** Variables ***
-${OPTIMIZER_PATH}    /optimizer/v1
-${valid_status_codes}    200    202    400    404    204    409
+${TOPOLOGY_PATH}    /topology/v1
 #**************** Test Case Variables ******************
 
 *** Keywords ***
 
 
-Post Optimizer
+Post Topology
     [Documentation]    Runs a scheduler POST request
     [Arguments]    ${alias}    ${resource}   ${data}={}
-    ${data_path}=   Catenate   ${OPTIMIZER_PATH}/${resource}
-    ${url}=   Catenate   ${GLOBAL_OPTIMIZER_URL}
+    ${data_path}=   Catenate   ${TOPOLOGY_PATH}/${resource}
+    ${url}=   Catenate   ${GLOBAL_TOPOLOGY_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}   
-    ${auth_string}=   B64 Encode     ${GLOBAL_OPTIMIZER_USER}:${GLOBAL_OPTIMIZER_PASSWORD}
+    ${auth_string}=   B64 Encode     ${GLOBAL_TOPOLOGY_USER}:${GLOBAL_TOPOLOGY_PASSWORD}
     ${headers}=  Create Dictionary   Accept=application/json    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}   Authorization=Basic ${auth_string}
     ${resp}= 	Post Request 	${alias} 	${data_path}     headers=${headers}   data=${data}
     Log    Received response from scheduler ${resp.text}
     [Return]    ${resp}
 
-Delete Optimizer
+Delete Topology
     [Documentation]    Runs a scheduler DELETE request (this may need to be changed for 1802 US change Delete schedule to Cancel Schedule)
     [Arguments]    ${alias}    ${resource}
-    ${data_path}=   Catenate   ${OPTIMIZER_PATH}/${resource}
-    ${url}=   Catenate   ${GLOBAL_OPTIMIZER_URL}
+    ${data_path}=   Catenate   ${TOPOLOGY_PATH}/${resource}
+    ${url}=   Catenate   ${GLOBAL_TOPOLOGY_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}     
-    ${auth_string}=   B64 Encode    ${GLOBAL_OPTIMIZER_USER}:${GLOBAL_OPTIMIZER_PASSWORD}
+    ${auth_string}=   B64 Encode    ${GLOBAL_TOPOLOGY_USER}:${GLOBAL_TOPOLOGY_PASSWORD}
     ${headers}=  Create Dictionary   Accept=application/json    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}  
     ${resp}= 	Delete Request 	${alias} 	${data_path}     headers=${headers}
     Log    Received response from scheduler ${resp.text}
     [Return]   ${resp}   
 
-Get Optimizer
+Get Topology
     [Documentation]    Runs a scheduler GET request
-    [Arguments]    ${alias}    ${resource}    ${accept}=application/json
-    ${data_path}=   Catenate   ${OPTIMIZER_PATH}/${resource} 
-    ${url}=   Catenate   ${GLOBAL_OPTIMIZER_URL}
+    [Arguments]    ${alias}    ${resource}  
+    ${data_path}=   Catenate   ${TOPOLOGY_PATH}/${resource} 
+    ${url}=   Catenate   ${GLOBAL_TOPOLOGY_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}     
-    ${auth_string}=   B64 Encode    ${GLOBAL_OPTIMIZER_USER}:${GLOBAL_OPTIMIZER_PASSWORD}
-    ${headers}=  Create Dictionary   Accept=${accept}    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}
+    ${auth_string}=   B64 Encode    ${GLOBAL_TOPOLOGY_USER}:${GLOBAL_TOPOLOGY_PASSWORD}
+    ${headers}=  Create Dictionary   Accept=application/json    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}
     ${resp}= 	Get Request 	${alias} 	${data_path}     headers=${headers}
     Log    Received response from scheduler ${resp.json()}
     [Return]   ${resp}    
 
-Get Optimizer Plain Text
+Get Topology Plain Text
     [Documentation]    Runs a scheduler GET request
-    [Arguments]    ${alias}    ${resource}    ${accept}=text/plain
-    ${data_path}=   Catenate   ${OPTIMIZER_PATH}/${resource} 
-    ${url}=   Catenate   ${GLOBAL_OPTIMIZER_URL}
+    [Arguments]    ${alias}    ${resource}  
+    ${data_path}=   Catenate   ${TOPOLOGY_PATH}/${resource} 
+    ${url}=   Catenate   ${GLOBAL_TOPOLOGY_URL}
     ${uuid}=    Generate UUID
     ${proxies}=   Create Dictionary   no=pass
     ${session}=    Create Session 	${alias}   ${url}     
-    ${auth_string}=   B64 Encode    ${GLOBAL_OPTIMIZER_USER}:${GLOBAL_OPTIMIZER_PASSWORD}
-    ${headers}=  Create Dictionary   Accept=${accept}    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}
+    ${auth_string}=   B64 Encode    ${GLOBAL_TOPOLOGY_USER}:${GLOBAL_TOPOLOGY_PASSWORD}
+    ${headers}=  Create Dictionary   Accept=text/plain    Content-Type=application/json    X-TransactionId=${GLOBAL_APPLICATION_ID}-${uuid}    X-FromAppId=${GLOBAL_APPLICATION_ID}      Authorization=Basic ${auth_string}
     ${resp}= 	Get Request 	${alias} 	${data_path}     headers=${headers}
     Log    Received response from scheduler ${resp.text}
     [Return]   ${resp}    
