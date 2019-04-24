@@ -33,10 +33,10 @@ package org.onap.optf.cmso.common;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -105,7 +105,7 @@ public class PropertiesManagement {
             Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
             byte[] encrypted = cipher.doFinal(value.getBytes());
-            return Base64.encodeBase64String(encrypted);
+            return Base64.getEncoder().encodeToString(encrypted);
         } catch (Exception ex) {
             errors.error("Unexpected exception {0}", ex.getMessage());
             debug.debug("Unexpected exception", ex);
@@ -120,7 +120,7 @@ public class PropertiesManagement {
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            byte[] original = cipher.doFinal(Base64.decodeBase64(encrypted));
+            byte[] original = cipher.doFinal(Base64.getDecoder().decode(encrypted));
             return new String(original);
         } catch (Exception ex) {
             errors.error("Unexpected exception {0}", ex.getMessage());
