@@ -13,7 +13,9 @@ pip install --no-cache-dir --target="$path/library" \
 	 'selenium' \
 	 'robotframework-seleniumlibrary' \
 	 'robotframework-sshlibrary' \
-	 'paramiko'  
+	 'paramiko'  \
+	 'flask' \
+	 'requests'
 #
 # Get the appropriate chromedriver. Default to linux64
 #
