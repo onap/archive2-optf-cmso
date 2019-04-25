@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Test specialized DB failover scenarios (not part of ete)
 
 Library   StringTemplater
 Library   UUID

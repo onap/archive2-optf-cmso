@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verify CMSO schedule cancel.
 
 Library   StringTemplater
 Library   UUID

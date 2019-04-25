@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Change Management Validation Testing
 
 Library   StringTemplater
 Library   UUID

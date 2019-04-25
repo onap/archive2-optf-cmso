@@ -35,6 +35,13 @@
 		</fileSet>
 		<fileSet>
 			<includes>
+				<include>**</include>
+			</includes>
+			<directory>${project.basedir}/mocking</directory>
+			<outputDirectory>/mocking</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<includes>
 				<include>ete.sh</include>
 				<include>server.py</include>
 			</includes>

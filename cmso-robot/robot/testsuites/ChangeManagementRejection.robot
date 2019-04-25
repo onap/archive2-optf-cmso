@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verifies rejection of optimized schedules
 
 Library   StringTemplater
 Library   UUID

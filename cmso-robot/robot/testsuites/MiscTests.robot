@@ -60,3 +60,28 @@ Test CMSO Topology Health
     ${response}=    Get Topology   alias    health
     Dictionary Should Contain Item   ${response.json()}   healthy  True 
     
+Test CMSO Optimizer Policies
+    [Tags]   ete   
+    ${response}=    Get Optimizer   alias  policies   
+    ##Should Contain   ${response.json()}   kECFDaLusYNHTN6Q4DmsYw==
+
+Test CMSO Optimizer Get Schedule
+    [Tags]   ete   
+    ${response}=    Get Optimizer   alias  optimize/schedule/id1   
+    ##Should Contain   ${response.json()}   kECFDaLusYNHTN6Q4DmsYw==
+
+Test CMSO Optimizer Delete Schedule
+    [Tags]   ete   
+    ${response}=    Delete Optimizer   alias  optimize/schedule/id1   
+    ##Should Contain   ${response.json()}   kECFDaLusYNHTN6Q4DmsYw==
+
+
+Test CMSO Ticket Mgt Get Tickets
+    [Tags]   ete 
+    ${response}=    Get Ticket Mgt   alias    tickets
+    ##Dictionary Should Contain Item   ${response.json()}   healthy  True 
+
+Test CMSO Ticket Mgt Get Ticket
+    [Tags]   ete 
+    ${response}=    Get Ticket Mgt   alias    ticket/none
+    ##Dictionary Should Contain Item   ${response.json()}   healthy  True 

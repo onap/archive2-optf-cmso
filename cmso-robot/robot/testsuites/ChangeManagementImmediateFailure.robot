@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verifies immediate request failures
 
 Library   StringTemplater
 Library   UUID

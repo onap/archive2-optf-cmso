@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verifies log output (Not part of ETE)
 
 Library   StringTemplater
 Library   UUID

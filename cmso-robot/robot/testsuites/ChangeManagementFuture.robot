@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verifies ETE Scheduling for future requests
 
 Library   StringTemplater
 Library   UUID

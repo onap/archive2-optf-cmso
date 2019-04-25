@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation	  Creates VID VNF Instance
+Documentation	  Verifies scheduler queries
 
 Library   StringTemplater
 Library   UUID

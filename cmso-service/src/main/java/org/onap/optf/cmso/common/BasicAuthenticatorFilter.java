@@ -21,7 +21,6 @@ import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.core.MultivaluedMap;
@@ -69,33 +68,4 @@ public class BasicAuthenticatorFilter implements ClientRequestFilter {
         }
     }
 
-    /**
-     * Gets the user.
-     *
-     * @param request the request
-     * @return the user
-     */
-    public static String getUser(HttpServletRequest request) {
-        String user = "";
-        String header = request.getHeader("Authorization");
-        if (header != null) {
-            String[] auth = header.split("Basic ");
-            if (auth.length == 2) {
-                String token = getToken(auth[1]);
-                if (token.contains(":")) {
-                    String[] tokens = token.split(":");
-                    user = tokens[0];
-                }
-            }
-        }
-        return user;
-    }
-
-    private static String getToken(String auth) {
-        try {
-            return new String(DatatypeConverter.parseBase64Binary(auth));
-        } catch (Exception e) {
-            return auth;
-        }
-    }
 }

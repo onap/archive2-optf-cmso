@@ -49,7 +49,6 @@ import org.onap.optf.cmso.filters.CmsoContainerFilters;
 import org.onap.optf.cmso.service.rs.AdminToolImpl;
 import org.onap.optf.cmso.service.rs.CmsoServiceImpl;
 import org.onap.optf.cmso.service.rs.HealthCheckImpl;
-import org.onap.optf.cmso.test.loopback.SchedulerTestLoopbackServiceImpl;
 import org.onap.optf.cmso.test.loopback.TicketMgtLoopbackServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -83,7 +82,6 @@ public class JerseyConfiguration extends ResourceConfig {
     @Autowired
     public JerseyConfiguration( /* LogRequestFilter lrf */ ) {
         register(CmsoServiceImpl.class);
-        register(SchedulerTestLoopbackServiceImpl.class);
         register(TicketMgtLoopbackServiceImpl.class);
         register(HealthCheckImpl.class);
         register(AdminToolImpl.class);

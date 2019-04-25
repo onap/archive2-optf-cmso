@@ -27,6 +27,7 @@ RUN apt-get update \
             
 
 COPY /onap-cmso/robot /opt/cmso-robot/robot
+COPY /onap-cmso/mocking /opt/cmso-robot/mocking
 
 COPY /onap-cmso/ete.sh /opt/cmso-robot
 RUN chmod 777 /opt/cmso-robot/ete.sh
@@ -40,6 +41,7 @@ RUN pip --version
 RUN pip install robotframework==3.1.1
 
 RUN pip install Flask
+RUN pip install requests
 RUN pip install selenium
 RUN pip install robotframework-sshlibrary
 RUN pip install robotframework-requests

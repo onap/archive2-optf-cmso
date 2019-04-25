@@ -100,6 +100,8 @@ services:
     environment:
       - GLOBAL_SCHEDULER_URL=http://cmso-service:8080
       - GLOBAL_OPTIMIZER_URL=http://cmso-optimizer:7997
+      - GLOBAL_TICKET_MGT_URL=http://cmso-ticketmgt:7999
+      - GLOBAL_TOPOLOGY_URL=http://cmso-topology:7998
       - CMSO_STARTUP_WAIT_TIME=20m
       - TAGS=-i ete -i opt_validation
       - OUTPUT=-d /share
