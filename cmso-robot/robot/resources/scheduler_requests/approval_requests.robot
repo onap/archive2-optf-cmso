@@ -23,10 +23,10 @@ Wait For Pending Approval
 
 Send Tier2 Approval
     [Documentation]    Sends an approval post request for the given schedule using the UUID and User given and checks that request worked
-    [Arguments]   ${uuid}   ${user}   ${status}
+    [Arguments]   ${uuid}   ${user}   ${status}   ${status_code}=204
     ${approval}=   Create Dictionary   approvalUserId=${user}   approvalType=Tier 2   approvalStatus=${status}          
     ${resp}=   Post Change Management   auth   schedules/${uuid}/approvals   data=${approval}
-    Should Be Equal As Strings    ${resp.status_code}   204
+    Should Be Equal As Strings    ${resp.status_code}   ${status_code}
      
     
 Send Invalid Approval    

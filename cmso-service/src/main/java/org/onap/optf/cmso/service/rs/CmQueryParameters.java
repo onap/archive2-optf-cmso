@@ -223,11 +223,13 @@ public class CmQueryParameters {
     }
 
     private static DateTime convertDate(String utcDate, String urlName) throws CmsoException {
-        DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
-        if (dateTime != null) {
+        try {
+            DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
             return dateTime;
         }
-        throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, utcDate);
+        catch (Exception e) {
+            throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, utcDate);
+        }
     }
 
     // public static void main(String argv[])
