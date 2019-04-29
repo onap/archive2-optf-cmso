@@ -21,7 +21,7 @@ fi
 
 if [ "${SSL_KEYSTORE_PASSWORD}" != '' ]
 then
-	VM_ARGS="${VM_ARGS} -Djavax.net.ssl.keyStorePassword=${SSL_KEYSTORE_PASSWORD}"
+	VM_ARGS="${VM_ARGS} -Dserver.ssl.key-store-password=${SSL_KEYSTORE_PASSWORD}"
 fi
 
 echo "VM_ARGS="${VM_ARGS}
