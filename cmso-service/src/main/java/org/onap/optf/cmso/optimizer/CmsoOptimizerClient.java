@@ -413,7 +413,7 @@ public class CmsoOptimizerClient {
                     break;
             }
         } catch (Exception e) {
-            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e.toString());
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
             hcc.setStatus(e.toString());
         } finally {
             Mdc.restore(mdcSave);
