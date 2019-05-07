@@ -1,7 +1,7 @@
-FROM ubuntu:16.04
+FROM openjdk:8u191-jdk-alpine3.9
 
 MAINTAINER "The Onap Team"
-LABEL Description="This image contains ubuntu 16.04 with the openjdk installed" Version="16.04-8"
+LABEL Description="This image contains alpine with the openjdk installed"
 ENV APP_HOME=/opt/app/cmso
 ARG http_proxy
 ARG https_proxy
@@ -11,9 +11,7 @@ ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
 
 RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /etc/apt/apt.conf.d/02proxy || true &&  \
-    apt-get update &&  \
-    apt-get -y dist-upgrade &&  \
-    apt-get install -y openjdk-8-jre-headless
+    apk add bash
 
 COPY onap-cmso-tm/cmso-ticketmgt.jar ${APP_HOME}/app.jar
 

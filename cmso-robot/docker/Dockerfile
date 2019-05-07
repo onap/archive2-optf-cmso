@@ -1,29 +1,27 @@
-FROM ubuntu:16.04
+FROM python:3.6-alpine
 
 MAINTAINER "CMSO"
 
 LABEL name="Docker image for the CMSO Robot Testing Framework"
 LABEL usage="docker run -e <testname> optf-cmso-robot"
 
-RUN apt-get update
-RUN apt-get install -y software-properties-common vim
-RUN add-apt-repository ppa:jonathonf/python-3.6
-RUN apt-get update
-RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv
+RUN apk update
+RUN apk add make
+RUN apk add musl-dev
+RUN apk add libffi-dev
+RUN apk add openssl-dev
+RUN apk add bash
+RUN apk add vim
 
 # update pip
 RUN python3.6 -m pip install pip --upgrade
 RUN python3.6 -m pip install wheel
 
-RUN apt-get update \
-    && apt-get install \
-        --no-install-recommends \
-        --assume-yes \
-            chromium-browser \
-            chromium-chromedriver \
-            dnsutils \
-            git \
-            gcc 
+RUN apk add chromium 
+RUN apk add chromium-chromedriver
+RUN apk add net-tools
+RUN apk add git
+RUN apk add gcc 
             
 
 COPY /onap-cmso/robot /opt/cmso-robot/robot
@@ -35,7 +33,7 @@ RUN chmod 777 /opt/cmso-robot/ete.sh
 COPY /onap-cmso/server.py /opt/cmso-robot
 
 
-RUN ln -s /usr/bin/python3.6 /usr/bin/python
+##RUN ln -s /usr/bin/python3.6 /usr/bin/python
 RUN python --version
 RUN pip --version
 RUN pip install robotframework==3.1.1
