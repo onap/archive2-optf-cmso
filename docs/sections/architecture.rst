@@ -6,16 +6,15 @@ Architecture
 Introduction
 ------------------
 OOF-CMSO is an optimizing service that allows for the scheduling of VNF change management
-work flows to be executed at a time in the future. It enables a 3rd party client to provide
-SO work flow requests for multiple VNFs to be executed within a provided change window. The schedule
-optimizer is designed to determine a "conflict free" time within that change window that is suitable for
-submitting the changes to SO.
+work flows to be executed at a time in the future. It enables a 3rd party client to provide 
+SO work flow requests for multiple VNFs to be executed within a provided change window. The schedule 
+optimizer is designed to determine a "conflict free" time within that change window that is suitable for 
+submitting the changes to SO. 
 
-The initial release provides a skeletal implementation that runs in "standalone" mode, that is, the
-intended interfaces are stubbed out (i,e, "loop-back mode").
+The Dublin release provides a an schedule optimizer framework that provides an interface to a model driven schedule optimizer developed using MiniZinc technolgy to provide a best effort at a conflict free schedule.  Inputs to the schedule optimizer require network topology and and scheduled change information on relevant network elements in order to do conflict avoidance. To this end, a Change Management Topology and Ticket Management interfaces were designed to abstract the vendor specific topology and availability data required for schedule optimization. Dublin provides skeletal implementations of these services.
 
- * SO interface for dispatching the work flow and checking status
- * Optimizer Interface for determining the "conflict free" change window (loop-back mode selects the start of change window provided the client)
+ * Dublin does not include an interface to SO for initiating the work flows and checking status. Rather, it has been suggested that a SO dispatcher service be provided to manage the runtime SO workload. While CMSO may take into account work scheduled for SO when creating a schedule. it is outside the domain of CMSO to manage the runtime actual workload on a target service such as SO. 
+ * Dublin Topology and Ticket Management simulator services are skeletal interfaces. These services will be expanded in El Alto to provide data to support additional conflict avoidance test cases.  Currently, only sunny day test cases are implemented in the CSIT test suite. 
 
 CMSO also models interfacing an external ticket/change management system to create, update, close/cancel tickets at relevant points in the CMSO flow.
 
@@ -57,15 +56,14 @@ Architectural Flow Diagram
 Scheduling Optimization and Confict Avoidance
 -----------------------------------------------
 
-The Casablanca implementation of CMSO does not attempt any conflict avoidance. It will assume that no
-conflicts exist and creates a achedule based upon the earliest start time, expected duration of each work flow,
-the number of concurrent workflows to be executed and the number of VNFs. The optimized schedule
+The Dublin implementation of CMSO implements an Optimization service that provides conflict avoidance.  The optimized schedule
 provides a start time for each VNF in the schedule.
 
 Conflict avoidance to achieve the goals of CMSO, successful completion of change requests  without incurring network outages,
 requires a system to track the availability (or rather unavailability) of assets required to determine an
-optimal time for exectution. No such system exists at this time within ONAP. CMSO itself can be used to track changes to VNFs and
-the initial optimization to be included in Dublin will be limited to ensuring that a VNF is not double booked within CMSO.
+optimal time for exectution. No such change management system exists at this time within ONAP, however, Dublin CMSO defines an interface that abstracts the Change Management Ticket information necessary for the schedule optimizer engine to determine element availability.
+
+
 
 SO Change Request Dispatching
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -74,10 +72,7 @@ CMSO does not serve as a throttling dispatcher to SO. Rather, the dispatching of
 the start time assigned to each VNF. CMSO will dispatch a VNF change to SO regardless of how many outstanding
 change management requests there are to SO within CMSO.
 
-CMSO will expect that SO will throttle its own workload and reject requests that arrive when the system is busy.
-CMSO will not interpret these system busy rejections as "try again later" as the changes are assumed to be
-time sensitive based upon the conflict avoidance objectives of CMSO.
-
+It has been proposed that a dispatcher service be defined to enable applications such as SO to manage the runtime workload of the service. The dispatcher would respond to system busy indicators to determine the disatch disposition of a request. For example, time sensitive may be rejected if they cannot be serviced in a particular time window while others may be held based upon priority. 
 
 
 

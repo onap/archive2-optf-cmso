@@ -1,13 +1,21 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "1.0.0-SNAPSHOT",
+    "version" : "2.0.0-SNAPSHOT",
     "title" : "cmso-service"
   },
   "basePath" : "/cmso",
+  "tags" : [ {
+    "name" : "CMSO Administration"
+  }, {
+    "name" : "CMSO Optimized Schedule API"
+  }, {
+    "name" : "CMSO Schedule API"
+  } ],
   "paths" : {
     "/{apiVersion}/admin/{id}" : {
       "get" : {
+        "tags" : [ "CMSO Administration" ],
         "summary" : "",
         "description" : "Returns encrypted value of id.",
         "operationId" : "exec",
@@ -45,6 +53,7 @@
     },
     "/{apiVersion}/health" : {
       "get" : {
+        "tags" : [ "CMSO Administration" ],
         "summary" : "",
         "description" : "Returns health status of server.",
         "operationId" : "healthCheck",
@@ -84,40 +93,9 @@
         }
       }
     },
-    "/{apiVersion}/optimizerCallback" : {
-      "post" : {
-        "summary" : "",
-        "description" : "Processes optimizer results callback to a Pending Optimization schedule.",
-        "operationId" : "sniroCallback",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "apiVersion",
-          "in" : "path",
-          "description" : "v1",
-          "required" : true,
-          "type" : "string",
-          "default" : "v1"
-        }, {
-          "in" : "body",
-          "name" : "body",
-          "description" : "Return schedules > lastScheduleId",
-          "required" : false,
-          "schema" : {
-            "$ref" : "#/definitions/Response from schedule optimizer"
-          }
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "OK"
-          },
-          "500" : {
-            "description" : "Unexpected Runtime error"
-          }
-        }
-      }
-    },
     "/{apiVersion}/schedules" : {
       "get" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Returns a list of Scheduler Requests based upon the filter criteria.",
         "operationId" : "searchScheduleRequests",
@@ -220,7 +198,52 @@
           "404" : {
             "description" : "No records found",
             "schema" : {
-              "$ref" : "#/definitions/CMSRequestError"
+              "$ref" : "#/definitions/CmsoRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/schedules/optimized/{scheduleId}" : {
+      "post" : {
+        "tags" : [ "CMSO Optimized Schedule API" ],
+        "summary" : "",
+        "description" : "Creates a request for an optimized schedule",
+        "operationId" : "createScheduleRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "scheduleId",
+          "in" : "path",
+          "description" : "Schedule id to uniquely identify the schedule request being created.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Data for creating a schedule request for the given schedule id",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Optimized Schedule Request"
+          }
+        } ],
+        "responses" : {
+          "202" : {
+            "description" : "Schedule request accepted for optimization."
+          },
+          "409" : {
+            "description" : "Schedule request already exists for this schedule id.",
+            "schema" : {
+              "$ref" : "#/definitions/CmsoRequestError"
             }
           },
           "500" : {
@@ -231,6 +254,7 @@
     },
     "/{apiVersion}/schedules/scheduleDetails" : {
       "get" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Returns a list of Schedule request details based upon the filter criteria.",
         "operationId" : "searchScheduleRequestDetails",
@@ -446,7 +470,7 @@
           "404" : {
             "description" : "No records found",
             "schema" : {
-              "$ref" : "#/definitions/CMSRequestError"
+              "$ref" : "#/definitions/CmsoRequestError"
             }
           },
           "500" : {
@@ -457,6 +481,7 @@
     },
     "/{apiVersion}/schedules/{scheduleId}" : {
       "get" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Retrieve the schedule request for scheduleId",
         "operationId" : "getScheduleRequestInfo",
@@ -491,6 +516,7 @@
         }
       },
       "post" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Creates a schedule request for scheduleId",
         "operationId" : "createScheduleRequest",
@@ -514,7 +540,7 @@
           "description" : "Data for creating a schedule request for the given schedule id",
           "required" : false,
           "schema" : {
-            "$ref" : "#/definitions/CMSMessage"
+            "$ref" : "#/definitions/CmsoMessage"
           }
         } ],
         "responses" : {
@@ -524,7 +550,7 @@
           "409" : {
             "description" : "Schedule request already exists for this schedule id.",
             "schema" : {
-              "$ref" : "#/definitions/CMSRequestError"
+              "$ref" : "#/definitions/CmsoRequestError"
             }
           },
           "500" : {
@@ -533,6 +559,7 @@
         }
       },
       "delete" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Cancels the schedule request for scheduleId",
         "operationId" : "deleteScheduleRequest",
@@ -558,7 +585,7 @@
           "404" : {
             "description" : "No record found",
             "schema" : {
-              "$ref" : "#/definitions/CMSRequestError"
+              "$ref" : "#/definitions/CmsoRequestError"
             }
           },
           "500" : {
@@ -569,6 +596,7 @@
     },
     "/{apiVersion}/schedules/{scheduleId}/approvals" : {
       "post" : {
+        "tags" : [ "CMSO Schedule API" ],
         "summary" : "",
         "description" : "Adds an accept/reject approval status to the schedule request identified by scheduleId",
         "operationId" : "approveScheduleRequest",
@@ -610,71 +638,6 @@
     }
   },
   "definitions" : {
-    "CMSMessage" : {
-      "type" : "object",
-      "properties" : {
-        "domain" : {
-          "type" : "string",
-          "description" : "Schedule domain : ChangeManagement"
-        },
-        "scheduleId" : {
-          "type" : "string",
-          "description" : "Schedule id that must be unique within the domain. Use of UUID is highly recommended."
-        },
-        "scheduleName" : {
-          "type" : "string",
-          "description" : "User provided name of the schedule (deaults to scheduleId"
-        },
-        "userId" : {
-          "type" : "string",
-          "description" : "ATTUID of the user requesting the schedule."
-        },
-        "domainData" : {
-          "type" : "array",
-          "description" : "Domain data as name value/pairs. (i.e. CallbackUrl, CallbackData, WorkflowName)",
-          "items" : {
-            "type" : "object",
-            "additionalProperties" : {
-              "type" : "string"
-            }
-          }
-        },
-        "schedulingInfo" : {
-          "$ref" : "#/definitions/Change Management Scheduling Info"
-        }
-      }
-    },
-    "CMSRequestError" : {
-      "type" : "object",
-      "properties" : {
-        "requestError" : {
-          "$ref" : "#/definitions/RequestError"
-        }
-      }
-    },
-    "CMSchedule" : {
-      "type" : "object",
-      "properties" : {
-        "groupId" : {
-          "type" : "string"
-        },
-        "startTime" : {
-          "type" : "string"
-        },
-        "finishTime" : {
-          "type" : "string"
-        },
-        "latestInstanceStartTime" : {
-          "type" : "string"
-        },
-        "node" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        }
-      }
-    },
     "Change Management Group" : {
       "type" : "object",
       "properties" : {
@@ -785,6 +748,10 @@
         "msoTime" : {
           "type" : "string",
           "description" : "Time of last poll for MSO status."
+        },
+        "request" : {
+          "type" : "string",
+          "description" : "Change equest."
         }
       },
       "description" : "VNF details for Change Management Schedule"
@@ -807,15 +774,25 @@
           "format" : "int32",
           "description" : "Maximum number of VNF changes to schedule concurrently"
         },
-        "policyId" : {
-          "type" : "string",
-          "description" : "Name of schedule optimization policy used by the change management cmso optimizer to determine available time slot"
+        "changeWindows" : {
+          "type" : "array",
+          "description" : "Lists of desired change windows to schedule the elements.",
+          "items" : {
+            "$ref" : "#/definitions/Change Window"
+          }
         },
-        "vnfDetails" : {
+        "policies" : {
+          "type" : "array",
+          "description" : "List of the policies to control optimization.",
+          "items" : {
+            "$ref" : "#/definitions/Supported Policy Information"
+          }
+        },
+        "elements" : {
           "type" : "array",
           "description" : "Lists of the VNFs to be changed and the desired change windows",
           "items" : {
-            "$ref" : "#/definitions/VNF Details"
+            "$ref" : "#/definitions/Optimizer Element"
           }
         }
       },
@@ -826,14 +803,16 @@
       "properties" : {
         "startTime" : {
           "type" : "string",
-          "description" : "Earliest time that a set of changes may begin."
+          "format" : "date-time",
+          "description" : "Earliest time for which changes may begin."
         },
         "endTime" : {
           "type" : "string",
-          "description" : "Latest time by which all changes must be completed"
+          "format" : "date-time",
+          "description" : "Latest time by which all changes must be completed."
         }
       },
-      "description" : "Time window within which the scheduler optimizer can schedule the changes for the  group of NVFs"
+      "description" : "Time window for which tickets are to returned"
     },
     "CmDetailsMessage" : {
       "type" : "object",
@@ -918,10 +897,48 @@
           "items" : {
             "$ref" : "#/definitions/Schedule Approval Request"
           }
+        }
+      }
+    },
+    "CmsoMessage" : {
+      "type" : "object",
+      "properties" : {
+        "domain" : {
+          "type" : "string",
+          "description" : "Schedule domain : ChangeManagement"
         },
-        "schedulesId" : {
-          "type" : "integer",
-          "format" : "int32"
+        "scheduleId" : {
+          "type" : "string",
+          "description" : "Schedule id that must be unique within the domain. Use of UUID is highly recommended."
+        },
+        "scheduleName" : {
+          "type" : "string",
+          "description" : "User provided name of the schedule (deaults to scheduleId"
+        },
+        "userId" : {
+          "type" : "string",
+          "description" : "ATTUID of the user requesting the schedule."
+        },
+        "domainData" : {
+          "type" : "array",
+          "description" : "Domain data as name value/pairs. (i.e. CallbackUrl, CallbackData, WorkflowName)",
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        },
+        "schedulingInfo" : {
+          "$ref" : "#/definitions/Change Management Scheduling Info"
+        }
+      }
+    },
+    "CmsoRequestError" : {
+      "type" : "object",
+      "properties" : {
+        "requestError" : {
+          "$ref" : "#/definitions/RequestError"
         }
       }
     },
@@ -977,6 +994,78 @@
         }
       }
     },
+    "Name Value Data" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Name."
+        },
+        "value" : {
+          "type" : "object",
+          "description" : "Value."
+        }
+      },
+      "description" : "Instance of a name/value"
+    },
+    "Optimized Schedule Request" : {
+      "type" : "object",
+      "properties" : {
+        "domain" : {
+          "type" : "string",
+          "description" : "Schedule domain : ChangeManagement"
+        },
+        "scheduleId" : {
+          "type" : "string",
+          "description" : "Schedule id that must be unique within the domain. Use of UUID is highly recommended."
+        },
+        "scheduleName" : {
+          "type" : "string",
+          "description" : "User provided name of the schedule (deaults to scheduleId"
+        },
+        "userId" : {
+          "type" : "string",
+          "description" : "ATTUID of the user requesting the schedule."
+        },
+        "commonData" : {
+          "type" : "array",
+          "description" : "Implementation specific name value pairs.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "schedulingData" : {
+          "description" : "Scheduling data.",
+          "$ref" : "#/definitions/Change Management Scheduling Info"
+        }
+      },
+      "description" : "Request to schedule VNF change management workflow(s)."
+    },
+    "Optimizer Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "request" : {
+          "type" : "object",
+          "description" : "Request for be scheduled."
+        },
+        "groupId" : {
+          "type" : "string",
+          "description" : "VNF group identifier."
+        }
+      },
+      "description" : "Element to be scheduled."
+    },
     "RequestError" : {
       "type" : "object",
       "properties" : {
@@ -993,39 +1082,6 @@
           }
         }
       }
-    },
-    "Response from schedule optimizer" : {
-      "type" : "object",
-      "properties" : {
-        "transactionId" : {
-          "type" : "string",
-          "description" : "Unique id of optimization request."
-        },
-        "scheduleId" : {
-          "type" : "string",
-          "description" : "Schedule id for which the optimization request was executed."
-        },
-        "requestState" : {
-          "type" : "string",
-          "description" : "State of the request as reported by the optimizer."
-        },
-        "status" : {
-          "type" : "string",
-          "description" : "Status of the request."
-        },
-        "description" : {
-          "type" : "string",
-          "description" : "Description of the request status."
-        },
-        "schedule" : {
-          "type" : "array",
-          "description" : "List of schedules returned, one per group. Only 1 group supported at this time.",
-          "items" : {
-            "$ref" : "#/definitions/CMSchedule"
-          }
-        }
-      },
-      "description" : "Asynchronous response to schedule oprimizer request."
     },
     "Schedule" : {
       "type" : "object",
@@ -1132,6 +1188,23 @@
         }
       },
       "description" : "Request to accept or reject an optimized time slot."
+    },
+    "Supported Policy Information" : {
+      "type" : "object",
+      "properties" : {
+        "policyName" : {
+          "type" : "string",
+          "description" : "Policy name"
+        },
+        "policyModifiers" : {
+          "type" : "array",
+          "description" : "Named values to modify/override policy attributes.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Policy Information returned from get policies API."
     },
     "VNF Details" : {
       "type" : "object",

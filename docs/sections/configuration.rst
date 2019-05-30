@@ -5,13 +5,13 @@ Configuration
 
 Executing CMSO in a standalone environment requires
 
- * MarisDB instance
+ * MariaDB instance
  * Maven
  * Java JDK 1.8
 
 Executing the Robot testsuite requires
 
- * Pyhton 2.7
+ * Python 3.7
  * Robot Framework
 
 Running the example

@@ -1,11 +1,14 @@
 OOF CMSO Delivery
 ======================
 
-OOF CMSO is made up of 3 docker containers depoloyed via OOM
+OOF CMSO is made up of 6 docker containers depoloyed via OOM
 
  #. CMSO Service - Java server (Jersey)
  #. CMSO Database Initialization - Java wrapper invoking Liquibase schema management scripts
  #. MariaDB - OOM Common mariadb-galera server
+ #. CMSO Optimizer - Java server (Jersey)
+ #. CMSO Ticket Management - Java server (Jersey)
+ #. CMSO Topology - Java server (Jersey)
 
 The OOM Helm Charts are located here:
 

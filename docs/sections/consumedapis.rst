@@ -5,39 +5,42 @@ Consumed APIs
 The following are the dependencies for CMSO project.
 
 
-SO (Dublin)
+SO (TBD)
 --------------------------------------------
 
 CMSO is designed to invoke SO API to
 
  * Submit  change management work flow requests
  * Poll for status of submitted requests
+ 
+While the CMSO schedule optimizer considers concurrency when creating  a scheduler, the actual SO workload at runtime remains outside the capabilities of CMSO. It has been proposed that CMSO interfaces to a dispatcher service which would manage the actual workload to SO at runtime.  
 
 
-Schedule Optimizer with Conflict Avoidance (Dublin)
+Schedule Optimizer with Conflict Avoidance
 -------------------------------------------------------
 
-There is currently no schedule optmizer that implements conflict avoidance.
-Conflict avoidance requires:
+CMSO in Dublin includes schedule optmizer that implements conflict avoidance. Services were added to CMSO in Dublin to support providing data to the scheduler optimizer which requires:
 
- * Vertical topology assets relevant the availability of the VNF(s) under consideration.
+ * Network Topology
+ 
+   * Vertical topology assets relevant the availability of the VNF(s) under consideration. These assets must be available in order to accomplish the change.
 
-   * Within ONAP topology information is available in A&AI
+   * Horizontal topology assets. Horizontal topology represents assets that must be available in order to avoid a network outage during the change. As an example, the assets supporting the backup instance(s) of the VNF under change.
+   
+   * Dublin provides a CMSO Topology Service which implements an API desinged to provide CMSO optimizer the network topology information that is required for conflict avoidance. This service currently only returns the VNF itself, however, El Alto will simulate vertical topology for the VNFs to expand the scope of the CMSO CSIT test cases.
 
- * Horizontal topology assets ???
-
- * Availability of the VNFs and of the assets identified in the previous items.
-   Knowing the availability of related assests generally requires a change management
+ * Availability of the VNFs and related network elements identified by the Toplogy service.
+   
+   * Determining the availability of related assests generally requires a change management
    tracking/ticketing system system that identifies scheduled changes (unavailaibility) to all assets that contribute to the
    functioning of the network.
 
-   * There is no change management ticketing system within ONAP. CMSO itself may serve as such in a very limited capacity as it
-     tracks scheduled changes to VNFs. It does not track changes the all network assets which is necessarilty required for full
-     conflict avoidance. For ONAP Dublin, the conflict avoidance will necessarily be limited to VNF level conflict
-     checking using CMSO as the source of asset (VNF) avaialability/unavailability.
+   * Dublin provides a CMSO Ticket Management service to simulate a change management ticketing system within ONAP. This service currently returns empty results, however, El Alto will simulate change tickets for the network elements to expand the scope of the CMSO CSIT test cases.
 
+CMSO Topology Service
+-----------------------------------------
 
-Change Management Ticketing System (TBD)
+CMSO Ticket Management Service
 -----------------------------------------
 
 
