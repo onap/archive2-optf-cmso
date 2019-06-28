@@ -46,8 +46,8 @@ RUN pip install selenium
 RUN pip install robotframework-sshlibrary
 RUN pip install robotframework-requests
 
-###Just to keep it running
-CMD ["/usr/bin/python", "/opt/cmso-robot/server.py"]
+### Start up the mock server for 
+CMD ["/usr/bin/python", "/opt/cmso-robot/mocking/mock.py"]
 
 ### Use --entrypoint to override to run the tests test and exit
 ### --entrypoint /opt/cmso-robot/ete.sh
