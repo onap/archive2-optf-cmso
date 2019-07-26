@@ -55,8 +55,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		
-		<docker.push.registry>localhost:5000</docker.push.registry>
-		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>false</docker.skip.build>
 		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>
@@ -147,7 +145,7 @@
 			                <apiVersion>1.23</apiVersion>
 			                <images>
 								<image>
-										<name>onap/optf-cmso-dbinit</name>
+										<name>${image.namespace}/optf-cmso-dbinit</name>
 										<alias>onap-optf-cmso-dbinit</alias>
 										<build>
 												<cleanup>true</cleanup>
@@ -161,6 +159,12 @@
 														<descriptor>${project.basedir}/src/main/docker/assembly/cmso-files.xml</descriptor>
 														<name>onap-cmso</name>
 												</assembly>
+												<args>
+													<!-- plugin cannot handle empty (no proxy) arguments
+													<http_proxy_arg>${docker.http_proxy}</http_proxy_arg>
+													<https_proxy_arg>${docker.https_proxy}</https_proxy_arg>
+													-->
+												</args>	
 										</build>
 								</image>
 			                </images>
@@ -181,7 +185,7 @@
 			                                <goal>push</goal>
 			                        </goals>
 			                        <configuration>
-			                                <image>onap/optf-cmso-dbinit:%l</image>
+			                                <image>${image.namespace}/optf-cmso-dbinit:%l</image>
 			                        </configuration>
 			                </execution>
 			        </executions>

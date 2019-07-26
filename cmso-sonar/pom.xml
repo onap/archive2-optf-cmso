@@ -34,23 +34,15 @@
 	<description>Maven Porject for Running CMSO CSIT for Code Coverage</description>
 
 	<properties>
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
-
-		<cmso.project.version>${project.version}</cmso.project.version>
-		<cmso.build.timestamp>${maven.build.timestamp}</cmso.build.timestamp>
 
 		<service.name>cmso-sonar</service.name>
-		<release-tag>Dublin</release-tag>
 		<name.space>org.onap.optf</name.space>
 		<serviceArtifactName>cmso-sonar</serviceArtifactName>
 
 		<build.number>${maven.build.timestamp}</build.number>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 
-		<docker.push.registry>localhost:5000</docker.push.registry>
-		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>false</docker.skip.build>
 		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>

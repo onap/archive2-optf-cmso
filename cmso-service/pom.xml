@@ -41,30 +41,15 @@
 	<name>cmso-service</name>
 
 	<properties>
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
-
-		<cmso.project.version>${project.version}</cmso.project.version>
-		<cmso.build.timestamp>${maven.build.timestamp}</cmso.build.timestamp>
-
-		<release-tag>Dublin</release-tag>
 		<service.name>cmso</service.name>
 		<name.space>org.onap.optf.cmso</name.space>
 		<serviceArtifactName>cmso</serviceArtifactName>
 
-		<java.version>1.8</java.version>
-		<eelf.version>1.0.0</eelf.version>
-        <spring.version>5.1.5.RELEASE</spring.version>
-		<swagger.core.version>2.0.0</swagger.core.version>
-
-		<maven.compiler.target>1.8</maven.compiler.target>
-		<maven.compiler.source>1.8</maven.compiler.source>
 		<build.number>${maven.build.timestamp}</build.number>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.build.timestamp.format>yyyyMMdd'T'HHmmss'Z'</maven.build.timestamp.format>
 		<mariadb.version>2.2.1</mariadb.version>
 		<swagger.directory>${basedir}/src/main/resources/META-INF/resources/swagger/</swagger.directory>
-        <aaf.version>2.1.4</aaf.version>
 
 		<!-- Sonar -->
 		<ilib.version>2.0.7</ilib.version>
@@ -78,8 +63,6 @@
 		<sonar.surefire.reportsPath>${basedir}/target/surefire-reports</sonar.surefire.reportsPath>
 		<sonar.failsafe.reportsPath>${basedir}/target/failsafe-reports</sonar.failsafe.reportsPath>
 
-		<docker.push.registry>localhost:5000</docker.push.registry>
-		<docker.pull.registry>nexus3.onap.org:10001</docker.pull.registry>
 		<docker.skip.build>false</docker.skip.build>
 		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>
@@ -350,7 +333,7 @@
 					<apiVersion>1.23</apiVersion>
 					<images>
 						<image>
-							<name>onap/optf-cmso-service</name>
+							<name>${image.namespace}/optf-cmso-service</name>
 							<alias>onap-optf-cmso-service</alias>
 							<build>
 								<cleanup>true</cleanup>
@@ -364,6 +347,12 @@
 									<descriptor>${project.basedir}/src/main/docker/assembly/cmso-files.xml</descriptor>
 									<name>onap-cmso</name>
 								</assembly>
+								<args>
+									<!-- plugin cannot handle empty (no proxy) arguments
+									<http_proxy_arg>${docker.http_proxy}</http_proxy_arg>
+									<https_proxy_arg>${docker.https_proxy}</https_proxy_arg>
+									-->
+								</args>	
 							</build>
 						</image>
 					</images>
@@ -384,7 +373,7 @@
 							<goal>push</goal>
 						</goals>
 						<configuration>
-							<image>onap/optf-cmso-service:%l</image>
+							<image>${image.namespace}/optf-cmso-service:%l</image>
 						</configuration>
 					</execution>
 				</executions>
