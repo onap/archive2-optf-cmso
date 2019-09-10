@@ -1,0 +1,14 @@
+distribution_type: 'container'
+container_release_tag: '2.1.0'
+project: 'optf-cmso'
+containers:
+    - name: optf-cmso-dbinit
+      version: 2.1-STAGING-20190909T031228Z
+    - name: optf-cmso-service
+      version: 2.1-STAGING-20190909T031228Z
+    - name: optf-cmso-optimizer
+      version: 2.1-STAGING-20190909T031228Z
+    - name: optf-cmso-ticketmgt
+      version: 2.1-STAGING-20190909T031228Z 
+    - name: optf-cmso-topology
+      version: 2.1-STAGING-20190909T031228Z 	  
