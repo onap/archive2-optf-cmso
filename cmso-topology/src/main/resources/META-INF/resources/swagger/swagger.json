@@ -1,0 +1,516 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "2.1.1-SNAPSHOT",
+    "title" : "cmso-topology"
+  },
+  "basePath" : "/topology",
+  "tags" : [ {
+    "name" : "Administration"
+  }, {
+    "name" : "Topology Interface"
+  } ],
+  "paths" : {
+    "/{apiVersion}/admin/{id}" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns encrypted value of id.",
+        "operationId" : "exec",
+        "produces" : [ "text/plain" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1|v2",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "string"
+            }
+          },
+          "400" : {
+            "description" : "Request failed"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/current" : {
+      "post" : {
+        "tags" : [ "Topology Interface" ],
+        "summary" : "Request Topology",
+        "description" : "API to retrieve toplogy for scheduling 'conflict free' mainentance. Retrieves the element information related to the list of elements targeted for mainenance activity. Scope of related elements to be returned are defined in the passed ToplogogyRequest. Elements returned must include in the elementData, the identifier that the element is known as in the ticket management system.\nThe Topology Service may implement asynchronous requests by returning IN_PROGRESS status. If IN_PROGRESS, the optimizer will begin polling until COMPLETED is returned with the response. ",
+        "operationId" : "retrieveCurrentTopology",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Topology criteria.",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Topology Request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Topology Response"
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "schema" : {
+              "$ref" : "#/definitions/CmsoRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/current/request/{id}" : {
+      "get" : {
+        "tags" : [ "Topology Interface" ],
+        "summary" : "Poll Asynchronous Topology Request",
+        "description" : "If a topology request results in asynchronous request (IN_PROGRESS) this GET is used to retrieve status until COMPLETED. At which time, the optimizer will  issue a DELETE to acknowledge receipt.\nThe Topology Service implementation may delete the cache when returning completed. The optimizer will treat subsequent not found on delete as normal.",
+        "operationId" : "getTopologyRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request Id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Topology Response"
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "schema" : {
+              "$ref" : "#/definitions/CmsoRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Topology Interface" ],
+        "summary" : "Acknowledge Topology Response",
+        "description" : "API to acknowledge COMPLETED toplogy request.",
+        "operationId" : "deleteTopologyRequest",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Request Id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Topology Response"
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "schema" : {
+              "$ref" : "#/definitions/CmsoRequestError"
+            }
+          },
+          "500" : {
+            "description" : "Unexpected Runtime error"
+          }
+        }
+      }
+    },
+    "/{apiVersion}/health" : {
+      "get" : {
+        "tags" : [ "Administration" ],
+        "summary" : "",
+        "description" : "Returns health status of server.",
+        "operationId" : "healthCheck",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiVersion",
+          "in" : "path",
+          "description" : "v1",
+          "required" : true,
+          "type" : "string",
+          "default" : "v1"
+        }, {
+          "name" : "checkInterfaces",
+          "in" : "query",
+          "description" : "Check Interfaces",
+          "required" : false,
+          "type" : "boolean",
+          "default" : true
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          },
+          "400" : {
+            "description" : "Not healthy",
+            "schema" : {
+              "$ref" : "#/definitions/HealthCheckMessage"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "CmsoRequestError" : {
+      "type" : "object",
+      "properties" : {
+        "requestError" : {
+          "$ref" : "#/definitions/RequestError"
+        }
+      }
+    },
+    "Element Critera" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element id unique to the request."
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Element criteria for retrieving topology."
+    },
+    "Element Location" : {
+      "type" : "object",
+      "properties" : {
+        "lat" : {
+          "type" : "number",
+          "format" : "float",
+          "description" : "Geographic latitude of element."
+        },
+        "lon" : {
+          "type" : "number",
+          "format" : "float",
+          "description" : "Geographic longitude of element."
+        },
+        "timezone" : {
+          "type" : "string",
+          "description" : "Timezone."
+        }
+      },
+      "description" : "Location information necessary to determine timezone. lat/lon and/or timezone must be provided"
+    },
+    "HealthCheckComponent" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "healthy" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "HealthCheckMessage" : {
+      "type" : "object",
+      "properties" : {
+        "healthy" : {
+          "type" : "boolean"
+        },
+        "buildInfo" : {
+          "type" : "string"
+        },
+        "currentTime" : {
+          "type" : "string"
+        },
+        "hostname" : {
+          "type" : "string"
+        },
+        "components" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/HealthCheckComponent"
+          }
+        }
+      }
+    },
+    "Name Value Data" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Name."
+        },
+        "value" : {
+          "type" : "object",
+          "description" : "Value."
+        }
+      },
+      "description" : "Instance of a name/value"
+    },
+    "RequestError" : {
+      "type" : "object",
+      "properties" : {
+        "messageId" : {
+          "type" : "string"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "variables" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Supported Policy Information" : {
+      "type" : "object",
+      "properties" : {
+        "policyName" : {
+          "type" : "string",
+          "description" : "Policy name"
+        },
+        "policyDescription" : {
+          "type" : "string",
+          "description" : "Policy description"
+        },
+        "policyModifiers" : {
+          "type" : "array",
+          "description" : "Named values to modify/override policy attributes.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Policy Information returned from get policies API."
+    },
+    "Topology Constraint ELements" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "constraintType" : {
+          "type" : "string",
+          "description" : "Type of constraint."
+        },
+        "constraintTypeMinimum" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "If more than one instance of constraintType, minimum number of available instances required. Useful for identifying availableBackup elements, service paths."
+        },
+        "optimizerAvailabilityMatrixName" : {
+          "type" : "string",
+          "description" : "Availability matrix name. Availability matrix will not be passed to optimizer engine. Generally useful for global concurrency type constraints."
+        },
+        "availabilityMatrixScope" : {
+          "type" : "string",
+          "description" : "Availability matrix scope global  or scoped per elementId.",
+          "enum" : [ "NONE", "GLOBAL", "ELEMENT" ]
+        },
+        "elementAvailabilityAggreagation" : {
+          "type" : "boolean",
+          "description" : "Availability matrix is aggregated into element availability marrix."
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "Elements ",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "Constraining Element Information returned from TopologyRequuest."
+    },
+    "Topology Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "elementLocation" : {
+          "description" : "Location information for the element.",
+          "$ref" : "#/definitions/Element Location"
+        },
+        "requiredElements" : {
+          "type" : "array",
+          "description" : "List of related elements required to be available to execute the chenge.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "constraintElements" : {
+          "type" : "array",
+          "description" : "Lists of related elements that must be  available to avoid network outage while executing the change. Each set constraint elements",
+          "items" : {
+            "$ref" : "#/definitions/Topology Constraint ELements"
+          }
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        }
+      },
+      "description" : "Element Information returned from TopologyRequuest."
+    },
+    "Topology Related Element" : {
+      "type" : "object",
+      "properties" : {
+        "elementId" : {
+          "type" : "string",
+          "description" : "Element identifier"
+        },
+        "elementLocation" : {
+          "description" : "Location information for the element.",
+          "$ref" : "#/definitions/Element Location"
+        },
+        "elementData" : {
+          "type" : "array",
+          "description" : "Implementation specific element data.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "relatedElements" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "description" : "Element Information returned from TopologyRequuest."
+    },
+    "Topology Request" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "commonData" : {
+          "type" : "array",
+          "description" : "Implementation specific name value pairs.",
+          "items" : {
+            "$ref" : "#/definitions/Name Value Data"
+          }
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "List of the elements for which topology information is requested.",
+          "items" : {
+            "$ref" : "#/definitions/Element Critera"
+          }
+        },
+        "policies" : {
+          "type" : "array",
+          "description" : "List of the policies to control topology retrieve.",
+          "items" : {
+            "$ref" : "#/definitions/Supported Policy Information"
+          }
+        }
+      },
+      "description" : "Request to retrieve topology information for the provided elements."
+    },
+    "Topology Response" : {
+      "type" : "object",
+      "properties" : {
+        "requestId" : {
+          "type" : "string",
+          "description" : "Unique Id of the request"
+        },
+        "elements" : {
+          "type" : "array",
+          "description" : "List of elements for for which topology has been requested.",
+          "items" : {
+            "$ref" : "#/definitions/Topology Element"
+          }
+        },
+        "referencedElements" : {
+          "type" : "array",
+          "description" : "List of referenced elements representing the topology that has been requested.",
+          "items" : {
+            "$ref" : "#/definitions/Topology Related Element"
+          }
+        },
+        "status" : {
+          "type" : "string",
+          "description" : "Status of asynchronous request. COMPLETED is returned on initial synchonous request. If IN_PROGRESS is returned, the optimizer will enter asynchronous polling mode.",
+          "enum" : [ "IN_PROGRESS", "COMPLETED", "FAILED" ]
+        },
+        "errorMessage" : {
+          "type" : "string",
+          "description" : "FAILED request error message."
+        },
+        "pollingSeconds" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "If request is asynchronous (IN_PROGRESS), suggested interval to the next poll."
+        }
+      },
+      "description" : "Response to topology query for the requested elements."
+    }
+  }
+}
