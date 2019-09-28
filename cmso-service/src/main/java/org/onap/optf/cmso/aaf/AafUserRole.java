@@ -1,33 +1,42 @@
 /*
- * Copyright © 2019 AT&T Intellectual Property.
+ * Copyright (c) 2019 AT&T Intellectual Property.
+ * Modifications Copyright © 2018 IBM.
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *         http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License
- * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing permissions and limitations under
- * the License.
- *
- *
- * Unless otherwise specified, all documentation contained herein is licensed under the Creative
- * Commons License, Attribution 4.0 Intl. (the "License"); you may not use this documentation except
- * in compliance with the License. You may obtain a copy of the License at
- *
- * https://creativecommons.org/licenses/by/4.0/
- *
- * Unless required by applicable law or agreed to in writing, documentation distributed under the
- * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the License for the specific language governing permissions and
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
- ******************************************************************************/
+ *
+ *
+ * Unless otherwise specified, all documentation contained herein is licensed
+ * under the Creative Commons License, Attribution 4.0 Intl. (the "License");
+ * you may not use this documentation except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         https://creativecommons.org/licenses/by/4.0/
+ *
+ * Unless required by applicable law or agreed to in writing, documentation
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 
 package org.onap.optf.cmso.aaf;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
+import org.onap.observations.Observation;
+import org.onap.optf.cmso.common.LogMessages;
 
 /**
  * The Class AafUserRole.
@@ -133,7 +142,7 @@ public class AafUserRole {
      * @return true, if successful
      */
     public boolean matches(String path, String matchMethod) {
-        if (!this.method.equalsIgnoreCase("ALL") && !this.method.equals("*") && !this.method.equals(matchMethod)) {
+        if (!this.method.equals("ALL") && !this.method.equals(matchMethod)) {
             return false;
         }
         List<String> inNodes = new ArrayList<>();
@@ -173,5 +182,18 @@ public class AafUserRole {
             }
         }
         return false;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        try {
+            return new ObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.toString());
+        }
+        return this.url;
     }
 }
