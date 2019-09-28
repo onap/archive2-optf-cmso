@@ -53,7 +53,7 @@ public class BasicAuthenticatorFilter implements ClientRequestFilter {
     public BasicAuthenticatorFilter(String user, String password) {
         this.user     = user;
         this.password = password;
-        log.info("user: " + user + " pass:" + password);
+        log.info("user: " + user + " pass:" + "****");
     }
 
     /**
