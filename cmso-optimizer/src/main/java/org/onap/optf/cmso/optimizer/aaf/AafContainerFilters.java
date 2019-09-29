@@ -31,75 +31,52 @@
 
 package org.onap.optf.cmso.optimizer.aaf;
 
-import com.att.eelf.configuration.EELFLogger;
-import com.att.eelf.configuration.EELFManager;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
+import java.io.IOException;
+import javax.annotation.Priority;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.ext.Provider;
 import org.onap.optf.cmso.optimizer.SpringProfiles;
+import org.onap.optf.cmso.optimizer.aaf.AafClientCache.AuthorizationResult;
 import org.onap.optf.cmso.optimizer.common.LogMessages;
 import org.onap.optf.cmso.optimizer.observations.Observation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-/**
- * The Class AafUserRoleProperties.
- */
+@Priority(1)
+@Provider
 @Component
 @Profile(SpringProfiles.AAF_AUTHENTICATION)
-public class AafUserRoleProperties {
-    private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
+public class AafContainerFilters implements ContainerRequestFilter {
 
-    /** The env. */
     @Autowired
-    Environment env;
+    AafClientCache aafClientCache;
 
-    private List<AafUserRole> list = new ArrayList<>();
-
-    /**
-     * Initialize permissions.
-     */
-    @PostConstruct
-    public void initializePermissions() {
-        String userRolePropertiesName = env.getProperty(AafProperties.aafUserRoleProperties.toString(),
-                        "opt/att/ajsc/config/AAFUserRoles.properties");
+    @Override
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        ResponseBuilder builder = null;
+        AuthorizationResult status = null;
         try {
-            List<String> lines = Files.readAllLines(Paths.get(userRolePropertiesName));
-            for (String line : lines) {
-                line = line.trim();
-                if (!line.startsWith("#")) {
-                    String[] parts = line.split("=");
-                    if (parts.length == 2) {
-                        list.add(new AafUserRole(parts[0], env.resolvePlaceholders(parts[1])));
-                    } else {
-                        Observation.report(LogMessages.INVALID_ATTRIBUTE, line, userRolePropertiesName);
-                    }
-                }
-            }
+            status = aafClientCache.authorize(requestContext);
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
+            status = AuthorizationResult.AuthenticationFailure;
         }
-        debug.debug("AafUserRole.properties: " + list);
-    }
-
-    /**
-     * Gets the for url method.
-     *
-     * @param url the url
-     * @param method the method
-     * @return the for url method
-     */
-    public List<AafUserRole> getForUrlMethod(String url, String method) {
-        List<AafUserRole> userRoleList = new ArrayList<>();
-        for (AafUserRole aur : list) {
-            if (aur.matches(url, method)) {
-                userRoleList.add(aur);
-            }
+        switch (status) {
+            case AuthenticationFailure:
+                builder = Response.status(Response.Status.UNAUTHORIZED).entity("");
+                builder.header("WWW-Authenticate", "Basic realm=\"Realm\"");
+                throw new WebApplicationException(builder.build());
+            case AuthorizationFailure:
+                builder = Response.status(Response.Status.FORBIDDEN).entity("");
+                throw new WebApplicationException(builder.build());
+            case Authorized:
+            case Authenticated:
+            default:
         }
-        return userRoleList;
     }
 }
