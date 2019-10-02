@@ -7,6 +7,61 @@ Release Notes
 =============
 
 
+Version: 5.0.1
+--------------
+
+:Release Date: 2019-09-30 (El Alto Release)
+
+Artifacts released:
+
+optf-cmso:2.1.1
+
+**New Features**
+
+While no new features were added in the release, the following Stories were delivered as enhancements.
+
+    * [OPTFRA-427] CMSO - Schedule a workflow in SO and track status to completion
+
+* Platform Maturity Level 1
+    * ~56.4+ unit test coverage
+
+**Bug Fixes**
+
+The El Alto release for CMSO fixed the following Bugs.
+
+    * [OPTFRA-577] Need for "ReadWriteMany" access on storage when deploying on Kubernetes?
+    * [OPTFRA-517] Clean up optf/cmso in integration/csit for Dublin
+    * [OPTFRA-403] OOF CMSO Service kubernetes resources allocation is not done
+    * [OPTFRA-526] OOF pods not running
+    * [OPTFRA-593] OOF-CSMO healthcheck is failing in Master
+
+
+**Known Issues**
+
+    * [OPTFRA-596] CMSO - Sonar and CSIT jobs failing
+
+**Security Notes**
+
+*Fixed Security Issues*
+
+    * [OPTFRA-455] CMSO - Mitigate License Threat tomcat-embed-core
+
+*Known Security Issues*
+
+    * [OPTFRA-481] Fix Vulnerability with spring-data-jpa package
+    * [OPTFRA-431] Fix Vulnerability with spring-security-web package
+
+*Known Vulnerabilities in Used Modules*
+
+**Upgrade Notes**
+
+
+**Deprecation Notes**
+
+
+**Other**
+
+
 Version: 2.0.0
 --------------
 
