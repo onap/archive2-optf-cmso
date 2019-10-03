@@ -1,0 +1,18 @@
+distribution_type: 'container'
+container_release_tag: '2.1.1'
+project: 'optf-cmso'
+log_dir: 'optf-cmso-maven-docker-stage-master/1/'
+ref: 99e486a9fafbf60b04c6ed30a01c8d18d4e2bd28
+containers:
+    - name: 'optf-cmso-robot'
+      version: '2.1-STAGING-20191003T045612Z'
+    - name: 'optf-cmso-service'
+      version: '2.1-STAGING-20191003T045612Z'
+    - name: 'optf-cmso-optimizer'
+      version: '2.1-STAGING-20191003T045612Z'
+    - name: 'optf-cmso-topology'
+      version: '2.1-STAGING-20191003T045612Z'
+    - name: 'optf-cmso-ticketmgt'
+      version: '2.1-STAGING-20191003T045612Z'
+    - name: 'optf-cmso-dbinit'
+      version: '2.1-STAGING-20191003T045612Z'
