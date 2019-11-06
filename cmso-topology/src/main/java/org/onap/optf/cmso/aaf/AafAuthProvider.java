@@ -55,7 +55,7 @@ public class AafAuthProvider implements AuthenticationProvider {
     AafClientCache clientCache;
 
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(Authentication authentication) {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
         String sessionId = null;
