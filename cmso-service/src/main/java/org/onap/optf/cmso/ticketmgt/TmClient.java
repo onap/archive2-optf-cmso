@@ -234,7 +234,7 @@ public class TmClient {
             }
 
         }
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
 
         variables.put(Variables.status.toString(), "Closed");
         variables.put(Variables.requesterId.toString(), requesterId);
@@ -248,7 +248,7 @@ public class TmClient {
 
     private Map<String, Object> getCancelVariables(Schedule schedule, String changeId) {
         String requesterId = schedule.getUserId();
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
         }
@@ -259,7 +259,7 @@ public class TmClient {
 
     private Map<String, Object> getUpdateVariables(Schedule schedule, String changeId) {
         String requesterId = schedule.getUserId();
-        Map<String, Object> variables = new HashMap<String, Object>();
+        Map<String, Object> variables = new HashMap<>();
         if (requesterId.length() > Variables.requesterId.getMaxLength()) {
             requesterId = requesterId.substring(0, Variables.requesterId.getMaxLength());
         }
@@ -275,7 +275,7 @@ public class TmClient {
             Response response = null;
             debug.debug("postCloseChangeTicket {}", closeChangeRecord.asText());
             Observation.report(LogMessages.TM_CLOSE_CHANGE_RECORD, "Begin", scheduleId, changeId);
-            // response = vtmPost(url, closeChangeRecord, scheduleId);
+         
             response = tmPost(Endpoint.CLOSE, closeChangeRecord, scheduleId);
             Observation.report(LogMessages.TM_CLOSE_CHANGE_RECORD, "End", scheduleId, changeId);
             switch (response.getStatus()) {
@@ -338,7 +338,7 @@ public class TmClient {
     }
 
     private List<TmAsset> getAssetList(List<String> vnfNames) {
-        List<TmAsset> assetList = new ArrayList<TmAsset>();
+        List<TmAsset> assetList = new ArrayList<>();
         for (String vnfName : vnfNames) {
             TmAsset asset = new TmAsset();
             asset.setAssetId(vnfName);
