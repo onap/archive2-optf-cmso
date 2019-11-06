@@ -213,7 +213,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     }
 
     private void createChangeManagement(Schedule schedule, OptimizedScheduleMessage scheduleMessage,
-                    Map<String, List<ElementInfo>> groups) throws CmsoException {
+                    Map<String, List<ElementInfo>> groups){
         SchedulingData schedulingInfo = scheduleMessage.getSchedulingData();
         for (String groupId : groups.keySet()) {
 
@@ -266,7 +266,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     }
 
     private void createChangeManagementImmediate(Schedule schedule, OptimizedScheduleMessage scheduleMessage,
-                    Map<String, List<ElementInfo>> groups) throws CmsoException, JsonProcessingException {
+                    Map<String, List<ElementInfo>> groups){
         SchedulingData schedulingInfo = scheduleMessage.getSchedulingData();
         for (String groupId : groups.keySet()) {
             ChangeManagementGroup cmg = new ChangeManagementGroup();
@@ -324,7 +324,7 @@ public class CommonServiceImpl extends BaseSchedulerServiceImpl {
     // Marshall commonData into DB DomainData
     // No validation.
     //
-    private List<DomainData> marshallDomainData(OptimizedScheduleMessage scheduleMessage) throws CmsoException {
+    private List<DomainData> marshallDomainData(OptimizedScheduleMessage scheduleMessage) {
         List<NameValue> domainData = scheduleMessage.getCommonData();
         List<DomainData> domainDataList = new ArrayList<DomainData>();
         for (NameValue nameValue : domainData) {

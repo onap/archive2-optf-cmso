@@ -199,7 +199,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
     }
 
     private OptimizedScheduleMessage adaptScheduleMessage(CmsoMessage sm)
-                    throws CmsoException, JsonParseException, JsonMappingException, IOException {
+                    throws CmsoException, IOException {
         OptimizedScheduleMessage osm = new OptimizedScheduleMessage();
         osm.setScheduleId(sm.getScheduleId());
         osm.setDomain(sm.getDomain());
@@ -266,7 +266,7 @@ public class CmsoServiceImpl extends CommonServiceImpl implements CmsoService {
     }
 
     private Object getRequestFromCallbackData(String node, String value)
-                    throws CmsoException, JsonParseException, JsonMappingException, IOException {
+                    throws CmsoException, IOException {
         ObjectMapper om = new ObjectMapper();
         JsonNode json = om.readValue(value, JsonNode.class);
         JsonNode details = json.get("requestDetails");
