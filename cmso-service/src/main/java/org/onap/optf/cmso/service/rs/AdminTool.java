@@ -47,6 +47,7 @@ import javax.ws.rs.core.Response;
 @Api("CMSO Administration")
 @Path("/{apiVersion}")
 @Produces({MediaType.APPLICATION_JSON})
+@FunctionalInterface
 public interface AdminTool {
 
     // ******************************************************************

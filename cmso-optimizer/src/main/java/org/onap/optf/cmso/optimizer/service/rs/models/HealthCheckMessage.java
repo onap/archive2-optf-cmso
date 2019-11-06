@@ -45,7 +45,7 @@ public class HealthCheckMessage implements Serializable {
     private String currentTime = "";
     private String hostname = "";
 
-    private List<HealthCheckComponent> components = new ArrayList<HealthCheckComponent>();
+    private List<HealthCheckComponent> components = new ArrayList<>();
 
     public Boolean getHealthy() {
         return healthy;
