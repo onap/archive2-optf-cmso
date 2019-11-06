@@ -170,33 +170,28 @@ public class OptimizerClient {
         return list;
     }
 
-    private ActiveTicketsResponse getTicketResponse(UUID uuid)
-                    throws JsonParseException, JsonMappingException, IOException {
+    private ActiveTicketsResponse getTicketResponse(UUID uuid) throws IOException {
         Ticket ticketRow = ticketMgtRequestManager.getExistingTickets(uuid);
         String ticketString = ticketRow.getTickets();
         ObjectMapper om = new ObjectMapper();
         return om.readValue(ticketString, ActiveTicketsResponse.class);
     }
 
-    private TopologyResponse getTopologyResponse(UUID uuid)
-                    throws JsonParseException, JsonMappingException, IOException {
+    private TopologyResponse getTopologyResponse(UUID uuid) throws IOException {
         Topology topologyRow = topologyRequestManager.getExistingTopology(uuid);
         String topologyString = topologyRow.getTopology();
         ObjectMapper om = new ObjectMapper();
         return om.readValue(topologyString, TopologyResponse.class);
     }
 
-    private OptimizerRequest getOptimizerRequest(Request request)
-                    throws JsonParseException, JsonMappingException, IOException {
+    private OptimizerRequest getOptimizerRequest(Request request) throws IOException {
         String requestString = request.getRequest();
         ObjectMapper om = new ObjectMapper();
         return om.readValue(requestString, OptimizerRequest.class);
     }
 
 
-    private OptimizerEngineResponse initiateOptimizer(OptimizerParameters request, Request requestRow)
-                    throws CmsoException, JsonProcessingException {
-
+    private OptimizerEngineResponse initiateOptimizer(OptimizerParameters request, Request requestRow) {
 
         UUID uuid = requestRow.getUuid();
         OptimizerEngineResponse apiResponse = new OptimizerEngineResponse();
