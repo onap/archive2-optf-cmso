@@ -89,14 +89,12 @@ public class AafPerm {
      * @return true = permissions ok
      */
     public boolean ok(AafPerm userPerm) {
-        if (type.equals(userPerm.getType())) {
-            if (userPerm.getInstance().equals("*") || instance.equals("*") || userPerm.getInstance().equals(instance)) {
-                for (String userAction : userPerm.getActions()) {
+        if ((type.equals(userPerm.getType()))&&(userPerm.getInstance().equals("*") || instance.equals("*") || userPerm.getInstance().equals(instance))) {
+                         for (String userAction : userPerm.getActions()) {
                     if (userAction.equals("*") || actions.contains("*") || actions.contains(userAction)) {
                         return true;
                     }
-                }
-            }
+                }           
         }
         return false;
     }
