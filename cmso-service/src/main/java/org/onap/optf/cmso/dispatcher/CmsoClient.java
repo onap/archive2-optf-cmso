@@ -163,8 +163,7 @@ public class CmsoClient {
         }
     }
 
-    private void processScheduleResponse(ChangeManagementSchedule cmSchedule, Schedule schedule, Response response)
-            throws SchedulerException {
+    private void processScheduleResponse(ChangeManagementSchedule cmSchedule, Schedule schedule, Response response) {
         WfChangeManagementResponse resp = response.readEntity(WfChangeManagementResponse.class);
         for (WfVidCmResponse cmResponse : resp.getCmResponses()) {
             if (cmResponse.getVnfName().equals(cmSchedule.getVnfName())) {
@@ -182,8 +181,7 @@ public class CmsoClient {
         updateScheduleStatus(cmSchedule, schedule);
     }
 
-    private void processScheduleResponse200(ChangeManagementSchedule cmSchedule, Schedule schedule, Response response)
-            throws SchedulerException {
+    private void processScheduleResponse200(ChangeManagementSchedule cmSchedule, Schedule schedule, Response response){
 
         JsonNode node = response.readEntity(JsonNode.class);
         log.info("Message returned from VID callback: " + node.toString());
