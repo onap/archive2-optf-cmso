@@ -86,13 +86,11 @@ public class RecurringWindows {
                     allUnique = true;
                     for (ChangeWindow test : availableList) {
                         // if availability windows overlap
-                        if (!consumed.contains(test)) {
-                            if (win.absorbIfOverlapping(test)) {
+                        if ((!consumed.contains(test)) && (win.absorbIfOverlapping(test))) {
                                 consumed.add(test);
                                 allUnique = false;
                             }
                         }
-                    }
                 }
                 collapsed.add(win);
             }
