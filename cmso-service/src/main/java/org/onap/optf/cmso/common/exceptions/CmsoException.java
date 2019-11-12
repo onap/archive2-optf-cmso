@@ -42,7 +42,7 @@ public class CmsoException extends Exception {
     private static final long serialVersionUID = 1L;
 
     protected CmsoRequestError requestError = null;
-    private List<String> variables = new ArrayList<String>();
+    private List<String> variables = new ArrayList<>();
     protected LogMessages messageCode;
     protected Status status;
 
