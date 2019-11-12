@@ -217,10 +217,8 @@ public class TmClient {
             if ((cms.getDispatchTimeMillis() != null) && (actualStartDate == 0 || cms.getDispatchTimeMillis() < actualStartDate)) {
                     actualStartDate = cms.getDispatchTimeMillis();
             }
-            if (cms.getExecutionCompletedTimeMillis() != null) {
-                if (cms.getExecutionCompletedTimeMillis() > actualEndDate) {
+            if ((cms.getExecutionCompletedTimeMillis() != null) && (cms.getExecutionCompletedTimeMillis() > actualEndDate)) {
                     actualEndDate = cms.getExecutionCompletedTimeMillis();
-                }
             }
         }
         if (closureCode != ClosureCode.Successful) {
