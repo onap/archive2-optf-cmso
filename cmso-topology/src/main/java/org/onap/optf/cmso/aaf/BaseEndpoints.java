@@ -63,7 +63,7 @@ public class BaseEndpoints {
         endpoints.clear();
         endpoints.addAll(endpointMap.get(ep));
         String endpoint = null;
-        if (endpoints.size() > 0) {
+        if (endpoints.size().isEmpty()) {
             // Make an attempt to return the most recent "working" endpoint.
             //
             synchronized (endpointMapOk) {
