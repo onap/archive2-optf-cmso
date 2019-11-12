@@ -214,10 +214,8 @@ public class TmClient {
         long actualStartDate = 0;
         long actualEndDate = 0;
         for (ChangeManagementSchedule cms : cmSchedules) {
-            if (cms.getDispatchTimeMillis() != null) {
-                if (actualStartDate == 0 || cms.getDispatchTimeMillis() < actualStartDate) {
+            if ((cms.getDispatchTimeMillis() != null) && (actualStartDate == 0 || cms.getDispatchTimeMillis() < actualStartDate)) {
                     actualStartDate = cms.getDispatchTimeMillis();
-                }
             }
             if (cms.getExecutionCompletedTimeMillis() != null) {
                 if (cms.getExecutionCompletedTimeMillis() > actualEndDate) {
