@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba8aca27_473d2da3",
+        "filename": "cmso-service/src/main/java/org/onap/optf/cmso/aaf/AafPerm.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2019-11-12T03:08:19Z",
+      "side": 1,
+      "message": "Can you check whether the formatting is off?",
+      "revId": "bfdc4a257df06b906b409fea61ade068a7593743",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
