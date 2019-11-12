@@ -65,7 +65,7 @@ public class MessageHeaders {
     }
 
     /** The Constant supportedMajorVersions. */
-    private static final Map<String, String> supportedMajorVersions = new HashMap<String, String>();
+    private static final Map<String, String> supportedMajorVersions = new HashMap<>();
 
     static {
         supportedMajorVersions.put("v1", "0");
@@ -73,7 +73,7 @@ public class MessageHeaders {
     }
 
     /** The Constant supportedMajorMinorVersions. */
-    private static final Set<String> supportedMajorMinorVersions = new HashSet<String>();
+    private static final Set<String> supportedMajorMinorVersions = new HashSet<>();
 
     static {
         supportedMajorMinorVersions.add("v1.0");
