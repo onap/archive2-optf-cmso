@@ -253,8 +253,7 @@ public class AafClientCache {
 
     private String getToken(String auth) {
         try {
-            String token = new String(DatatypeConverter.parseBase64Binary(auth));
-            return token;
+            return new String(DatatypeConverter.parseBase64Binary(auth));
         } catch (Exception e) {
             return auth;
         }
