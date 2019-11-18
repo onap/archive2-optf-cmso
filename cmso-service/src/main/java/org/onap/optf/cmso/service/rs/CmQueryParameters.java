@@ -224,8 +224,7 @@ public class CmQueryParameters {
 
     private static DateTime convertDate(String utcDate, String urlName) throws CmsoException {
         try {
-            DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
-            return dateTime;
+            return ISODateTimeFormat.dateTimeParser().parseDateTime(utcDate);
         }
         catch (Exception e) {
             throw new CmsoException(Status.BAD_REQUEST, LogMessages.INVALID_DATE_FILTER, urlName, utcDate);
