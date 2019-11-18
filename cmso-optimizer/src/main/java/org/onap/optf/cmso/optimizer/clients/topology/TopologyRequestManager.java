@@ -96,8 +96,7 @@ public class TopologyRequestManager {
      * @throws JsonMappingException the json mapping exception
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    public TopologyResponse getTopologyResponse(UUID uuid)
-                    throws JsonParseException, JsonMappingException, IOException {
+    public TopologyResponse getTopologyResponse(UUID uuid) throws IOException {
         Topology row = getExistingTopology(uuid);
         if (row != null) {
             String responseString = row.getTopology();
