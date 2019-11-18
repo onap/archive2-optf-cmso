@@ -119,7 +119,7 @@ public class TicketMgtClient {
     }
 
     private ActiveTicketsRequest buildRequest(OptimizerRequest optimizerRequest)
-                    throws JsonParseException, JsonMappingException, IOException {
+                    throws IOException {
         UUID uuid = UUID.fromString(optimizerRequest.getRequestId());
         Topology topologyRow = topologyRequestManager.getExistingTopology(uuid);
         String topologyString = topologyRow.getTopology();
