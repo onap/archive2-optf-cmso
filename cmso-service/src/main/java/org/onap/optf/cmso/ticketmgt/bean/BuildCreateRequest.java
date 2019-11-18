@@ -152,8 +152,7 @@ public class BuildCreateRequest {
      */
     public JsonNode createGetChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("GetChangeRecord");
-        JsonNode json = substituteJson(rawjson, variables);
-        return json;
+        return substituteJson(rawjson, variables);
     }
 
     private JsonNode substituteJson(JsonNode json, Map<String, Object> variables) {
