@@ -142,7 +142,7 @@ public class CmsoOptimizerHandler {
         }
     }
 
-    private void saveSchedules(OptimizerResponse response, Schedule schedule) throws CmsoException {
+    private void saveSchedules(OptimizerResponse response, Schedule schedule) {
 
         // TODO: Persist the list of schedules in the DB
 
