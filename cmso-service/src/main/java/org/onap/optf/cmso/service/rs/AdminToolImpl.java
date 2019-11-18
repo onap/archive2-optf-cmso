@@ -62,8 +62,7 @@ public class AdminToolImpl implements AdminTool {
             return Response.ok("").build();
         }
         String encrypted = PropertiesManagement.getEncryptedValue(id);
-        Response response = Response.ok(encrypted).build();
-        return response;
+        return Response.ok(encrypted).build();
     }
 
 }
