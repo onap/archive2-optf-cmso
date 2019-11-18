@@ -104,8 +104,7 @@ public class BuildCreateRequest {
     public JsonNode createChangeRecordRequest(Map<String, Object> variables, List<TmAsset> assetList,
             String workflowName) {
         JsonNode rawjson = getYaml("CreateChangeTicket");
-        JsonNode json = substituteJson(rawjson, variables);
-        return json;
+        return substituteJson(rawjson, variables);
     }
 
     /**
@@ -116,8 +115,7 @@ public class BuildCreateRequest {
      */
     public JsonNode createCloseCancelChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("CloseCancelChangeRecord");
-        JsonNode json = substituteJson(rawjson, variables);
-        return json;
+        return substituteJson(rawjson, variables);
     }
 
     /**
@@ -128,8 +126,7 @@ public class BuildCreateRequest {
      */
     public JsonNode createCancelChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("CancelChangeRecord");
-        JsonNode json = substituteJson(rawjson, variables);
-        return json;
+        return substituteJson(rawjson, variables);
     }
 
     /**
@@ -140,8 +137,7 @@ public class BuildCreateRequest {
      */
     public JsonNode createUpdateChangeRecord(Map<String, Object> variables) {
         JsonNode rawjson = getYaml("UpdateChangeRecord");
-        JsonNode json = substituteJson(rawjson, variables);
-        return json;
+        return substituteJson(rawjson, variables);
     }
 
     /**
