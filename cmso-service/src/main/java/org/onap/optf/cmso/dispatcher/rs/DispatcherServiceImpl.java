@@ -75,8 +75,7 @@ public class DispatcherServiceImpl implements DispacherService {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             debug.error(e.getMessage(), e);
         }
-        Response response = Response.ok().build();
-        return response;
+        return Response.ok().build();
     }
 
     @Override
@@ -105,8 +104,7 @@ public class DispatcherServiceImpl implements DispacherService {
             errors.error(LogMessages.UNEXPECTED_EXCEPTION, e.getMessage());
             debug.error(e.getMessage(), e);
         }
-        Response response = Response.ok().build();
-        return response;
+        return Response.ok().build();
     }
 
     @Override
