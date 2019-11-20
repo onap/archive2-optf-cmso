@@ -237,9 +237,7 @@ public class RecurringWindows {
 
         String rdata = "RRULE:FREQ=MINUTELY;INTERVAL=" + durationInSeconds / 60;
         DateTime start = new DateTime(window.getStartTime().toInstant().toEpochMilli());
-        DateTimeIterator recur =
-                        DateTimeIteratorFactory.createDateTimeIterator(rdata, start, DateTimeZone.UTC, true);
-        return recur;
+        return DateTimeIteratorFactory.createDateTimeIterator(rdata, start, DateTimeZone.UTC, true);
     }
 
 
