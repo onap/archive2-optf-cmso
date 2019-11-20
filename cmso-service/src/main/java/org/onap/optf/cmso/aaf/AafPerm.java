@@ -90,9 +90,9 @@ public class AafPerm {
      */
     public boolean ok(AafPerm userPerm) {
         if (type.equals(userPerm.getType())) {
-            if (userPerm.getInstance().equals("*") || instance.equals("*") || userPerm.getInstance().equals(instance)) {
+            if ("*".equals(userPerm.getInstance()) || "*".equals(instance) || userPerm.getInstance().equals(instance)) {
                 for (String userAction : userPerm.getActions()) {
-                    if (userAction.equals("*") || actions.contains("*") || actions.contains(userAction)) {
+                    if ("*".equals(userAction) || actions.contains("*") || actions.contains(userAction)) {
                         return true;
                     }
                 }
