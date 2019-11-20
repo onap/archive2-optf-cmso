@@ -158,7 +158,7 @@ public class AafUserRole {
         while (!inNodes.isEmpty() && !matchNodes.isEmpty()) {
             String inNode = inNodes.remove(0);
             String matchNode = matchNodes.get(0);
-            if (matchNode.equals(inNode) || matchNode.equals("*")) {
+            if (matchNode.equals(inNode) || "*".equals(matchNode)) {
                 matchNodes.remove(0);
             } else {
                 if (!matchNode.equals("**")) {
@@ -174,10 +174,10 @@ public class AafUserRole {
 
         // We have incoming nodes remaining, see if we can wildcard them
         if (matchNodes.size() == 1) {
-            if (matchNodes.get(0).equals("**")) {
+            if ("**".equals(matchNodes.get(0))) {
                 return true;
             }
-            if (inNodes.size() == 1 && matchNodes.get(0).equals("*")) {
+            if (inNodes.size() == 1 && "*".equals(matchNodes.get(0))) {
                 return true;
             }
         }
