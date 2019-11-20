@@ -72,10 +72,8 @@ public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFil
 
         String transactionId = (String) headers.getFirst(MessageHeaders.HeadersEnum.TransactionID.toString());
         String mdcId = MDC.get(MDC_KEY_REQUEST_ID);
-        if (transactionId == null || "".equals(transactionId)) {
-            if (mdcId != null) {
+        if ((transactionId == null || "".equals(transactionId)) && (mdcId != null)) {
                 headers.add(HeadersEnum.TransactionID.toString(), mdcId);
-            }
         }
         headers.add(HeadersEnum.FromAppID.toString(), appId);
     }
