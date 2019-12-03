@@ -59,7 +59,7 @@ public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFil
         Mdc.metricEnd(responseContext);
         Mdc.setCaller(17);
         Observation.report(LogMessages.OUTGOING_MESSAGE_RETURNED, requestContext.getMethod(),
-                        requestContext.getUri().getPath().toString(), responseContext.getStatusInfo().toString());
+                        requestContext.getUri().getPath(), responseContext.getStatusInfo().toString());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CmsoClientFilters implements ClientRequestFilter, ClientResponseFil
         Mdc.metricStart(requestContext);
         Mdc.setCaller(17);
         Observation.report(LogMessages.OUTGOING_MESSAGE, requestContext.getMethod(),
-                        requestContext.getUri().getPath().toString());
+                        requestContext.getUri().getPath());
         MultivaluedMap<String, Object> headers = requestContext.getHeaders();
 
         String transactionId = (String) headers.getFirst(MessageHeaders.HeadersEnum.TransactionID.toString());
