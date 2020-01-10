@@ -120,8 +120,8 @@ public class CmQueryParameters {
 
     private static String formatString(String urlName, List<String> values, QueryColumns qc) {
         StringBuilder clause = new StringBuilder();
-        List<String> likes = new ArrayList<String>();
-        List<String> in = new ArrayList<String>();
+        List<String> likes = new ArrayList<>();
+        List<String> in = new ArrayList<>();
         for (String value : values) {
             if (value.contains("%")) {
                 likes.add(value);
@@ -170,7 +170,7 @@ public class CmQueryParameters {
     }
 
     private static String formatDate(String urlName, List<String> values, QueryColumns qc) throws CmsoException {
-        List<String> clauses = new ArrayList<String>();
+        List<String> clauses = new ArrayList<>();
         for (String value : values) {
             String[] dates = value.split(",");
             switch (dates.length) {
@@ -231,19 +231,5 @@ public class CmQueryParameters {
         }
     }
 
-    // public static void main(String argv[])
-    // {
-    // List<String> values = new ArrayList<String>();
-    // values.add("2017-07-08T11:12:13Z,2017-07-08T11:12:13Z");
-    // values.add("2017-07-09T11:12:13Z,2017-07-09T11:12:13Z");
-    // values.add(",2017-07-09T11:12:13Z");
-    // values.add(" 2017-07-09T11:12:13Z");
-    // try {
-    // System.out.println(buildClause("request.createDateTime", values));
-    // } catch (SchedulerException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    //
-    // }
+    
 }
