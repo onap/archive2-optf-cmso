@@ -175,8 +175,7 @@ public class Mdc {
      * @return the map
      */
     public static Map<String, String> save() {
-        Map<String, String> save = MDC.getCopyOfContextMap();
-        return save;
+    	  return MDC.getCopyOfContextMap();
     }
 
     /**
