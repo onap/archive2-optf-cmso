@@ -13,14 +13,14 @@ ENV http_proxy=$HTTP_PROXY
 ENV https_proxy=$HTTPS_PROXY
 
 RUN test -n "$" && echo "Acquire::Proxy \"http://$http_proxy\";" > /etc/apt/apt.conf.d/02proxy || true && \
-    apt-get update  && \
-    apt-get install -y software-properties-common vim && \
-    add-apt-repository ppa:jonathonf/python-3.6 && \
-    apt-get update && \
-    apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv  && \
-	python3.6 -m pip install pip --upgrade && \
-    python3.6 -m pip install wheel  && \
-    apt-get install \
+apt-get update && \
+apt-get install -y software-properties-common vim && \
+add-apt-repository ppa:deadsnakes/ppa && \
+apt-get update  && \
+apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv  && \
+python3.6 -m pip install pip --upgrade && \
+python3.6 -m pip install wheel  && \
+apt-get install \
         --no-install-recommends \
         --assume-yes \
             chromium-browser \

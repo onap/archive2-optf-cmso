@@ -139,11 +139,11 @@ public class AafClientCache {
             }
             permissions = cache.get(getCacheKey(auth));
             if ((permissions == null) && (!auth.get("password").equals(""))) {
-                    permissions = getPermissionsFromAaf(auth);
-                    if (permissions != null) {
-                        cache.put(getCacheKey(auth), permissions);
-                    }
+                permissions = getPermissionsFromAaf(auth);
+                if (permissions != null) {
+                    cache.put(getCacheKey(auth), permissions);
                 }
+            }
         }
         return permissions;
     }

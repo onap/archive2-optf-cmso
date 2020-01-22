@@ -66,8 +66,9 @@ public class AafAuthProvider implements AuthenticationProvider {
                 sessionId = webAuthDetails.getRemoteAddress() + ":" + webAuthDetails.getSessionId();
             }
         }
-        if ((env.getProperty(AafProperties.aafEnabled.toString(), Boolean.class, true)) && (clientCache.authenticate(name, password, sessionId) != AuthorizationResult.Authenticated)) {
-                return null;
+        if ((env.getProperty(AafProperties.aafEnabled.toString(), Boolean.class, true))
+               && (clientCache.authenticate(name, password, sessionId) != AuthorizationResult.Authenticated)) {
+            return null;
         }
         return new UsernamePasswordAuthenticationToken(name, password, new ArrayList<>());
 

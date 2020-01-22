@@ -140,8 +140,10 @@ public class DispatchJob {
         // Validate ticket is still active with tm
         //
         // TODO
-        if (cmSchedule.getTmChangeId() != null && !cmSchedule.getTmChangeId().equals("") && !isChangeApproved(schedule, cmSchedule, scheduleImmediateEnabled)) {
-                return false;
+        if (cmSchedule.getTmChangeId() != null 
+                && !cmSchedule.getTmChangeId().equals("")
+                && !isChangeApproved(schedule, cmSchedule, scheduleImmediateEnabled)) {
+            return false;
         }
 
         // *******************************************************************

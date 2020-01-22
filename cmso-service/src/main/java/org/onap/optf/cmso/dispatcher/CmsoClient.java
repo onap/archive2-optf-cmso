@@ -181,7 +181,8 @@ public class CmsoClient {
         updateScheduleStatus(cmSchedule, schedule);
     }
 
-    private void processScheduleResponse200(ChangeManagementSchedule cmSchedule, Schedule schedule, Response response){
+    private void processScheduleResponse200(ChangeManagementSchedule cmSchedule, Schedule schedule,
+        Response response) {
 
         JsonNode node = response.readEntity(JsonNode.class);
         log.info("Message returned from VID callback: " + node.toString());
