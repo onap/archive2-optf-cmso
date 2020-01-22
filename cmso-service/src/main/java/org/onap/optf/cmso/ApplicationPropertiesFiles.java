@@ -1,6 +1,6 @@
 /*
  * Copyright © 2018 AT&T Intellectual Property.
- * Modifications Copyright © 2018 IBM.
+ * Modifications Copyright © 2019 IBM.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ import org.springframework.context.annotation.PropertySources;
 
 
 @Configuration
-@PropertySources({@PropertySource("file:etc/config/cmso.properties"),
-                @PropertySource("file:etc/config/optimizer.properties"),
-                @PropertySource("file:etc/config/ticketmgt.properties"),})
+@PropertySource("file:etc/config/cmso.properties")
+@PropertySource("file:etc/config/optimizer.properties")
+@PropertySource("file:etc/config/ticketmgt.properties")
 public class ApplicationPropertiesFiles {
 }
