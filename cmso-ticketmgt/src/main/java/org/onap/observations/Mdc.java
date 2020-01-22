@@ -198,9 +198,7 @@ public class Mdc {
      * @param response the response
      */
     public static void metricEnd(ClientResponseContext response) {
-
         Date now = new Date();
-        // MDC.put(MDC_BEGIN_TIMESTAMP, Stopwatch.isoFormatter.format(now));
         MDC.put(MDC_END_TIMESTAMP, Stopwatch.isoFormatter.format(now));
         setResponseInfo(response.getStatusInfo());
 
