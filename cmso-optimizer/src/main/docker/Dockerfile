@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 MAINTAINER "The Onap Team"
 LABEL Description="This image contains ubuntu 16.04 with the openjdk installed" Version="16.04-8"
@@ -20,7 +20,7 @@ ENV MZN_DL_URL ${MZN_GH_BASE}/releases/download/${MZN}/${MZN_BASENAME}.tgz
 RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /etc/apt/apt.conf.d/02proxy || true  && \
     apt-get update &&  \
     apt-get -y dist-upgrade &&  \
-    apt-get install -y openjdk-8-jre-headless && \
+    apt-get install -y openjdk-11-jre-headless && \
     apt-get install -y wget && \
     apt-get install -y curl && \
     set && \
