@@ -1,6 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `optimizer` DEFAULT CHARACTER SET utf8 ;
 
-CREATE TABLE IF NOT EXISTS `optimizer`.`request` (
+CREATE TABLE IF NOT EXISTS `request` (
   uuid BINARY(16) NOT NULL,
   request LONGTEXT NOT NULL,
   created_time BIGINT(20) NULL DEFAULT NULL,
@@ -12,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`request` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `optimizer`.`response` (
+CREATE TABLE IF NOT EXISTS `response` (
   uuid BINARY(16) NOT NULL,
   response LONGTEXT NULL DEFAULT NULL,
   delivered_time BIGINT(20) NULL DEFAULT NULL,
@@ -21,7 +20,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
-CREATE TABLE IF NOT EXISTS `optimizer`.`topology` (
+CREATE TABLE IF NOT EXISTS `topology` (
   uuid BINARY(16) NOT NULL,
   topology LONGTEXT NULL DEFAULT NULL,
   topology_start BIGINT(20) NULL DEFAULT NULL,
@@ -32,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`topology` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `optimizer`.`tickets` (
+CREATE TABLE IF NOT EXISTS `tickets` (
   uuid BINARY(16) NOT NULL,
   tickets LONGTEXT NULL DEFAULT NULL,
   tickets_start BIGINT(20) NULL DEFAULT NULL,
@@ -43,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `optimizer`.`tickets` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
-CREATE TABLE IF NOT EXISTS `optimizer`.`optimizer` (
+CREATE TABLE IF NOT EXISTS `optimizer` (
   uuid BINARY(16) NOT NULL,
   optimize_response LONGTEXT NULL DEFAULT NULL,
   optimize_start BIGINT(20) NULL DEFAULT NULL,

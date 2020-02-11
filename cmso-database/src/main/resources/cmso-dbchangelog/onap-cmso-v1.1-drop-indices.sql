@@ -1,4 +1,3 @@
-USE CMSO;
 
 -- -----------------------------------------------------
 -- DROP THE FOREIGN KEYS THAT USE INT IDs
