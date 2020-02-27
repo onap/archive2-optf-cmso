@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "087ee13c_da5a38df",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 2923
+      },
+      "writtenOn": "2020-02-27T14:51:47Z",
+      "side": 1,
+      "message": "Can you change this 3.0.0?\nI will abandon the one I created.",
+      "revId": "cf86d3dc75f2a0c568b942d045888992dada4e76",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    }
+  ]
+}
