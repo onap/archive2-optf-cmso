@@ -30,6 +30,8 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     rm mz.tgz && \
     echo PATH=/mz-dist:$PATH >> ~/.bashrc
 
+RUN groupadd onap \
+    && useradd -m -g onap onap
 
 COPY onap-cmso-optimizer/cmso-optimizer.jar ${APP_HOME}/app.jar
 
@@ -44,7 +46,10 @@ COPY onap-cmso-optimizer/scripts ${APP_HOME}/scripts
 RUN chmod 700 ${APP_HOME}/startService.sh && \
     ln -s /share/etc ${APP_HOME}/etc && \
     ln -s /share/logs ${APP_HOME}/logs && \
-    ln -s /share/debug-logs ${APP_HOME}/debug-logs
+    ln -s /share/debug-logs ${APP_HOME}/debug-logs && \
+    chown -R onap:onap ${APP_HOME}
+
+USER onap
 
 WORKDIR ${APP_HOME}
 ENTRYPOINT ./startService.sh 

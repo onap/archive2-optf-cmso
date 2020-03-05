@@ -17,6 +17,9 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get install -y openjdk-11-jre-headless && \
 	apt-get install -y curl
 
+RUN groupadd onap \
+    && useradd -m -g onap onap
+
 COPY onap-cmso-topology/cmso-topology.jar ${APP_HOME}/app.jar
 
 VOLUME /share/etc
@@ -29,7 +32,10 @@ COPY onap-cmso-topology/data ${APP_HOME}/data
 RUN chmod 700 ${APP_HOME}/startService.sh && \
     ln -s /share/etc ${APP_HOME}/etc && \
     ln -s /share/logs ${APP_HOME}/logs && \
-    ln -s /share/debug-logs ${APP_HOME}/debug-logs
+    ln -s /share/debug-logs ${APP_HOME}/debug-logs && \
+    chown -R onap:onap ${APP_HOME}
+
+USER onap
 
 WORKDIR ${APP_HOME}
 ENTRYPOINT ./startService.sh 
