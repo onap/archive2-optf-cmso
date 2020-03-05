@@ -255,6 +255,7 @@ public class AafClientCache {
         try {
             return new String(DatatypeConverter.parseBase64Binary(auth));
         } catch (Exception e) {
+            debug.info("Exception in cmso-topology.AafClientCache",e);
             return auth;
         }
     }

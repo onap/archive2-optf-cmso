@@ -258,6 +258,7 @@ public class AafClientCache {
             String token = new String(DatatypeConverter.parseBase64Binary(auth));
             return token;
         } catch (Exception e) {
+            debug.info("Exception in cmso-service..AafClientCache",e);
             return auth;
         }
     }
