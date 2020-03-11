@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2.1.1-SNAPSHOT",
+    "version" : "2.2.0-SNAPSHOT",
     "title" : "cmso-ticketmgt"
   },
   "basePath" : "/ticketmgt",
