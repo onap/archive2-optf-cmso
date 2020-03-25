@@ -22,7 +22,7 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-11-jre-headless && \
     apt-get install -y wget && \
-    apt-get install -y curl && \
+    apt-get install -y curl unzip wget netcat && \
     set && \
     wget -q $MZN_DL_URL -O mz.tgz && \
     tar xzf mz.tgz && \

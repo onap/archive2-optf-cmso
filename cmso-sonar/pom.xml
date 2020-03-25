@@ -110,7 +110,7 @@
 						<configuration>
 							<skip>${skipIntegrationTests}</skip>
 							<dataFile>${project.basedir}/target/code-coverage/service.jacoco.exec</dataFile>
-							<outputDirectory>${project.basedir}/target/site/service-it</outputDirectory>
+							<outputDirectory>${project.basedir}/../cmso-service/target/site/service-it</outputDirectory>
 							<includes>
 								<include>service/**</include>
 							</includes>
@@ -131,7 +131,7 @@
 						<configuration>
 							<skip>${skipIntegrationTests}</skip>
 							<dataFile>${project.basedir}/target/code-coverage/optimizer.jacoco.exec</dataFile>
-							<outputDirectory>${project.basedir}/target/site/optimizer-it</outputDirectory>
+							<outputDirectory>${project.basedir}/../cmso-optimizer/target/site/optimizer-it</outputDirectory>
 							<includes>
 								<include>optimizer/**</include>
 							</includes>
