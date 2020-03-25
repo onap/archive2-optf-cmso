@@ -48,6 +48,7 @@
 		<docker.skip.tag>false</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
 		<skipIntegrationTests>true</skipIntegrationTests>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/service-it/jacoco.xml,${project.build.directory}/site/optimizer-it/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
