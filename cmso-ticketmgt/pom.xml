@@ -47,8 +47,6 @@
 		<jacoco.itPath>${basedir}/target/jacoco_itReport</jacoco.itPath>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-		<sonar.jacoco.reportPath>${basedir}/target/jacoco-ut.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.surefire.reportsPath>${basedir}/target/surefire-reports</sonar.surefire.reportsPath>
 		<sonar.failsafe.reportsPath>${basedir}/target/failsafe-reports</sonar.failsafe.reportsPath>
 
@@ -56,6 +54,7 @@
 		<docker.skip.push>false</docker.skip.push>
 		<docker.skip.tag>false</docker.skip.tag>
 		<skip.staging.artifacts>false</skip.staging.artifacts>
+		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/ticketmgt-it/jacoco.xml,${project.build.directory}/site/jacoco-ut/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 
 	</properties>
 

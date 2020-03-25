@@ -102,7 +102,7 @@
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<executions>
 					<execution>
-						<id>post-integration-test1</id>
+						<id>post-integration-test</id>
 						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report</goal>
@@ -110,7 +110,7 @@
 						<configuration>
 							<skip>${skipIntegrationTests}</skip>
 							<dataFile>${project.basedir}/target/code-coverage/service.jacoco.exec</dataFile>
-							<outputDirectory>${project.basedir}/target/site/service-it</outputDirectory>
+							<outputDirectory>${project.basedir}/../cmso-service/target/site/service-it</outputDirectory>
 							<includes>
 								<include>service/**</include>
 							</includes>
@@ -123,7 +123,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>post-integration-test2</id>
+						<id>post-integration-optimizer</id>
 						<phase>post-integration-test</phase>
 						<goals>
 							<goal>report</goal>
@@ -131,9 +131,51 @@
 						<configuration>
 							<skip>${skipIntegrationTests}</skip>
 							<dataFile>${project.basedir}/target/code-coverage/optimizer.jacoco.exec</dataFile>
-							<outputDirectory>${project.basedir}/target/site/optimizer-it</outputDirectory>
+							<outputDirectory>${project.basedir}/../cmso-optimizer/target/site/optimizer-it</outputDirectory>
 							<includes>
 								<include>optimizer/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/gen/**</exclude>
+								<exclude>**/generated-sources/**</exclude>
+								<exclude>**/yang-gen/**</exclude>
+								<exclude>**/pax/**</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-topology</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<skip>${skipIntegrationTests}</skip>
+							<dataFile>${project.basedir}/target/code-coverage/topology.jacoco.exec</dataFile>
+							<outputDirectory>${project.basedir}/../cmso-topology/target/site/topology-it</outputDirectory>
+							<includes>
+								<include>topology/**</include>
+							</includes>
+							<excludes>
+								<exclude>**/gen/**</exclude>
+								<exclude>**/generated-sources/**</exclude>
+								<exclude>**/yang-gen/**</exclude>
+								<exclude>**/pax/**</exclude>
+							</excludes>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-integration-ticketmgt</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+						<configuration>
+							<skip>${skipIntegrationTests}</skip>
+							<dataFile>${project.basedir}/target/code-coverage/ticketmgt.jacoco.exec</dataFile>
+							<outputDirectory>${project.basedir}/../cmso-ticketmgt/target/site/ticketmgt-it</outputDirectory>
+							<includes>
+								<include>ticketmgt/**</include>
 							</includes>
 							<excludes>
 								<exclude>**/gen/**</exclude>
