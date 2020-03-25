@@ -14,7 +14,7 @@ RUN test -n "$http_proxy" && echo "Acquire::Proxy \"http://$http_proxy\";" > /et
     apt-get update &&  \
     apt-get -y dist-upgrade &&  \
     apt-get install -y openjdk-11-jre-headless && \
-	apt-get install -y curl
+	apt-get install -y curl unzip wget netcat
 
 RUN groupadd onap \
     && useradd -m -g onap onap
