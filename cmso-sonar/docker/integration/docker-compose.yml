@@ -13,6 +13,7 @@ services:
 
   db-init-svc:
     image: onap/optf-cmso-dbinit
+    user: root
     volumes:
       - "./cmso-service/etc:/share/etc:rw"
       - "./cmso-service/logs:/share/logs:rw"
@@ -25,6 +26,7 @@ services:
 
   db-init-opt:
     image: onap/optf-cmso-dbinit
+    user: root
     volumes:
       - "./cmso-optimizer/etc:/share/etc:rw"
       - "./cmso-optimizer/logs:/share/logs:rw"
@@ -38,6 +40,7 @@ services:
 
   cmso-service:
     image: onap/optf-cmso-service
+    user: root
     volumes:
       - "./cmso-service/etc:/share/etc:rw"
       - "./cmso-service/logs:/share/logs:rw"
@@ -55,6 +58,7 @@ services:
 
   cmso-ticketmgt:
     image: onap/optf-cmso-ticketmgt
+    user: root
     volumes:
       - "./cmso-ticketmgt/etc:/share/etc:rw"
       - "./cmso-ticketmgt/logs:/share/logs:rw"
@@ -65,6 +69,7 @@ services:
 
   cmso-topology:
     image: onap/optf-cmso-topology
+    user: root
     volumes:
       - "./cmso-topology/etc:/share/etc:rw"
       - "./cmso-topology/logs:/share/logs:rw"
@@ -75,6 +80,7 @@ services:
 
   cmso-optimizer:
     image: onap/optf-cmso-optimizer
+    user: root
     volumes:
       - "./cmso-optimizer/etc:/share/etc:rw"
       - "./cmso-optimizer/logs:/share/logs:rw"
@@ -93,6 +99,7 @@ services:
 
   cmso-robot:
     image: onap/optf-cmso-robot
+    user: root
     volumes:
       - "./cmso-robot/logs:/share:rw"
     depends_on:
