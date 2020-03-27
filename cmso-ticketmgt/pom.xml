@@ -152,6 +152,12 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-yaml</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.yaml</groupId>
+					<artifactId>snakeyaml</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.att.eelf</groupId>
@@ -218,6 +224,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-text</artifactId>
 			<version>1.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>1.26</version>
 		</dependency>
 		<!-- Testing Dependencies -->
 		<!-- <dependency> <groupId>org.powermock</groupId> <artifactId>powermock-api-mockito2</artifactId> 
@@ -327,11 +338,9 @@
 									<name>onap-cmso-tm</name>
 								</assembly>
 								<args>
-									<!-- plugin cannot handle empty (no proxy) arguments
-									<http_proxy_arg>${docker.http_proxy}</http_proxy_arg>
-									<https_proxy_arg>${docker.https_proxy}</https_proxy_arg>
-									-->
-								</args>	
+									<!-- plugin cannot handle empty (no proxy) arguments <http_proxy_arg>${docker.http_proxy}</http_proxy_arg> 
+										<https_proxy_arg>${docker.https_proxy}</https_proxy_arg> -->
+								</args>
 							</build>
 						</image>
 					</images>
