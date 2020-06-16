@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "8d6f5d04_5dd4607c",
+        "filename": "cmso-service/src/test/java/org/onap/optf/cmso/aaf/AafContainerFiltersTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-06-16T12:33:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "efaf32de_11b7e2f8",
+      "range": {
+        "startLine": 69,
+        "startChar": 34,
+        "endLine": 69,
+        "endChar": 37
+      },
+      "revId": "adc43abd9ce03387af7a25e2dbe07432f7e18d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4b8b854_57512a91",
         "filename": "cmso-service/src/test/java/org/onap/optf/cmso/aaf/AafContainerFiltersTest.java",
         "patchSetId": 3
@@ -69,6 +93,30 @@
       "revId": "adc43abd9ce03387af7a25e2dbe07432f7e18d70",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcafb100_7f0cf17c",
+        "filename": "cmso-service/src/test/java/org/onap/optf/cmso/aaf/AafContainerFiltersTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-06-16T12:33:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a4b8b854_57512a91",
+      "range": {
+        "startLine": 83,
+        "startChar": 34,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "adc43abd9ce03387af7a25e2dbe07432f7e18d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
