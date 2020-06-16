@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2019 AT&T Intellectual Property.
  * Modifications Copyright © 2018 IBM.
+ * Modifications Copyright © 2020 Nokia.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,30 +54,43 @@ import org.springframework.stereotype.Component;
 @Profile(SpringProfiles.AAF_AUTHENTICATION)
 public class AafContainerFilters implements ContainerRequestFilter {
 
+    private static final String EMPTY_ENTITY_CONTENT = "";
+
     @Autowired
-    AafClientCache aafClientCache;
+    private AafClientCache aafClientCache;
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        ResponseBuilder builder = null;
-        AuthorizationResult status = null;
+        AuthorizationResult authorizationStatus = getAuthorizationResult(requestContext);
+        switch (authorizationStatus) {
+            case AuthenticationFailure:
+                throw new WebApplicationException(createAuthenticationErrorResponse());
+            case AuthorizationFailure:
+                throw new WebApplicationException(createAuthorizationErrorResponse());
+            case Authorized:
+            case Authenticated:
+            default:
+        }
+    }
+
+    private AuthorizationResult getAuthorizationResult(ContainerRequestContext requestContext) {
+        AuthorizationResult status;
         try {
             status = aafClientCache.authorize(requestContext);
         } catch (Exception e) {
             Observation.report(LogMessages.UNEXPECTED_EXCEPTION, e, e.getMessage());
             status = AuthorizationResult.AuthenticationFailure;
         }
-        switch (status) {
-            case AuthenticationFailure:
-                builder = Response.status(Response.Status.UNAUTHORIZED).entity("");
-                builder.header("WWW-Authenticate", "Basic realm=\"Realm\"");
-                throw new WebApplicationException(builder.build());
-            case AuthorizationFailure:
-                builder = Response.status(Response.Status.FORBIDDEN).entity("");
-                throw new WebApplicationException(builder.build());
-            case Authorized:
-            case Authenticated:
-            default:
-        }
+        return status;
+    }
+
+    private Response createAuthenticationErrorResponse() {
+        ResponseBuilder builder = Response.status(Response.Status.UNAUTHORIZED).entity(EMPTY_ENTITY_CONTENT);
+        builder.header("WWW-Authenticate", "Basic realm=\"Realm\"");
+        return builder.build();
+    }
+
+    private Response createAuthorizationErrorResponse() {
+        return Response.status(Response.Status.FORBIDDEN).entity(EMPTY_ENTITY_CONTENT).build();
     }
 }
