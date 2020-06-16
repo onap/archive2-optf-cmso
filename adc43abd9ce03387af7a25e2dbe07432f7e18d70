@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00c1790b_16cd38e5",
+        "filename": "cmso-service/src/test/java/org/onap/optf/cmso/aaf/AafContainerFiltersTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-06-16T12:16:21Z",
+      "side": 1,
+      "message": "I think that HttpStatus constant can be used here",
+      "range": {
+        "startLine": 69,
+        "startChar": 34,
+        "endLine": 69,
+        "endChar": 37
+      },
+      "revId": "adc43abd9ce03387af7a25e2dbe07432f7e18d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4b8b854_57512a91",
+        "filename": "cmso-service/src/test/java/org/onap/optf/cmso/aaf/AafContainerFiltersTest.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-06-16T12:16:21Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 83,
+        "startChar": 34,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "adc43abd9ce03387af7a25e2dbe07432f7e18d70",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
