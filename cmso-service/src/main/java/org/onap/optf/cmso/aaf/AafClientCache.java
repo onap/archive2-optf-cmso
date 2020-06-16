@@ -90,7 +90,7 @@ public class AafClientCache {
         if (!env.getProperty(AafProperties.aafEnabled.toString(), Boolean.class, true)) {
             return AuthorizationResult.Authorized;
         }
-        Map<String, String> auth = getUserPasssword(requestContext);
+        Map<String, String> auth = getUserPassword(requestContext);
         String permissions = getPermissions(auth);
         if (permissions == null) {
             return AuthorizationResult.AuthenticationFailure;
@@ -209,7 +209,7 @@ public class AafClientCache {
         return AuthorizationResult.AuthenticationFailure;
     }
 
-    private Map<String, String> getUserPasssword(ContainerRequestContext requestContext) {
+    private Map<String, String> getUserPassword(ContainerRequestContext requestContext) {
 
         String header = requestContext.getHeaderString("Authorization");
         Map<String, String> userPassword = getUserPasswordFromAuthorizationHeader(header);
