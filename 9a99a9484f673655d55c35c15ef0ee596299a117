@@ -1,0 +1,12 @@
+Verified+1: ONAP Jobbuilder <onap-jobbuilder@jenkins.onap.org>
+Code-Review+2: krishna moorthy <krishna.moorthy6@wipro.com>
+Code-Review+1: Bartosz Gardziejewski <bartosz.gardziejewski@nokia.com>
+Code-Review+1: Pawel Kasperkiewicz <pawel.kasperkiewicz@nokia.com>
+Code-Review+1: Aleksandra Maciaga <aleksandra.maciaga@nokia.com>
+Code-Review+1: Edyta Krukowska <edyta.krukowska@nokia.com>
+Code-Review+1: Michał Bańka <michal.banka@nokia.com>
+Submitted-by: krishna moorthy <krishna.moorthy6@wipro.com>
+Submitted-at: Mon, 06 Jul 2020 14:07:29 +0000
+Reviewed-on: https://gerrit.onap.org/r/c/optf/cmso/+/109182
+Project: optf/cmso
+Branch: refs/heads/master
