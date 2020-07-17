@@ -32,8 +32,9 @@ package org.onap.observations;
 
 import com.att.eelf.i18n.EELFResolvableErrorEnum;
 import com.att.eelf.i18n.EELFResourceManager;
+import org.apache.logging.log4j.Level;
+
 import javax.ws.rs.core.Response.Status;
-import org.apache.log4j.Level;
 
 
 public class ObservationObject implements ObservationInterface {

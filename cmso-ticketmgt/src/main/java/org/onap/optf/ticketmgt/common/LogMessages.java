@@ -38,7 +38,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.ws.rs.core.Response.Status;
-import org.apache.log4j.Level;
+
+import org.apache.logging.log4j.Level;
 import org.onap.observations.ObservationInterface;
 
 public enum LogMessages implements ObservationInterface {

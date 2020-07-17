@@ -32,7 +32,8 @@ package org.onap.observations;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.spi.StandardLevel;
 
 
 public class Observation {
@@ -59,24 +60,27 @@ public class Observation {
         if (obs.getMetric()) {
             metrics.info(obs, exc, arguments);
         }
+
         Level lev = obs.getLevel();
-        switch (lev.toInt()) {
-            case Level.WARN_INT:
+        final StandardLevel standardLevel = lev.getStandardLevel();
+
+        switch (standardLevel) {
+            case WARN:
                 errors.warn(obs, arguments);
                 debug.debug(obs, exc, arguments);
                 break;
-            case Level.INFO_INT:
+            case INFO:
                 log.info(obs, exc, arguments);
                 debug.debug(obs, exc, arguments);
                 break;
-            case Level.ERROR_INT:
+            case ERROR:
                 errors.error(obs, arguments);
                 debug.debug(obs, exc, arguments);
                 break;
-            case Level.TRACE_INT:
+            case TRACE:
                 debug.trace(obs, exc, arguments);
                 break;
-            case Level.DEBUG_INT:
+            case DEBUG:
                 debug.debug(obs, exc, arguments);
                 break;
             default:
@@ -100,24 +104,27 @@ public class Observation {
         if (obs.getMetric()) {
             metrics.info(obs, arguments);
         }
+
         Level lev = obs.getLevel();
-        switch (lev.toInt()) {
-            case Level.WARN_INT:
+        final StandardLevel standardLevel = lev.getStandardLevel();
+
+        switch (standardLevel) {
+            case WARN:
                 errors.warn(obs, arguments);
                 debug.debug(obs, arguments);
                 break;
-            case Level.INFO_INT:
+            case INFO:
                 log.info(obs, arguments);
                 debug.debug(obs, arguments);
                 break;
-            case Level.ERROR_INT:
+            case ERROR:
                 errors.error(obs, arguments);
                 debug.debug(obs, arguments);
                 break;
-            case Level.TRACE_INT:
+            case TRACE:
                 debug.debug(obs, arguments);
                 break;
-            case Level.DEBUG_INT:
+            case DEBUG:
                 debug.debug(obs, arguments);
                 break;
             default:
