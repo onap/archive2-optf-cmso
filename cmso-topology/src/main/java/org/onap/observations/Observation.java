@@ -28,7 +28,7 @@ package org.onap.observations;
 
 import com.att.eelf.configuration.EELFLogger;
 import com.att.eelf.configuration.EELFManager;
-import org.apache.log4j.Level;
+import org.onap.logger.Logger;
 import org.onap.optf.cmso.topology.Application;
 
 
@@ -42,46 +42,20 @@ public class Observation {
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
     private static EELFLogger debug = EELFManager.getInstance().getDebugLogger();
 
+    private static Logger logger = new Logger(log, metrics, audit, errors, debug);
+
     /**
      * Report.
      *
      * @param obs the o
-     * @param execpt the e
+     * @param except the e
      * @param arguments the arguments
      */
     // *************************************************************************************************
-    public static void report(ObservationInterface obs, Exception execpt, String... arguments) {
+    public static void report(ObservationInterface obs, Exception except, String... arguments) {
         Mdc.setCaller(4);
         Mdc.setObservation(obs);
-        if (obs.getAudit()) {
-            audit.info(obs, execpt, arguments);
-        }
-        if (obs.getMetric()) {
-            metrics.info(obs, execpt, arguments);
-        }
-        Level lev = obs.getLevel();
-        switch (lev.toInt()) {
-            case Level.WARN_INT:
-                errors.warn(obs, arguments);
-                debug.debug(obs, execpt, arguments);
-                break;
-            case Level.INFO_INT:
-                log.info(obs, execpt, arguments);
-                debug.debug(obs, execpt, arguments);
-                break;
-            case Level.ERROR_INT:
-                errors.error(obs, arguments);
-                debug.debug(obs, execpt, arguments);
-                break;
-            case Level.TRACE_INT:
-                debug.trace(obs, execpt, arguments);
-                break;
-            case Level.DEBUG_INT:
-                debug.debug(obs, execpt, arguments);
-                break;
-            default:
-                log.info(obs, execpt, arguments);
-        }
+        logger.report(obs, except, arguments);
         Mdc.clearCaller();
     }
 
@@ -94,35 +68,7 @@ public class Observation {
     public static void report(ObservationInterface obs, String... arguments) {
         Mdc.setCaller(4);
         Mdc.setObservation(obs);
-        if (obs.getAudit()) {
-            audit.info(obs, arguments);
-        }
-        if (obs.getMetric()) {
-            metrics.info(obs, arguments);
-        }
-        Level levl = obs.getLevel();
-        switch (levl.toInt()) {
-            case Level.WARN_INT:
-                errors.warn(obs, arguments);
-                debug.debug(obs, arguments);
-                break;
-            case Level.INFO_INT:
-                log.info(obs, arguments);
-                debug.debug(obs, arguments);
-                break;
-            case Level.ERROR_INT:
-                errors.error(obs, arguments);
-                debug.debug(obs, arguments);
-                break;
-            case Level.TRACE_INT:
-                debug.debug(obs, arguments);
-                break;
-            case Level.DEBUG_INT:
-                debug.debug(obs, arguments);
-                break;
-            default:
-                log.info(obs, arguments);
-        }
+        logger.report(obs, arguments);
         Mdc.clearCaller();
     }
 
