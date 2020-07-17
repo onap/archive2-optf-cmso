@@ -38,10 +38,9 @@ import static com.att.eelf.configuration.Configuration.MDC_TARGET_ENTITY;
 import static com.att.eelf.configuration.Configuration.MDC_TARGET_SERVICE_NAME;
 
 import com.att.eelf.utils.Stopwatch;
-import java.net.URI;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
+import org.onap.observations.ObservationInterface;
+import org.onap.optf.cmso.optimizer.observations.MessageHeaders.HeadersEnum;
+import org.slf4j.MDC;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientResponseContext;
@@ -49,8 +48,10 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response.StatusType;
-import org.onap.optf.cmso.optimizer.observations.MessageHeaders.HeadersEnum;
-import org.slf4j.MDC;
+import java.net.URI;
+import java.util.Date;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * EELF logging MDC fields not defined in the MDC Configuration (i.e. MDC_ALERT_SEVERITY)
