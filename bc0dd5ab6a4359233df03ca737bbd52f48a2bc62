@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a11353b2_0798458e",
+        "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bedf8248_eb39fbff",
+        "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7133aa2_9e866598",
+        "filename": "cmso-service/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e83e3b59_0053fcb4",
+        "filename": "cmso-service/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "579b1cd8_94f16a9e",
+        "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4b2d546_7c23fa43",
+        "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8c6a6fd_da7bd967",
+        "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9959c416_5289383f",
+        "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-17T07:55:21Z",
+      "side": 1,
+      "message": "I think we can do this in one line, due to fact that lev is not used anywhere else. It could be:\nfinal StandardLevel standardLevel \u003d obs.getLevel().getStandardLevel()",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
