@@ -1,4 +1,4 @@
-/*
+package org.onap.observations;/*
  * Copyright © 2019 AT&T Intellectual Property.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
@@ -24,26 +24,19 @@
  * limitations under the License.
  */
 
-package org.onap.observations;
 
 import com.att.eelf.i18n.EELFResolvableErrorEnum;
-import javax.ws.rs.core.Response.Status;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
+import javax.ws.rs.core.Response;
 
 public interface ObservationInterface extends EELFResolvableErrorEnum {
-    public Enum<?> getValue();
 
-    public Level getLevel();
-
-    public String getMessage();
-
-    public Status getStatus();
-
-    public String getDomain();
-
-    public String name();
-
-    public Boolean getAudit();
-
-    public Boolean getMetric();
+    Enum<?> getValue();
+    Level getLevel();
+    String getMessage();
+    Response.Status getStatus();
+    String getDomain();
+    String name();
+    Boolean getAudit();
+    Boolean getMetric();
 }
