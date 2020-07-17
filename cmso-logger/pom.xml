@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cmso</artifactId>
+        <groupId>org.onap.optf.cmso</groupId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cmso-logger</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.att.eelf</groupId>
+            <artifactId>eelf-core</artifactId>
+            <version>${eelf.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-module</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-api-mockito</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.powermock</groupId>
+                    <artifactId>powermock-module-junit4</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>${javax.version.rs.api}</version>
+        </dependency>
+    </dependencies>
+
+
+</project>

@@ -30,8 +30,8 @@ import com.att.eelf.i18n.EELFResourceManager;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.core.Response.Status;
+import org.onap.observations.ObservationInterface;
 import org.onap.optf.cmso.optimizer.common.CmsoRequestError;
-import org.onap.optf.cmso.optimizer.observations.ObservationInterface;
 
 /**
  * The Class CMSException.

@@ -169,41 +169,12 @@
 			<artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.att.eelf</groupId>
-			<artifactId>eelf-core</artifactId>
-			<version>${eelf.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.mockito</groupId>
-					<artifactId>mockito-core</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-module</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-api-mockito</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.powermock</groupId>
-					<artifactId>powermock-module-junit4</artifactId>
-				</exclusion>
-
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
 			<version>1.26</version>
 		</dependency>
 		<!-- <dependency> <groupId>org.onap.aaf.authz</groupId> <artifactId>aaf-cadi-aaf</artifactId> 
 			<version>2.1.1</version> </dependency> -->
-		<dependency>
-			<groupId>javax.ws.rs</groupId>
-			<artifactId>javax.ws.rs-api</artifactId>
-			<version>2.1</version>
-		</dependency>
 
 		<!--Swagger Dependencies -->
 		<dependency>
@@ -263,8 +234,19 @@
 			<groupId>org.onap.aaf.authz</groupId>
 			<artifactId>aaf-cadi-aaf</artifactId>
 			<version>${aaf.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.onap.optf.cmso</groupId>
+            <artifactId>cmso-logger</artifactId>
+            <version>2.2.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<finalName>cmso-service</finalName>

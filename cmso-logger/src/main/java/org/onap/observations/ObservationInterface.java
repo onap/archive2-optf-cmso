@@ -1,5 +1,6 @@
 /*
  * Copyright © 2019 AT&T Intellectual Property.
+ * Modified 2020 Nokia.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License. You may obtain a copy of the License at
@@ -26,24 +27,20 @@
 
 package org.onap.observations;
 
+
 import com.att.eelf.i18n.EELFResolvableErrorEnum;
-import javax.ws.rs.core.Response.Status;
-import org.apache.log4j.Level;
+import org.apache.logging.log4j.Level;
+
+import static javax.ws.rs.core.Response.Status;
 
 public interface ObservationInterface extends EELFResolvableErrorEnum {
-    public Enum<?> getValue();
 
-    public Level getLevel();
-
-    public String getMessage();
-
-    public Status getStatus();
-
-    public String getDomain();
-
-    public String name();
-
-    public Boolean getAudit();
-
-    public Boolean getMetric();
+    Enum<?> getValue();
+    Level getLevel();
+    String getMessage();
+    Status getStatus();
+    String getDomain();
+    String name();
+    Boolean getAudit();
+    Boolean getMetric();
 }
