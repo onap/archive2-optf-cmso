@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a15ef0f7_8c353fb2",
+        "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2df5e126_3c21cdf4",
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a11353b2_0798458e",
         "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
         "patchSetId": 1
@@ -39,6 +57,30 @@
       "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0c98cb0_fc5b4577",
+        "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a11353b2_0798458e",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "70c24863_3a86b5cc",
+        "filename": "cmso-optimizer/src/main/java/org/onap/optf/cmso/optimizer/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bedf8248_eb39fbff",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 108,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c7133aa2_9e866598",
         "filename": "cmso-service/src/main/java/org/onap/observations/Observation.java",
         "patchSetId": 1
@@ -85,6 +151,30 @@
       "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02e68c3a_910adaca",
+        "filename": "cmso-service/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7133aa2_9e866598",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "2af77b0b_7b5ccd40",
+        "filename": "cmso-service/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e83e3b59_0053fcb4",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "579b1cd8_94f16a9e",
         "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/Observation.java",
         "patchSetId": 1
@@ -131,6 +245,30 @@
       "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f46f4e4_6c56ed4f",
+        "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "579b1cd8_94f16a9e",
+      "range": {
+        "startLine": 64,
+        "startChar": 8,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "b7fce042_24f52df1",
+        "filename": "cmso-ticketmgt/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4b2d546_7c23fa43",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8c6a6fd_da7bd967",
         "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
         "patchSetId": 1
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "78efe142_7e304617",
+        "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8c6a6fd_da7bd967",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9959c416_5289383f",
         "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
         "patchSetId": 1
@@ -200,6 +386,30 @@
       "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
       "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "846d44a5_098fc1a5",
+        "filename": "cmso-topology/src/main/java/org/onap/observations/Observation.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 6751
+      },
+      "writtenOn": "2020-07-20T07:34:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9959c416_5289383f",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 67
+      },
+      "revId": "bc0dd5ab6a4359233df03ca737bbd52f48a2bc62",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": false
     }
   ]
 }
