@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14cb7e1f_6d1d2a82",
+        "filename": "cmso-logger/src/main/java/org/onap/logger/Logger.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-20T10:24:31Z",
+      "side": 1,
+      "message": "Please remove JavaDoc or insert similar doc for above \"report\" method",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 64,
+        "endChar": 7
+      },
+      "revId": "494eabfe12c52dc6bb403e8129a89262c3879632",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f7b601d_50f1a890",
+        "filename": "cmso-logger/src/main/java/org/onap/observations/ObservationInterface.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-20T10:24:31Z",
+      "side": 1,
+      "message": "I think Response.Status can be import statically",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 19
+      },
+      "revId": "494eabfe12c52dc6bb403e8129a89262c3879632",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
