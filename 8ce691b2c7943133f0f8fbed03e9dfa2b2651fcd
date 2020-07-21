@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3616320b_e93cddbb",
+        "filename": "cmso-logger/src/main/java/org/onap/logger/Logger.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-21T05:59:14Z",
+      "side": 1,
+      "message": "I think, it should be:\nCopyright © 2019 AT\u0026T Intellectual Property.\nModified 2020 Nokia.",
+      "range": {
+        "startLine": 2,
+        "startChar": 20,
+        "endLine": 2,
+        "endChar": 47
+      },
+      "revId": "8ce691b2c7943133f0f8fbed03e9dfa2b2651fcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13743eb0_58668562",
+        "filename": "cmso-logger/src/main/java/org/onap/observations/ObservationInterface.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 5098
+      },
+      "writtenOn": "2020-07-21T05:59:14Z",
+      "side": 1,
+      "message": "Please add line:\nModified 2020 Nokia.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 47
+      },
+      "revId": "8ce691b2c7943133f0f8fbed03e9dfa2b2651fcd",
+      "serverId": "14b4e41f-c4e3-4fb9-9955-6a9b5656895a",
+      "unresolved": true
+    }
+  ]
+}
