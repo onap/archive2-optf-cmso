@@ -2,7 +2,7 @@
 apt update
 apt install wget
 apt install unzip  --assume-yes
-wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.5/org.jacoco.agent-0.8.5.jar
+wget https://repo1.maven.org/maven2/org/jacoco/org.jacoco.agent/0.8.5/org.jacoco.agent-0.8.5.jar --no-check-certificate
 unzip org.jacoco.agent-0.8.5.jar
 cp org.jacoco.agent-0.8.5/jacocoagent.jar .
 ls -l
