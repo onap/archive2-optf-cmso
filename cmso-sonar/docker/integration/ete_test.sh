@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 docker-compose up >up.txt 2>&1 &
 
 ### Wait for robot to finish

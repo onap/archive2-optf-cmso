@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,12 +41,18 @@ public class ItFullIntegrationTest {
         Process process = null;
         try {
             ProcessBuilder processBuilder = buildCommand();
+            processBuilder = processBuilder.redirectErrorStream(true);
             process = processBuilder.start();
-            // debug.debug("engine command=" + commandString);
-            String stdout = IOUtils.toString(process.getInputStream(), "UTF-8");
-            String stderr = IOUtils.toString(process.getErrorStream(), "UTF-8");
-            System.out.println("stdout=" + stdout);
-            System.out.println("stderr=" + stderr);
+            try (var reader = new BufferedReader(
+                new InputStreamReader(process.getInputStream()))) {
+
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+            }
             copyJacocoFiles();
             copyClassFiles();
             copyForSonar();
