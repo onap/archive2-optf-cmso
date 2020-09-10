@@ -27,8 +27,10 @@ apt-get install \
             chromium-chromedriver \
             dnsutils \
             git \
-            gcc 
-            
+            gcc
+
+RUN groupadd onap \
+    && useradd -m -g onap onap
 
 COPY /onap-cmso/robot /opt/cmso-robot/robot
 COPY /onap-cmso/mocking /opt/cmso-robot/mocking
@@ -45,7 +47,11 @@ RUN ln -s /usr/bin/python3.6 /usr/bin/python && \
     pip install robotframework-sshlibrary && \
     pip install robotframework-requests
 
-### Start up the mock server for 
+RUN chown -R onap:onap /opt/cmso-robot
+
+USER onap
+
+### Start up the mock server for
 CMD ["/usr/bin/python", "/opt/cmso-robot/mocking/mock.py"]
 
 ### Use --entrypoint to override to run the tests test and exit
