@@ -1,0 +1,4 @@
+distribution_type: 'maven'
+version: '2.3.0'
+project: 'optf-cmso'
+log_dir: 'optf-cmso-maven-stage-master/521/'
