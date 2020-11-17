@@ -7,6 +7,93 @@ Release Notes
 =============
 
 ..      ===========================
+..      * * *    GUILIN    * * *
+..      ===========================
+
+Abstract
+========
+
+This document provides the release notes for the Guilin release.
+
+Summary
+=======
+
+
+Release Data
+============
+
+
++--------------------------------------+--------------------------------------+
+| **OOF Project**                      |                                      |
+|                                      |                                      |
++--------------------------------------+--------------------------------------+
+| **Docker images**                    | - optf-cmso-ticketmgt 2.3.0          |
+|                                      | - optf-cmso-topology 2.3.0           |
+|                                      | - optf-cmso-optimizer 2.3.0          |
+|                                      | - optf-cmso-service 2.3.0            |
+|                                      |                                      |
+|                                      |                                      |
+|                                      |                                      |
+|                                      |                                      |
++--------------------------------------+--------------------------------------+
+| **Release designation**              | 7.0.0 guilin                         |
+|                                      |                                      |
++--------------------------------------+--------------------------------------+
+| **Release date**                     | 2020-11-19 (TBD)                     |
+|                                      |                                      |
++--------------------------------------+--------------------------------------+
+
+
+New features
+------------
+
+
+
+Known Limitations, Issues and Workarounds
+=========================================
+
+System Limitations
+------------------
+
+
+Known Vulnerabilities
+---------------------
+
+
+Workarounds
+-----------
+
+
+Security Notes
+--------------
+
+**Fixed Security issues**
+
+- OPTFRA-752 Upgrade Vulnerable Direct Dependencies
+- OPTFRA-838 OOF has root pods
+- OPTFRA-841 Remove checker-framework from CMSO logger
+
+References
+==========
+
+For more information on the ONAP Guilin release, please see:
+
+#. `ONAP Home Page`_
+#. `ONAP Documentation`_
+#. `ONAP Release Downloads`_
+#. `ONAP Wiki Page`_
+
+
+.. _`ONAP Home Page`: https://www.onap.org
+.. _`ONAP Wiki Page`: https://wiki.onap.org
+.. _`ONAP Documentation`: https://docs.onap.org
+.. _`ONAP Release Downloads`: https://git.onap.org
+
+Quick Links:
+    - `OOF project page`_
+    - `Passing Badge information for OOF`_
+
+..      ===========================
 ..      * * *    FRANKFURT    * * *
 ..      ===========================
 
