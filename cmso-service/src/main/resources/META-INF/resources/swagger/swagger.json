@@ -1,7 +1,7 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "version" : "2.3.0-SNAPSHOT",
+    "version" : "2.3.1-SNAPSHOT",
     "title" : "cmso-service"
   },
   "basePath" : "/cmso",
@@ -774,15 +774,25 @@
           "format" : "int32",
           "description" : "Maximum number of VNF changes to schedule concurrently"
         },
-        "policyId" : {
-          "type" : "string",
-          "description" : "Name of schedule optimization policy used by the change management cmso optimizer to determine available time slot"
+        "changeWindows" : {
+          "type" : "array",
+          "description" : "Lists of desired change windows to schedule the elements.",
+          "items" : {
+            "$ref" : "#/definitions/Change Window"
+          }
         },
-        "vnfDetails" : {
+        "policies" : {
+          "type" : "array",
+          "description" : "List of the policies to control optimization.",
+          "items" : {
+            "$ref" : "#/definitions/Supported Policy Information"
+          }
+        },
+        "elements" : {
           "type" : "array",
           "description" : "Lists of the VNFs to be changed and the desired change windows",
           "items" : {
-            "$ref" : "#/definitions/VNF Details"
+            "$ref" : "#/definitions/Optimizer Element"
           }
         }
       },
@@ -793,14 +803,16 @@
       "properties" : {
         "startTime" : {
           "type" : "string",
-          "description" : "Earliest time that a set of changes may begin."
+          "format" : "date-time",
+          "description" : "Earliest time for which changes may begin."
         },
         "endTime" : {
           "type" : "string",
-          "description" : "Latest time by which all changes must be completed"
+          "format" : "date-time",
+          "description" : "Latest time by which all changes must be completed."
         }
       },
-      "description" : "Time window within which the scheduler optimizer can schedule the changes for the  group of NVFs"
+      "description" : "Time window for which tickets are to returned"
     },
     "CmDetailsMessage" : {
       "type" : "object",

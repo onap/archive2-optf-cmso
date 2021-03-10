@@ -35,6 +35,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import java.security.SecureRandom;
 
 @Component
 public class PropertiesManagement {
@@ -43,11 +44,10 @@ public class PropertiesManagement {
     private static EELFLogger errors = EELFManager.getInstance().getErrorLogger();
 
     private  static final String algorithm = "AES";
-    private  static final String cipherMode = "CBC";
-    private  static final String paddingScheme = "PKCS5Padding";
+    private  static final String cipherMode = "GCM";
+    private  static final String paddingScheme = "NoPadding";
     private  static final String transformation = algorithm + "/" + cipherMode + "/" + paddingScheme;
-
-    private static final String initVector = "ONAPCMSOVECTORIV"; // 16 bytes IV
+    private  static final SecureRandom random = new SecureRandom();
 
     @Autowired
     Environment env;
@@ -74,7 +74,7 @@ public class PropertiesManagement {
     public static String getDecryptedValue(String value) {
         if (value.startsWith("enc:")) {
             String secret = getSecret();
-            value = decrypt(secret, initVector, value.substring(4));
+            value = decrypt(secret, value.substring(4));
         }
         return value;
     }
@@ -87,13 +87,15 @@ public class PropertiesManagement {
      */
     public static String getEncryptedValue(String value) {
         String secret = getSecret();
-        value = encrypt(secret, initVector, value);
+        value = encrypt(secret, value);
         return value;
     }
 
-    private static final String encrypt(String key, String initVector, String value) {
+    private static final String encrypt(String key, String value) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+	    byte[] bytesIV = new byte[16];
+            random.nextBytes(bytesIV);
+            IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
@@ -107,9 +109,11 @@ public class PropertiesManagement {
         return null;
     }
 
-    private static final String decrypt(String key, String initVector, String encrypted) {
+    private static final String decrypt(String key, String encrypted) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
+	    byte[] bytesIV = new byte[16];
+            random.nextBytes(bytesIV);
+            IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
