@@ -20,6 +20,9 @@
 package org.onap.optf.cmso.utilities;
 
 import org.onap.optf.cmso.optimizer.common.PropertiesManagement;
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * The Class PropertiesAdmin.
@@ -43,6 +46,13 @@ public class PropertiesAdmin {
             value = PropertiesManagement.getEncryptedValue(args[0]);
         }
         System.out.println(args[0] + " : " + value);
+    }
+    @Test
+    public void testEncryptionDecryption()
+    {
+    String encryptedInputData = PropertiesManagement.getEncryptedValue("Hello");
+    String decryptedData = PropertiesManagement.getDecryptedValue(encryptedInputData);
+    assertEquals(decryptedData,"Hello");
     }
 
 }

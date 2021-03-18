@@ -99,8 +99,8 @@ public class PropertiesManagement {
     }
 
     private static final String encrypt(String key, String value) {
-        try {
-	    byte[] bytesIV = new byte[16];
+        try{
+	    byte[] bytesIV = new byte[12];
             random.nextBytes(bytesIV);
             IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -118,8 +118,8 @@ public class PropertiesManagement {
 
     private static final String decrypt(String key, String encrypted) {
         try {
-            byte[] bytesIV = new byte[16];
-            random.nextBytes(bytesIV);
+	      byte[] bytesIV = new byte[12];
+    random.nextBytes(bytesIV);
             IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance(transformation);

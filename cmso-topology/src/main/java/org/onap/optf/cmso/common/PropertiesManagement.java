@@ -49,6 +49,7 @@ public class PropertiesManagement {
     private  static final String transformation = algorithm + "/" + cipherMode + "/" + paddingScheme;
     private  static final SecureRandom random = new SecureRandom();
 
+
     @Autowired
     Environment env;
 
@@ -93,7 +94,7 @@ public class PropertiesManagement {
 
     private static final String encrypt(String key, String value) {
         try {
-	    byte[] bytesIV = new byte[16];
+            byte[] bytesIV = new byte[12];
             random.nextBytes(bytesIV);
             IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -111,9 +112,9 @@ public class PropertiesManagement {
 
     private static final String decrypt(String key, String encrypted) {
         try {
-	    byte[] bytesIV = new byte[16];
+            byte[] bytesIV = new byte[12];
             random.nextBytes(bytesIV);
-            IvParameterSpec iv = new IvParameterSpec(bytesIV);
+	    IvParameterSpec iv = new IvParameterSpec(bytesIV);
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
             Cipher cipher = Cipher.getInstance(transformation);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
