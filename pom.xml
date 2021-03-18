@@ -43,7 +43,7 @@
 
 	<groupId>org.onap.optf.cmso</groupId>
 	<artifactId>cmso</artifactId>
-	<version>2.3.2-SNAPSHOT</version>
+	<version>2.3.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>optf-cmso</name>
