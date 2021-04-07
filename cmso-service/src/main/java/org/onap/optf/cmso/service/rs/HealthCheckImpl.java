@@ -93,7 +93,6 @@ public class HealthCheckImpl implements HealthCheck {
 
         if (checkInterfaces) {
             addToHealthCheckMessage(hc, tmClient.healthCheck());
-            addToHealthCheckMessage(hc, msoStatusClient.healthCheck());
             addToHealthCheckMessage(hc, optimizerClient.healthCheck());
         }
         addToHealthCheckMessage(hc, this.healthCheckCrap());
